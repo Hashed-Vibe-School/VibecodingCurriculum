@@ -1,314 +1,278 @@
-# Chapter 06: Slash Commands
+# Chapter 06: Effective Prompting
 
-[한국어](./README.ko.md) | **English**
+**English** | [한국어](./README.ko.md)
 
-## Prerequisites
+## What You Will Learn
 
-Before starting this chapter, ensure you:
-- [ ] Have completed Chapter 00-05 (Foundation)
-- [ ] Understand CLAUDE.md and project memory
-- [ ] Are comfortable with markdown syntax
-
----
-
-## Introduction
-
-Slash commands let you create reusable prompts that you or your team can invoke with a simple `/command`. Think of them as macros for common tasks—code review, debugging, documentation generation, and more.
-
-### Why Slash Commands?
-
-- **Consistency**: Same prompt structure every time
-- **Speed**: No retyping complex instructions
-- **Team Sharing**: Project commands are git-tracked
-- **Best Practices**: Encode expert knowledge into commands
+- How to communicate with Claude effectively
+- Using Plan mode
+- Breaking down complex tasks
 
 ---
 
-## Topics
+## What is Prompting?
 
-### 1. Built-in Commands
+Prompting is how you communicate with AI. The same question phrased differently can produce very different results.
 
-Claude Code comes with many built-in commands:
+### Bad vs Good Examples
 
-#### Essential Commands
-
-| Command | Description |
-|---------|-------------|
-| `/help` | Show all commands |
-| `/clear` | Clear conversation |
-| `/compact` | Compress context |
-| `/model` | Change model |
-| `/cost` | Show usage |
-| `/config` | Configuration |
-| `/doctor` | Diagnose issues |
-
-#### Power User Commands
-
-| Command | Description |
-|---------|-------------|
-| `/vim` | Enable full vim-style editing (h/j/k/l, ciw, dd, etc.) |
-| `/context` | View what's consuming your token window |
-| `/stats` | See your Claude Code usage statistics |
-| `/rename <name>` | Name your current session |
-| `/resume <name>` | Resume a named session |
-| `/statusline` | Customize the status bar display |
-| `/chrome` | Enable browser interaction for web tasks |
-
-### 2. Creating Custom Commands
-
-Commands are markdown files in the `.claude/commands/` directory.
-
-**Project commands** (shared with team):
+**Bad:**
 ```
-.claude/commands/
-├── review.md
-├── fix-issue.md
-└── generate-tests.md
+> Fix the bug
+```
+Claude does not know what to fix.
+
+**Good:**
+```
+> In @src/login.js, I get an error when clicking the login button.
+> The error is "Cannot read property 'email' of undefined".
+> Please fix it.
+```
+Claude knows exactly what to do.
+
+---
+
+## 3 Principles of Good Prompts
+
+### 1. Be Specific
+
+```
+# Bad
+> Make a website
+
+# Good
+> Make a self-introduction page.
+> It should have sections for name, photo, and bio.
+> Use a blue background.
 ```
 
-**Personal commands** (only for you):
+### 2. Provide Context
+
 ```
-~/.claude/commands/
-├── my-review-style.md
-└── daily-standup.md
-```
+# Bad
+> Add a function
 
-### 3. Command File Structure
-
-A simple command:
-
-```markdown
-<!-- .claude/commands/review.md -->
-Review this code for:
-1. Potential bugs
-2. Performance issues
-3. Security vulnerabilities
-4. Code style violations
-
-Provide specific line references and suggested fixes.
+# Good
+> Add a date format function to @src/utils.js.
+> Similar style to the other functions there.
+> It should convert "2024-01-15" to "January 15, 2024".
 ```
 
-Invoke with: `/review`
+### 3. One Thing at a Time
 
-### 4. Using Arguments
-
-Use `$ARGUMENTS` placeholder for dynamic input:
-
-```markdown
-<!-- .claude/commands/fix-issue.md -->
-Find and fix GitHub issue #$ARGUMENTS
-
-Steps:
-1. Read the issue description
-2. Locate the relevant code
-3. Implement a fix
-4. Write tests if applicable
-5. Summarize the changes
 ```
+# Bad
+> Make login and signup and password reset
 
-Invoke with: `/fix-issue 123`
-
-### 5. Multi-Step Commands
-
-Create complex workflows:
-
-```markdown
-<!-- .claude/commands/feature.md -->
-# Implement Feature: $ARGUMENTS
-
-## Phase 1: Research
-- Understand the requirement
-- Identify affected files
-- Check for similar implementations
-
-## Phase 2: Implementation
-- Create necessary files
-- Follow existing patterns
-- Add proper error handling
-
-## Phase 3: Quality
-- Write unit tests
-- Update documentation
-- Self-review for issues
-
-## Phase 4: Completion
-- Summarize all changes
-- List any follow-up tasks
-```
-
-### 6. Command Best Practices
-
-#### Be Specific
-```markdown
-<!-- Bad -->
-Review the code
-
-<!-- Good -->
-Review @src/auth/ for security issues:
-- Check for SQL injection
-- Verify input sanitization
-- Ensure proper authentication checks
-- Look for exposed secrets
-```
-
-#### Include Context
-```markdown
-<!-- Include project-specific context -->
-Our tech stack uses React + TypeScript.
-Follow the patterns in @src/components/Button.tsx.
-Use our custom `useApi` hook for data fetching.
-```
-
-#### Add Constraints
-```markdown
-<!-- Set clear boundaries -->
-Rules:
-- Do not modify existing tests
-- Keep changes backward compatible
-- Maximum 3 files changed
-```
-
-### 7. Organizing Commands
-
-Recommended structure:
-```
-.claude/commands/
-├── code/
-│   ├── review.md
-│   ├── refactor.md
-│   └── debug.md
-├── docs/
-│   ├── api-docs.md
-│   └── readme.md
-├── git/
-│   ├── commit.md
-│   └── pr.md
-└── test/
-    ├── unit.md
-    └── e2e.md
+# Good
+> Start with login first.
+> A form that takes email and password.
 ```
 
 ---
 
-## Resources
+## Using Plan Mode
 
-- [Claude Code Commands Documentation](https://docs.anthropic.com/en/docs/claude-code)
-- [Markdown Guide](https://www.markdownguide.org/)
+Plan mode makes Claude plan before executing.
+
+### Why Plan Mode?
+
+If Claude writes code immediately, it might go in the wrong direction. Review the plan first in Plan mode, then execute if it looks good.
+
+### How to Use
+
+```
+> /plan
+```
+Or press `Shift + Tab` twice
+
+### Example
+
+```
+> /plan
+> How should I build the login feature?
+```
+
+Claude shows the plan:
+```
+Login feature implementation plan:
+
+1. Create src/components/LoginForm.js
+   - Email, password input fields
+   - Submit button
+
+2. Create src/api/auth.js
+   - Login API call function
+
+3. Modify existing App.js
+   - Add login state management
+
+Proceed with this plan?
+```
+
+If it looks good, switch to Normal mode to execute.
 
 ---
 
-## Checklist
+## Working Step by Step
 
-Answer these questions as if in an interview:
+Break down complex tasks.
 
-1. **What are slash commands and why use them?**
-   <details>
-   <summary>Hint</summary>
-   Reusable prompt templates, consistency, speed, team sharing
-   </details>
+### Bad Example
 
-2. **Where do project vs personal commands live?**
-   <details>
-   <summary>Hint</summary>
-   Project: .claude/commands/ (git tracked). Personal: ~/.claude/commands/
-   </details>
+```
+> Make a shopping mall
+```
+Too large of a request.
 
-3. **How do you pass dynamic arguments to commands?**
-   <details>
-   <summary>Hint</summary>
-   Use $ARGUMENTS placeholder in the command file
-   </details>
+### Good Example
 
-4. **What makes a good slash command?**
-   <details>
-   <summary>Hint</summary>
-   Specific, includes context, has constraints, well-organized
-   </details>
+```
+# Step 1: Understand
+> What features does a shopping mall usually have?
+
+# Step 2: Plan
+> Start with the product list page.
+> How should I build it?
+
+# Step 3: Execute
+> Build it according to that plan.
+
+# Step 4: Verify
+> Check if it works. Run it.
+```
 
 ---
 
-## Mini Project: Command Library
+## Providing Feedback
 
-### Project Goals
+If the first result is not what you want, provide feedback.
 
-Build a comprehensive slash command library by completing:
+### Example
 
-- [ ] Create `/review` command for code review with security and style checks
-- [ ] Create `/fix-bug $ARGUMENTS` command to fix bugs by issue number
-- [ ] Create `/test $ARGUMENTS` command to generate tests for a file
-- [ ] Create `/docs $ARGUMENTS` command to generate documentation
-- [ ] Create 4+ creative commands (e.g., `/explain`, `/optimize`, `/refactor`)
-- [ ] Organize commands in proper folder structure
-- [ ] Test each command works correctly
+```
+> Make a button
+```
+If the result is too small:
 
-### Ideas to Try
+```
+> The button is too small. Make it bigger.
+> Make the text bolder too.
+```
 
-- Create a `/security-audit` command for security-focused reviews
-- Build a `/changelog` command to generate changelogs from commits
-- Make a `/standup` command that generates daily standup summaries
-- Create commands that chain together for complex workflows
+Keep refining.
+
+### Undoing
+
+If it went completely wrong:
+- `Esc Esc` (Esc twice): Revert to previous state
+- `Ctrl + C`: Cancel current operation
 
 ---
 
-## Advanced
+## Ultrathink: Solving Complex Problems
 
-### Framework-Specific Commands
+For difficult problems, make Claude think more deeply.
 
-Create commands for frameworks you use frequently:
+### Keywords
 
-**React Component Generation** (`.claude/commands/react-component.md`):
-```markdown
-Create a new React component named $ARGUMENTS with:
-- TypeScript + functional component
-- Props interface defined
-- Basic unit test file
-- Storybook story (if stories/ exists)
-Follow patterns in @src/components/Button.tsx
+| Keyword | Effect | When to Use |
+|---------|--------|-------------|
+| `think` | Normal level | General tasks |
+| `think hard` | Deep thinking | Complex problems |
+| `ultrathink` | Maximum depth | Architecture decisions |
+
+### Example
+
+```
+> ultrathink
+> How should I design this project structure?
+> So it's easy to add features later.
 ```
 
-**API Endpoint Generation** (`.claude/commands/api-endpoint.md`):
-```markdown
-Create a new API endpoint for $ARGUMENTS:
-- Follow REST conventions
-- Include validation with zod
-- Add error handling
-- Create test file
-Follow patterns in @src/api/users.ts
+---
+
+## Practice
+
+### Practice 1: Being Specific
+
+Turn a bad prompt into a good one:
+
+```
+# Bad
+> Fix the error
+
+# Turn this into something specific
+> ???
 ```
 
-### Team Onboarding Command Set
+### Practice 2: Using Plan Mode
 
-Commands that help new team members become productive immediately:
-
-```markdown
-<!-- .claude/commands/onboarding/setup.md -->
-Help me set up this project:
-1. Explain the project architecture
-2. Show me how to run it locally
-3. Point out the main files I should know
-4. Explain the testing strategy
-
-<!-- .claude/commands/onboarding/first-task.md -->
-I'm new to this codebase. Help me with my first task: $ARGUMENTS
-- Explain relevant code sections
-- Suggest which files to modify
-- Warn about common pitfalls
+```
+> /plan
+> I want to make a todo list app.
+> It should have add, delete, and check-complete features.
+> How should I build it?
 ```
 
-### Command Chaining Pattern
+Review the plan and execute if it looks good.
 
-Use commands sequentially for complex tasks:
+### Practice 3: Step by Step
 
-```bash
-# 1. Review first
-/review
-
-# 2. Fix discovered issues
-/fix-bug found in review
-
-# 3. Add tests
-/test src/utils/newFeature.ts
-
-# 4. Document
-/docs src/utils/newFeature.ts
 ```
+# Step 1
+> I want to make a simple calculator. What do I need?
+
+# Step 2
+> Start with addition.
+
+# Step 3
+> Add subtraction, multiplication, and division.
+
+# Step 4
+> Make it look nice.
+```
+
+---
+
+## Frequently Used Patterns
+
+### When Exploring
+
+```
+> Explain the project structure
+> What does this function do?
+> How does the data flow?
+```
+
+### When Fixing Bugs
+
+```
+> I'm getting this error message: [error message]
+> @filename I think the problem is in this file
+> Fix it
+```
+
+### When Building New Features
+
+```
+> I want to build [feature]
+> Requirements: [list]
+> Reference @existingfile and use a similar style
+```
+
+---
+
+## Summary
+
+What you learned in this chapter:
+- [x] Being specific
+- [x] Providing context
+- [x] One thing at a time
+- [x] Using Plan mode
+- [x] Working step by step
+- [x] Providing feedback
+
+**Key point**: Good communication leads to good results.
+
+Move on to [Chapter 07: Exploring Code](../Chapter07/README.md).

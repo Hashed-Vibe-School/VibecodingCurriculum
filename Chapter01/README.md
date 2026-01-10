@@ -1,326 +1,138 @@
-# Chapter 01: Conversation & Context
+# Chapter 01: What is AI Coding?
 
-[한국어](./README.ko.md) | **English**
+**English** | [한국어](./README.ko.md)
 
-## Prerequisites
+## What You'll Learn
 
-Before starting this chapter, make sure you can:
-- [ ] Start and exit Claude Code
-- [ ] Understand the three permission modes
-- [ ] Navigate directories in the terminal
-
----
-
-## Introduction
-
-Effective communication with Claude Code is not just about asking questions—it's about providing the right context. This chapter focuses on how to structure your prompts, reference files, and maintain conversation context for optimal results.
-
-### Why Context Matters
-
-Claude Code can only help effectively when it understands:
-- **What** you're trying to accomplish
-- **Where** the relevant code is located
-- **Why** you need to make changes
-- **How** the existing system works
+- What coding with AI means
+- The concept of Vibecoding
+- What Claude Code is and why to use it
 
 ---
 
-## Topics
+## Before We Start
 
-### 1. Effective Prompting Techniques
+No coding knowledge is required. This curriculum starts from scratch.
 
-#### Be Specific
-```bash
-# Bad
-> fix the bug
-
-# Good
-> Fix the authentication bug in src/auth.ts where users can't log in
-> after password reset. The error message is "Invalid token"
-```
-
-#### Provide Context
-```bash
-# Bad
-> add a button
-
-# Good
-> Add a "Save Draft" button to the BlogEditor component that saves
-> the current content to localStorage. Follow the existing button
-> styling in the codebase.
-```
-
-#### Break Down Complex Tasks
-```bash
-# Instead of one huge rechapter, break it down:
-> First, let's understand the current authentication flow.
-> Can you explain how login works in this project?
-
-# Then follow up:
-> Now let's add OAuth support. What files would need to change?
-```
-
-### 2. Special Prefixes
-
-Claude Code has powerful prefix shortcuts:
-
-| Prefix | Description | Example |
-|--------|-------------|---------|
-| `@` | Reference files/folders | `@src/auth.ts` |
-| `!` | Execute bash command and inject output | `!git status` |
-| `#` | Save to Claude's memory | `# Always use bun` |
-
-```bash
-# Execute bash and inject output (no token waste)
-> !bun test
-# Claude sees the test results instantly
-
-# Save a rule to memory
-> # Use TypeScript strict mode in this project
-# Claude prompts for save location
-```
-
-### 3. File References with @-mentions
-
-Reference files directly in your prompts using `@`:
-
-```bash
-> Look at @src/components/Button.tsx and create a similar
-> component for form inputs
-
-> Compare @package.json with @package-lock.json and check
-> for version mismatches
-
-> The bug is somewhere between @api/routes.ts and @api/handlers.ts
-```
-
-**Autocomplete**: Type `@` and start typing the filename—Claude Code will autocomplete.
-
-### 4. Multi-turn Conversations
-
-Claude Code maintains conversation context within a session:
-
-```bash
-> What does the UserService class do?
-# Claude explains UserService
-
-> How does it connect to the database?
-# Claude uses previous context to explain DB connection
-
-> Add a method to get users by email
-# Claude knows we're still talking about UserService
-```
-
-#### Managing Context
-
-| Command | Description |
-|---------|-------------|
-| `/clear` | Clear conversation history |
-| `/compact` | Summarize and compress context |
-| `/history` | View conversation history |
-| `Ctrl+L` | Clear terminal (keeps context) |
-
-### 5. Conversation Patterns
-
-#### Exploration Pattern
-```bash
-> What is the architecture of this project?
-> How does data flow from frontend to backend?
-> Where are API endpoints defined?
-```
-
-#### Debugging Pattern
-```bash
-> I'm getting this error: [paste error]
-> The error occurs when I try to [action]
-> Here's the relevant code: @path/to/file.ts
-```
-
-#### Implementation Pattern
-```bash
-> I want to add [feature]
-> Here are the requirements: [list]
-> Please follow the patterns in @existing/similar/code.ts
-```
-
-### 6. Advanced Prompting Features
-
-#### Ultrathink - Control Thinking Depth
-
-Include these keywords to control how deeply Claude thinks before responding:
-
-| Keyword | Thinking Budget | Use Case |
-|---------|-----------------|----------|
-| `think` | 4k tokens | Standard tasks |
-| `think hard` | 10k tokens | Complex problems |
-| `ultrathink` | 32k tokens | Architectural decisions |
-
-```bash
-> ultrathink about the best architecture for a real-time chat system
-```
-
-#### Prompt Stashing
-
-Press `Ctrl+S` to stash your current prompt draft, send something else, and it auto-restores later—like git stash for prompts.
-
-#### Prompt Suggestions
-
-After Claude completes a task, grayed-out follow-up suggestions appear:
-- Press `Tab` to edit/accept
-- Press `Enter` to run immediately
-
-### 7. Slash Commands Overview
-
-| Command | Description |
-|---------|-------------|
-| `/help` | List all commands |
-| `/model` | Change or view current model |
-| `/cost` | Show token usage and costs |
-| `/config` | View/modify configuration |
-| `/bug` | Report a bug |
-| `/doctor` | Diagnose common issues |
-| `/context` | View what's consuming your token window |
-| `/plan` | Enter Plan mode |
-| `/vim` | Enable Vim editing mode |
-
-### 8. Vim Editing Mode
-
-Enable Vim-style editing in the terminal with `/vim` command:
-
-**Mode Switching**:
-- `Esc` → Normal mode
-- `i`, `a`, `o` → Insert mode
-
-**Navigation (Normal mode)**:
-| Key | Action |
-|-----|--------|
-| `h`/`j`/`k`/`l` | Left/Down/Up/Right |
-| `w`/`b` | Next/Previous word |
-| `0`/`$` | Start/End of line |
-
-**Editing (Normal mode)**:
-| Key | Action |
-|-----|--------|
-| `x` | Delete character |
-| `dd` | Delete line |
-| `yy` | Yank (copy) line |
-| `p` | Paste |
-| `>>`, `<<` | Indent/Outdent |
+You might think, "But I'm not a developer." Correct—for now. In the AI era, anyone can build their own ideas.
 
 ---
 
-## Resources
+## What is AI Coding?
 
-- [Prompt Engineering Guide](https://docs.anthropic.com/en/docs/prompt-engineering)
-- [Claude Code Documentation](https://docs.anthropic.com/en/docs/claude-code)
+Previously, code had to be written line by line. Memorizing syntax, fixing errors, searching for solutions... learning took years.
+
+Now it's different.
+
+**Tell AI "make this for me" and AI writes the code.**
+
+Clear communication leads to better results. That's why this curriculum exists.
+
+### Example: Creating a Simple Web Page
+
+**Traditional Approach:**
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Page</title>
+    <style>
+        body { font-family: sans-serif; }
+        h1 { color: blue; }
+    </style>
+</head>
+<body>
+    <h1>Hello</h1>
+    <p>My name is John.</p>
+</body>
+</html>
+```
+All of this had to be memorized and written manually.
+
+**AI Coding Approach:**
+```
+"Make a web page with a blue heading that says 'Hello',
+and below it 'My name is John'"
+```
+This instruction produces the code above.
 
 ---
 
-## Checklist
+## What is Vibecoding?
 
-Answer these questions as if in an interview:
+**Vibecoding** is a new way of creating code through conversation with AI.
 
-1. **What makes a prompt "effective" when working with Claude Code?**
-   <details>
-   <summary>Hint</summary>
-   Specificity, context, clear goals, breaking down complexity
-   </details>
+"Vibe" means feeling or atmosphere. Without knowing exact syntax, conveying the "feel" of what you want is enough for AI to understand and implement it.
 
-2. **How do @-mentions work and why are they useful?**
-   <details>
-   <summary>Hint</summary>
-   Direct file references, autocomplete, providing context without pasting code
-   </details>
+### Core Principles of Vibecoding
 
-3. **When should you use `/clear` vs `/compact`?**
-   <details>
-   <summary>Hint</summary>
-   /clear: start fresh. /compact: keep context but reduce token usage
-   </details>
+1. **Express intent**: "Make the number go up when I click the button"
+2. **Iterate through conversation**: "The number is too small. Make it bigger"
+3. **Collaborate**: AI suggests, you choose, AI revises
 
-4. **How does conversation context affect Claude's responses?**
-   <details>
-   <summary>Hint</summary>
-   Multi-turn understanding, building on previous answers, context window limits
-   </details>
-
-5. **What information should you provide when asking Claude to fix a bug?**
-   <details>
-   <summary>Hint</summary>
-   Error message, steps to reproduce, relevant files (@-mention), expected vs actual behavior
-   </details>
+Traditional coding required knowing everything independently. Vibecoding means building with AI as a partner.
 
 ---
 
-## Mini Project
+## What is Claude Code?
 
-### Learning Goals
+**Claude Code** is an AI coding tool made by Anthropic.
 
-Complete these tasks to master this chapter:
+### Difference from Web Chat (ChatGPT, Claude.ai)
 
-- [ ] Ask Claude to explain a project structure and follow up with 3-4 questions that build on each answer
-- [ ] Use @-mentions to reference specific files in your prompts
-- [ ] Practice the debugging pattern: introduce a bug and ask Claude to find it with good context clues
-- [ ] Practice the implementation pattern: rechapter a feature starting broad, then narrow down
-- [ ] Use `/clear` or `/compact` to manage conversation context
+Code can be generated in web chats like ChatGPT or Claude.ai, but there are limitations:
 
-### Try These Prompts
+| Web Chat | Claude Code |
+|----------|-------------|
+| Copy code and paste into files manually | Creates and edits files directly |
+| No local file access | Understands the entire project |
+| Run commands manually | Executes commands on your behalf |
+| Explain context every time | Recognizes current context |
 
-```bash
-> What is the architecture of this project?
-> Look at @src/components/Button.tsx and explain how it works
-> I'm getting this error: [paste error]. The error occurs when I try to [action]
-> Add a new utility function following the pattern in @src/utils/helpers.ts
-```
+**Summary**: Web chat provides the recipe; Claude Code does the cooking.
+
+### What Claude Code Can Do
+
+- Create websites
+- Build apps
+- Automate file organization
+- Process data
+- Modify existing code
+- Find and fix bugs
 
 ---
 
-## Advanced
+## Learning Outcomes
 
-### Context Management Deep Dive
+After completing 20 chapters, you will be able to:
 
-Practice efficiently managing context in long conversations:
+- Create and deploy a **portfolio website**
+- Build **simple apps** (TODO app, games, etc.)
+- Create **automation tools** (file organization, data processing)
+- Build **AI services** (document summarizer, translator)
 
-```bash
-# Check current context status
-/context
+This curriculum teaches not just coding, but **creating with AI**.
 
-# Compress when conversation gets long
-/compact
+---
 
-# Compare token usage before/after compression
-/cost
-```
+## Mindset Before Starting
 
-### Prompt Style Experiment
+### 1. Perfection Is Not Required
+Initial results may be unexpected. Simply try again.
 
-Try requesting the same task in different ways and compare results:
+### 2. Errors Are Normal
+Errors in coding are not failures—they are part of the process. AI fixes errors too.
 
-```bash
-# Style 1: Simple request
-> Add validation to the form
+### 3. Start Small
+Do not attempt something complex from the start. Begin with "Hello World."
 
-# Style 2: Specific request
-> Add email validation to the signup form in @components/SignupForm.tsx
-> Show error message below the field when invalid
+### 4. Ask When Curious
+"What is this?", "Why this approach?" Ask AI and it will explain.
 
-# Style 3: Example-based request
-> Add validation like the one in @components/LoginForm.tsx to SignupForm
-```
+---
 
-**Experiment**: Record which style produces the most accurate results.
+## Next Steps
 
-### @-mention vs Code Pasting
+The next chapter covers Claude Code installation. Instructions are provided for both Mac and Windows.
 
-```bash
-# Method 1: @-mention (recommended)
-> Fix the bug in @src/utils/parser.ts line 45
-
-# Method 2: Direct code pasting
-> Fix this code:
-> function parse(input) { ... }
-
-# When to use which?
-# - @-mention: When you need full file context
-# - Pasting: When you only want to show a specific snippet
-```
+Proceed to [Chapter 02: Installing Claude Code](../Chapter02/README.md).

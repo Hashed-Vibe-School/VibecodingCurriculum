@@ -1,258 +1,294 @@
-# Chapter 04: Git Workflow
+# Chapter 04: Working with Files
 
-[한국어](./README.ko.md) | **English**
+**English** | [한국어](./README.ko.md)
 
-## Prerequisites
+## What You'll Learn
 
-Before starting this chapter, make sure you can:
-- [ ] Use basic Git commands (add, commit, push, pull)
-- [ ] Understand branches and merging
-- [ ] Make code edits with Claude Code
-
----
-
-## Introduction
-
-Git is the backbone of modern development workflows. Claude Code integrates deeply with Git, helping you write better commit messages, create pull requests, and even review code changes. This chapter teaches you to leverage Claude for a streamlined Git workflow.
-
-### Why Claude + Git?
-
-- **Better Commits**: Claude analyzes changes and writes meaningful messages
-- **PR Creation**: Automated, well-structured pull requests
-- **Code Review**: AI-assisted review of changes
-- **Conflict Resolution**: Help understanding and resolving merge conflicts
+- Referencing files with Claude (@-mention)
+- File creation and modification
+- Processing multiple files simultaneously
 
 ---
 
-## Topics
+## Referencing Files with @
 
-### 1. Understanding Claude's Git Integration
+In Claude Code, `@` references files.
 
-Claude Code can:
-- Read git status, diff, and log
-- Stage and commit changes
-- Create and manage branches
-- Generate pull requests (via `gh` CLI)
-- Never pushes without explicit permission
+### Basic Usage
 
-### 2. Commit Workflow
-
-#### Let Claude Write Commit Messages
-
-```bash
-> Commit these changes with an appropriate message
+```
+> @index.html Explain this file
 ```
 
-Claude will:
-1. Run `git status` to see changes
-2. Run `git diff` to understand what changed
-3. Check `git log` for commit style
-4. Write a commit message following conventions
-
-#### Commit Message Format
-
-Claude follows this format by default:
 ```
-type: concise description
-
-Longer explanation if needed.
-
-Co-Authored-By: Claude <noreply@anthropic.com>
+> @src/app.js Find bugs in this code
 ```
 
-**Types**: feat, fix, docs, style, refactor, test, chore
-
-### 3. Pull Request Creation
-
-Ask Claude to create a PR:
-
-```bash
-> Create a pull request for these changes
+```
+> @package.json List the libraries used here
 ```
 
-Claude will:
-1. Check if branch is pushed
-2. Analyze all commits on the branch
-3. Generate PR title and description
-4. Use `gh pr create` to submit
+### Auto-complete
 
-**PR Format**:
-```markdown
+Typing `@` followed by a filename displays a list automatically. Use arrows to select and press Enter.
+
+### Folder References
+
+```
+> @src/ Explain this folder structure
+```
+
+```
+> @components/ What do these files do?
+```
+
+---
+
+## File Creation
+
+Request file creation from Claude.
+
+### Examples
+
+```
+> Create a file called hello.txt. Write "Hello World" inside.
+```
+
+```
+> Create an index.html file. Make it a simple web page.
+```
+
+### Approval Process
+
+In Normal mode, Claude requests confirmation before creating files:
+
+```
+Claude wants to create hello.txt
+---
+Hello World
+---
+[Allow] [Deny]
+```
+
+Selecting `Allow` creates the file.
+
+### Creating with Folders
+
+```
+> Create src/components/Button.js file. Make it a React button component.
+```
+
+If the folder does not exist, Claude creates it as well.
+
+---
+
+## File Modification
+
+Existing files can be modified.
+
+### Examples
+
+```
+> In @index.html, change the title to "My Website"
+```
+
+```
+> Add a console.log to @app.js
+```
+
+### Reviewing Changes
+
+Claude displays changes before editing:
+
+```diff
+- <h1>Hello World</h1>
++ <h1>My Website</h1>
+```
+
+Red (-) indicates removal, green (+) indicates addition.
+
+---
+
+## Viewing File Contents
+
+```
+> @config.json Show me the contents
+```
+
+```
+> Read @README.md
+```
+
+Claude reads and displays file contents. For long files, important sections may be summarized.
+
+---
+
+## Processing Multiple Files
+
+### Referencing Multiple Files
+
+```
+> Look at @index.html and @style.css and check if styles are applied correctly
+```
+
+```
+> Compare @src/api.js and @src/utils.js and find duplicate code
+```
+
+### Finding Files by Pattern
+
+```
+> Find all .js files in the src folder
+```
+
+```
+> Show me all test files
+```
+
+---
+
+## Special Prefixes
+
+Beyond `@`, other useful prefixes exist.
+
+| Prefix | Function | Example |
+|--------|----------|---------|
+| `@` | Reference file/folder | `@src/app.js` |
+| `!` | Run command and show result | `!ls` |
+| `#` | Save to Claude's memory | `# Always respond in English` |
+
+### ! Examples
+
+```
+> !ls
+```
+Displays the current folder's file list; Claude recognizes the content.
+
+```
+> !cat package.json
+```
+Outputs file contents to terminal; Claude recognizes the content.
+
+### # Examples
+
+```
+> # This project uses TypeScript
+```
+Claude remembers this rule and asks where to save it.
+
+---
+
+## Practice
+
+### 1. File Creation
+
+```
+> Create my-first-page.html.
+> Title should be "My First Web Page", put a self-introduction in the body.
+```
+
+### 2. File Modification
+
+```
+> @my-first-page.html Change the background color to sky blue
+```
+
+### 3. Multiple File Creation
+
+```
+> Create a my-project folder and make index.html, style.css, script.js inside.
+> Make it a simple "Hello World" web page.
+```
+
+### 4. File Comparison
+
+```
+> Compare the structure of @index.html and @about.html
+```
+
+---
+
+## Common Mistakes
+
+### File Not Found
+
+```
+> @nonexistent.txt Show me
+```
+Verify the filename is correct. Using auto-complete reduces errors.
+
+### Incorrect Path
+
+```
+> @app.js Show me
+```
+The file may be in another folder. Try including the path: `@src/app.js`.
+
+### Approval Not Given
+
+If a file was not created, verify `Allow` was selected on the approval request.
+
+---
+
+## Mini Project: Personal Introduction Page
+
+Create a personal introduction page using concepts from this chapter.
+
+### Goals
+
+- Learn HTML/CSS basics
+- Practice file creation and modification
+
+### Creation
+
+```
+> Create a personal introduction page.
+> - Name and profile picture placeholder
+> - Short introduction paragraph
+> - List of favorite things
+> - Applied styling
+```
+
+### Improvement
+
+```
+> Change the background to pastel colors
+```
+Practice CSS color systems (`hex`, `rgb`, `hsl`)
+
+```
+> Make the fonts more elegant
+```
+Understand web fonts and `font-family` stacks
+
+```
+> Add hover effects that change colors
+```
+CSS pseudo-classes for interaction
+
+### Challenge
+
+```
+> Make a dark mode version too
+```
+CSS variable-based theming - essential for modern web
+
+```
+> Split into multiple pages (index.html, about.html, contact.html)
+```
+Multi-page architecture and navigation design
+
+---
+
 ## Summary
-- Bullet points of changes
 
-## Test plan
-- [ ] How to verify the changes
+Covered in this chapter:
+- [x] Referencing files with `@`
+- [x] File creation
+- [x] File modification
+- [x] Processing multiple files
+- [x] Special prefixes (`@`, `!`, `#`)
 
-🤖 Generated with Claude Code
-```
+The next chapter covers terminal commands.
 
-### 4. Code Review with Claude
-
-#### Reviewing Your Own Changes
-```bash
-> Review my changes before I commit
-> Are there any issues with the code I modified?
-```
-
-#### Reviewing a PR
-```bash
-> Review PR #123 and summarize the changes
-> Check PR #123 for potential bugs or issues
-```
-
-Claude can:
-- Summarize what changed
-- Identify potential bugs
-- Suggest improvements
-- Check for security issues
-
-### 5. Branch Management
-
-```bash
-> Create a new branch for the login feature
-> What branches exist and what are they for?
-> Merge the feature branch into main
-```
-
-### 6. Handling Merge Conflicts
-
-```bash
-> I have merge conflicts in @file.ts. Help me resolve them.
-> Explain what each side of this conflict represents
-```
-
-Claude can:
-- Explain what each version does
-- Suggest the best resolution
-- Apply the fix
-
-### 7. Git Safety Rules
-
-Claude Code follows strict safety rules:
-
-| Safe | Unsafe (requires explicit permission) |
-|------|--------------------------------------|
-| `git status` | `git push --force` |
-| `git diff` | `git reset --hard` |
-| `git log` | `git push` (any) |
-| `git add` | `git rebase -i` |
-| `git commit` | Modifying git config |
-
----
-
-## Resources
-
-- [Conventional Commits](https://www.conventionalcommits.org/)
-- [GitHub CLI Documentation](https://cli.github.com/manual/)
-- [Git Best Practices](https://git-scm.com/book/en/v2)
-
----
-
-## Checklist
-
-Answer these questions as if in an interview:
-
-1. **How does Claude generate commit messages?**
-   <details>
-   <summary>Hint</summary>
-   Analyzes git status/diff, checks log for style, follows conventional commits
-   </details>
-
-2. **What information should a good PR include?**
-   <details>
-   <summary>Hint</summary>
-   Summary of changes, motivation/context, test plan, related issues
-   </details>
-
-3. **What git operations does Claude refuse to do automatically?**
-   <details>
-   <summary>Hint</summary>
-   Force push, hard reset, push to remote, interactive rebase
-   </details>
-
-4. **How can Claude help with code review?**
-   <details>
-   <summary>Hint</summary>
-   Summarize changes, identify bugs, suggest improvements, check security
-   </details>
-
-5. **How would you use Claude to resolve merge conflicts?**
-   <details>
-   <summary>Hint</summary>
-   Ask to explain each side, suggest resolution, apply the fix
-   </details>
-
----
-
-## Mini Project
-
-### Learning Goals
-
-Complete these tasks to master this chapter:
-
-- [ ] Ask Claude to commit changes and verify the commit message follows conventions
-- [ ] Create a feature branch and make multiple commits with Claude's help
-- [ ] Ask Claude to create a pull request with proper summary and test plan
-- [ ] Use Claude to review changes before committing
-- [ ] Resolve a merge conflict with Claude's assistance
-
-### Try These Prompts
-
-```bash
-> Commit these changes with an appropriate message
-> Create a new branch for the login feature
-> Create a pull request for these changes
-> Review my changes before I commit
-> I have merge conflicts in @file.ts. Help me resolve them
-```
-
----
-
-## Advanced
-
-### Commit Message Template Setup
-
-Add your team's commit conventions to CLAUDE.md:
-
-```markdown
-## Commit Convention
-- Format: type(scope): description
-- Types: feat, fix, docs, style, refactor, test, chore
-- Example: feat(auth): add OAuth2 login support
-- Keep subject line under 50 characters
-```
-
-Then test:
-```bash
-> Commit these changes following our commit convention
-```
-
-### GitHub CLI Integration
-
-Use the `gh` CLI with Claude to manage issues and PRs:
-
-```bash
-# Check issue list and work on one
-> !gh issue list
-> Let's work on issue #42. Read the issue first, then create a plan.
-
-# Automate PR creation
-> Create a PR for this branch. Use the issue #42 description as context.
-```
-
-### Complex PR Review Practice
-
-Find a PR with 10+ changed files and review it:
-
-```bash
-# Get PR changes
-> !gh pr diff 123
-
-# Request systematic review
-> Review this PR focusing on:
-> 1. Breaking changes
-> 2. Security issues
-> 3. Performance concerns
-> Organize feedback by severity.
-```
+Proceed to [Chapter 05: Terminal Commands](../Chapter05/README.md).

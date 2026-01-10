@@ -1,259 +1,294 @@
-# Chapter 04: Git 워크플로우
+# Chapter 04: 파일 읽고 쓰기
 
-**한국어** | [English](./README.md)
+[English](./README.md) | **한국어**
 
-## Prerequisites
+## 이 챕터에서 배우는 것
 
-이 Chapter를 시작하기 전에 다음을 할 수 있어야 합니다:
-- [ ] 기본 Git 명령어 사용 (add, commit, push, pull)
-- [ ] 브랜치와 머지 이해
-- [ ] Claude Code로 코드 편집
-
----
-
-## Introduction
-
-Git은 현대 개발 워크플로우의 근간입니다. Claude Code는 Git과 깊이 통합되어 더 나은 커밋 메시지 작성, PR 생성, 코드 변경 리뷰를 도와줍니다. 이 Chapter에서는 간소화된 Git 워크플로우를 위해 Claude를 활용하는 방법을 배웁니다.
-
-### 왜 Claude + Git인가?
-
-- **더 나은 커밋**: Claude가 변경 사항을 분석하고 의미 있는 메시지 작성
-- **PR 생성**: 자동화된, 잘 구조화된 풀 리퀘스트
-- **코드 리뷰**: AI 지원 변경 사항 검토
-- **충돌 해결**: 머지 충돌 이해 및 해결 지원
+- Claude에게 파일 참조하는 법 (@-mention)
+- 파일 생성 및 수정
+- 여러 파일 동시 처리
 
 ---
 
-## Topics
+## @로 파일 참조하기
 
-### 1. Claude의 Git 통합 이해
+Claude Code에서 `@`를 사용하면 파일을 참조할 수 있습니다.
 
-Claude Code는 다음을 할 수 있습니다:
-- git status, diff, log 읽기
-- 변경 사항 스테이징 및 커밋
-- 브랜치 생성 및 관리
-- 풀 리퀘스트 생성 (`gh` CLI 사용)
-- 명시적 허가 없이 절대 push 하지 않음
+### 기본 사용법
 
-### 2. 커밋 워크플로우
-
-#### Claude가 커밋 메시지 작성하게 하기
-
-```bash
-> Commit these changes with an appropriate message
+```
+> @index.html 이 파일 설명해줘
 ```
 
-Claude는:
-1. `git status`로 변경 사항 확인
-2. `git diff`로 무엇이 변경되었는지 파악
-3. `git log`로 커밋 스타일 확인
-4. 규칙을 따르는 커밋 메시지 작성
-
-#### 커밋 메시지 형식
-
-Claude는 기본적으로 이 형식을 따릅니다:
 ```
-type: 간결한 설명
-
-필요한 경우 더 긴 설명.
-
-Co-Authored-By: Claude <noreply@anthropic.com>
+> @src/app.js 이 코드에서 버그 찾아줘
 ```
 
-**Types**: feat, fix, docs, style, refactor, test, chore
-
-### 3. 풀 리퀘스트 생성
-
-Claude에게 PR 생성 요청:
-
-```bash
-> Create a pull request for these changes
+```
+> @package.json 여기서 사용하는 라이브러리 목록 알려줘
 ```
 
-Claude는:
-1. 브랜치가 push 되었는지 확인
-2. 브랜치의 모든 커밋 분석
-3. PR 제목과 설명 생성
-4. `gh pr create`로 제출
+### 자동완성
 
-**PR 형식**:
-```markdown
-## Summary
-- 변경 사항 bullet points
+`@`를 입력하고 파일 이름을 입력하면 자동으로 목록이 나타납니다. 화살표로 선택하고 Enter를 누릅니다.
 
-## Test plan
-- [ ] 변경 사항 검증 방법
+### 폴더 참조
 
-🤖 Generated with Claude Code
+```
+> @src/ 이 폴더 구조 설명해줘
 ```
 
-### 4. Claude로 코드 리뷰
-
-#### 자신의 변경 사항 리뷰
-```bash
-> Review my changes before I commit
-> Are there any issues with the code I modified?
 ```
-
-#### PR 리뷰
-```bash
-> Review PR #123 and summarize the changes
-> Check PR #123 for potential bugs or issues
-```
-
-Claude는:
-- 변경 사항 요약
-- 잠재적 버그 식별
-- 개선점 제안
-- 보안 문제 확인
-
-### 5. 브랜치 관리
-
-```bash
-> Create a new branch for the login feature
-> What branches exist and what are they for?
-> Merge the feature branch into main
-```
-
-### 6. 머지 충돌 처리
-
-```bash
-> I have merge conflicts in @file.ts. Help me resolve them.
-> Explain what each side of this conflict represents
-```
-
-Claude는:
-- 각 버전이 무엇을 하는지 설명
-- 최선의 해결책 제안
-- 수정 적용
-
-### 7. Git 안전 규칙
-
-Claude Code는 엄격한 안전 규칙을 따릅니다:
-
-| 안전 | 위험 (명시적 허가 필요) |
-|------|----------------------|
-| `git status` | `git push --force` |
-| `git diff` | `git reset --hard` |
-| `git log` | `git push` (전부) |
-| `git add` | `git rebase -i` |
-| `git commit` | git config 수정 |
-
----
-
-## Resources
-
-- [Claude Code 공식 문서](https://code.claude.com/docs)
-- [Git Workflow Guide](https://code.claude.com/docs/en/common-tasks#working-with-git)
-- [Conventional Commits](https://www.conventionalcommits.org/)
-- [GitHub CLI 문서](https://cli.github.com/manual/)
-
----
-
-## Checklist
-
-면접에서 답변하듯이 다음 질문에 답해보세요:
-
-1. **Claude는 커밋 메시지를 어떻게 생성하나요?**
-   <details>
-   <summary>힌트</summary>
-   git status/diff 분석, log에서 스타일 확인, conventional commits 따르기
-   </details>
-
-2. **좋은 PR에는 어떤 정보가 포함되어야 하나요?**
-   <details>
-   <summary>힌트</summary>
-   변경 사항 요약, 동기/컨텍스트, 테스트 계획, 관련 이슈
-   </details>
-
-3. **Claude가 자동으로 하지 않는 git 작업은?**
-   <details>
-   <summary>힌트</summary>
-   Force push, hard reset, 원격에 push, interactive rebase
-   </details>
-
-4. **Claude가 코드 리뷰에 어떻게 도움이 되나요?**
-   <details>
-   <summary>힌트</summary>
-   변경 사항 요약, 버그 식별, 개선점 제안, 보안 확인
-   </details>
-
-5. **머지 충돌 해결에 Claude를 어떻게 사용하나요?**
-   <details>
-   <summary>힌트</summary>
-   각 측 설명 요청, 해결책 제안, 수정 적용
-   </details>
-
----
-
-## Mini Project
-
-### Learning Goals
-
-이 Chapter를 마스터하기 위해 다음 작업을 완료하세요:
-
-- [ ] Claude에게 변경 사항을 커밋하도록 요청하고 커밋 메시지가 규칙을 따르는지 확인
-- [ ] 기능 브랜치를 생성하고 Claude의 도움으로 여러 커밋 수행
-- [ ] Claude에게 적절한 요약과 테스트 계획이 있는 풀 리퀘스트 생성 요청
-- [ ] 커밋하기 전에 Claude를 사용하여 변경 사항 검토
-- [ ] Claude의 도움으로 머지 충돌 해결
-
-### Try These Prompts
-
-```bash
-> Commit these changes with an appropriate message
-> Create a new branch for the login feature
-> Create a pull request for these changes
-> Review my changes before I commit
-> I have merge conflicts in @file.ts. Help me resolve them
+> @components/ 여기 있는 파일들 뭐하는 거야?
 ```
 
 ---
 
-## Advanced
+## 파일 생성
 
-### 커밋 메시지 템플릿 설정
+Claude에게 파일을 생성해달라고 요청합니다.
 
-CLAUDE.md에 팀의 커밋 규칙을 추가하세요:
+### 예시
 
-```markdown
-## Commit Convention
-- Format: type(scope): description
-- Types: feat, fix, docs, style, refactor, test, chore
-- Example: feat(auth): add OAuth2 login support
-- Keep subject line under 50 characters
+```
+> hello.txt 파일 만들어줘. 안에 "안녕하세요"라고 써줘.
 ```
 
-그 다음 테스트:
-```bash
-> Commit these changes following our commit convention
+```
+> index.html 파일 만들어줘. 간단한 웹페이지로.
 ```
 
-### GitHub CLI 연동
+### 승인 절차
 
-`gh` CLI로 이슈와 PR을 Claude와 함께 관리하세요:
+Normal 모드에서는 Claude가 파일을 생성하기 전에 확인을 요청합니다:
 
-```bash
-# 이슈 목록 확인 후 작업
-> !gh issue list
-> Let's work on issue #42. Read the issue first, then create a plan.
-
-# PR 생성 자동화
-> Create a PR for this branch. Use the issue #42 description as context.
+```
+Claude wants to create hello.txt
+---
+안녕하세요
+---
+[Allow] [Deny]
 ```
 
-### 복잡한 PR 리뷰 연습
+`Allow`를 선택하면 파일이 생성됩니다.
 
-10개 이상 파일이 변경된 PR을 찾아 리뷰해보세요:
+### 폴더와 함께 생성
 
-```bash
-# PR 변경사항 가져오기
-> !gh pr diff 123
-
-# 체계적 리뷰 요청
-> Review this PR focusing on:
-> 1. Breaking changes
-> 2. Security issues
-> 3. Performance concerns
-> Organize feedback by severity.
 ```
+> src/components/Button.js 파일 만들어줘. React 버튼 컴포넌트로.
+```
+
+폴더가 없으면 Claude가 폴더도 함께 생성합니다.
+
+---
+
+## 파일 수정
+
+기존 파일을 수정할 수 있습니다.
+
+### 예시
+
+```
+> @index.html에서 제목을 "내 웹사이트"로 바꿔줘
+```
+
+```
+> @app.js에 console.log 추가해줘
+```
+
+### 수정 내용 확인
+
+Claude가 수정하기 전에 변경 내용을 보여줍니다:
+
+```diff
+- <h1>Hello World</h1>
++ <h1>내 웹사이트</h1>
+```
+
+빨간색(-)은 삭제되는 부분, 초록색(+)은 추가되는 부분입니다.
+
+---
+
+## 파일 내용 보기
+
+```
+> @config.json 내용 보여줘
+```
+
+```
+> @README.md 읽어줘
+```
+
+Claude가 파일 내용을 읽고 표시합니다. 긴 파일은 중요한 부분만 요약해서 표시하기도 합니다.
+
+---
+
+## 여러 파일 처리
+
+### 여러 파일 동시 참조
+
+```
+> @index.html과 @style.css 보고 스타일이 제대로 적용되는지 확인해줘
+```
+
+```
+> @src/api.js랑 @src/utils.js 비교해서 중복 코드 찾아줘
+```
+
+### 파일 패턴으로 검색
+
+```
+> src 폴더에서 .js 파일 다 찾아줘
+```
+
+```
+> 테스트 파일들 목록 보여줘
+```
+
+---
+
+## 특수 접두사
+
+`@` 외에도 유용한 접두사들이 있습니다.
+
+| 접두사 | 기능 | 예시 |
+|--------|------|------|
+| `@` | 파일/폴더 참조 | `@src/app.js` |
+| `!` | 명령어 실행 후 결과 표시 | `!ls` |
+| `#` | Claude 메모리에 저장 | `# 항상 한국어로 대답해` |
+
+### ! 사용 예시
+
+```
+> !ls
+```
+현재 폴더의 파일 목록을 표시하고, Claude가 그 내용을 인식합니다.
+
+```
+> !cat package.json
+```
+파일 내용을 터미널에 출력하고, Claude가 그 내용을 인식합니다.
+
+### # 사용 예시
+
+```
+> # 이 프로젝트는 TypeScript를 사용해
+```
+Claude가 이 규칙을 기억합니다. 저장 위치를 확인합니다.
+
+---
+
+## 실습
+
+### 1. 파일 생성
+
+```
+> my-first-page.html 만들어줘.
+> 제목은 "나의 첫 웹페이지", 본문에는 자기소개 넣어줘.
+```
+
+### 2. 파일 수정
+
+```
+> @my-first-page.html 배경색을 하늘색으로 바꿔줘
+```
+
+### 3. 여러 파일 생성
+
+```
+> my-project 폴더 만들고 그 안에 index.html, style.css, script.js 만들어줘.
+> 간단한 "Hello World" 웹페이지로.
+```
+
+### 4. 파일 비교
+
+```
+> @index.html이랑 @about.html 구조 비교해줘
+```
+
+---
+
+## 미니 프로젝트: 자기소개 웹페이지 ⭐
+
+이번 챕터에서 학습한 내용으로 자기소개 페이지를 만들어봅니다.
+
+### 목표
+
+- HTML/CSS 기초 익히기
+- 파일 생성과 수정 연습
+
+### 생성
+
+```
+> 자기소개 페이지 만들어줘.
+> - 이름과 프로필 사진 자리
+> - 간단한 소개 문단
+> - 좋아하는 것 목록
+> - 예쁜 스타일 적용
+```
+
+### 개선
+
+```
+> 배경색을 파스텔톤으로 바꿔줘
+```
+→ CSS 색상 시스템 (`hex`, `rgb`, `hsl`) 익히기
+
+```
+> 글씨체를 더 예쁘게 바꿔줘
+```
+→ 웹폰트와 `font-family` 스택 이해
+
+```
+> 호버하면 색이 바뀌는 효과 추가해줘
+```
+→ CSS 가상 클래스로 인터랙션 구현
+
+### 도전 과제
+
+```
+> 다크 모드 버전도 만들어줘
+```
+→ CSS 변수 기반 테마 시스템 - 현대 웹의 필수 기능
+
+```
+> 여러 페이지로 나눠줘 (index.html, about.html, contact.html)
+```
+→ 멀티 페이지 구조와 내비게이션 설계
+
+---
+
+## 자주 하는 실수
+
+### 파일이 없다고 할 때
+
+```
+> @없는파일.txt 보여줘
+```
+→ 파일 이름을 정확히 입력했는지 확인하세요. 자동완성을 사용하면 실수를 줄일 수 있습니다.
+
+### 경로가 틀렸을 때
+
+```
+> @app.js 보여줘
+```
+→ 파일이 다른 폴더에 있을 수 있습니다. `@src/app.js`처럼 경로를 포함해보세요.
+
+### 승인을 안 했을 때
+
+파일이 생성되지 않았다면 승인 요청에서 `Allow`를 선택했는지 확인하세요.
+
+---
+
+## 정리
+
+이번 챕터에서 학습한 것:
+- [x] `@`로 파일 참조하기
+- [x] 파일 생성
+- [x] 파일 수정
+- [x] 여러 파일 처리
+- [x] 특수 접두사 (`@`, `!`, `#`)
+
+다음 챕터에서는 터미널 명령어를 다루는 방법을 학습합니다.
+
+[Chapter 05: 터미널 명령어](../Chapter05/README.ko.md)로 진행하세요.

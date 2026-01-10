@@ -1,336 +1,268 @@
-# Chapter 05: 프로젝트 메모리
+# Chapter 05: 터미널 명령어
 
-**한국어** | [English](./README.md)
+[English](./README.md) | **한국어**
 
-## Prerequisites
+## 이 챕터에서 배우는 것
 
-이 Chapter를 시작하기 전에 다음을 할 수 있어야 합니다:
-- [ ] Claude로 코드베이스 탐색 및 탐구
-- [ ] 코드 편집 및 커밋
-- [ ] LLM 대화에서 컨텍스트 개념 이해
-
----
-
-## Introduction
-
-모든 프로젝트에는 부족의 지식이 있습니다—코딩 규칙, 아키텍처 결정, 팀 선호도—새 팀원(그리고 AI 어시스턴트)이 배워야 하는 것들입니다. Claude Code의 프로젝트 메모리 시스템을 사용하면 이 지식을 캡처하여 Claude가 처음부터 프로젝트를 이해할 수 있습니다.
-
-### 왜 프로젝트 메모리가 중요한가
-
-메모리 없이는 매 세션마다 같은 지시를 반복해야 합니다:
-- "우리는 스타일링에 Tailwind CSS를 사용해"
-- "항상 TypeScript strict 모드 사용해"
-- "기존 파일 구조를 따라"
-
-CLAUDE.md가 있으면 Claude가 이를 자동으로 알게 됩니다.
+- Claude에게 명령어 실행시키는 법
+- 자주 사용하는 터미널 명령어
+- 프로젝트 실행 및 테스트
 
 ---
 
-## Topics
+## Claude에게 명령어 실행시키기
 
-### 1. CLAUDE.md 개요
+Claude Code는 터미널 명령어를 대신 실행할 수 있습니다.
 
-CLAUDE.md는 Claude가 모든 세션 시작 시 읽는 특별한 마크다운 파일입니다.
-
-**위치** (우선순위 순서):
-1. `./CLAUDE.md` - 프로젝트 루트 (최고 우선순위)
-2. `./.claude/CLAUDE.md` - 숨겨진 claude 폴더
-3. `~/.claude/CLAUDE.md` - 사용자 전역 (최저 우선순위)
-
-### 2. 무엇을 포함할까
-
-#### 프로젝트 아키텍처
-```markdown
-# Project Overview
-
-## Tech Stack
-- Frontend: React 18 + TypeScript
-- Backend: Node.js + Express
-- Database: PostgreSQL with Prisma ORM
-- Styling: Tailwind CSS
-
-## Directory Structure
-- `src/components/` - React 컴포넌트
-- `src/pages/` - 페이지 컴포넌트 (Next.js 라우팅)
-- `src/api/` - API 라우트 핸들러
-- `src/lib/` - 유틸리티 함수
-```
-
-#### 코딩 규칙
-```markdown
-## Coding Standards
-
-### TypeScript
-- strict 모드 사용
-- 객체에는 type보다 interface 선호
-- 함수에는 항상 반환 타입 정의
-
-### Naming
-- 컴포넌트: PascalCase (UserProfile.tsx)
-- 유틸리티: camelCase (formatDate.ts)
-- 상수: UPPER_SNAKE_CASE
-
-### File Organization
-- 파일당 하나의 컴포넌트
-- 소스 파일과 테스트 파일 같이 배치
-- 타입이 아닌 기능별로 그룹화
-```
-
-#### 팀 선호도
-```markdown
-## Preferences
-
-- 클래스 컴포넌트 말고 hooks가 있는 함수형 컴포넌트 사용
-- default export보다 named export 선호
-- public API에만 JSDoc 주석 작성
-- 컴포넌트는 200줄 미만 유지
-```
-
-#### 금지 패턴
-```markdown
-## Do NOT
-
-- TypeScript에서 `any` 타입 사용 금지
-- .env 파일 커밋 금지
-- 인라인 스타일 사용 금지 (Tailwind 사용)
-- 논의 없이 새 의존성 추가 금지
-```
-
-### 3. 효과적인 CLAUDE.md 구조
-
-```markdown
-# Project Name
-
-## Quick Reference
-[Claude가 알아야 할 가장 중요한 것들]
-
-## Architecture
-[고수준 시스템 설계]
-
-## Conventions
-[코딩 표준 및 패턴]
-
-## Common Tasks
-[실행, 테스트, 배포 방법]
-
-## Gotchas
-[혼란스러울 수 있는 것들]
-```
-
-### 4. 팀 vs 개인 메모리
-
-| 파일 | 범위 | 사용 사례 |
-|------|------|----------|
-| `./CLAUDE.md` | 프로젝트 (git 추적) | 팀 전체 표준 |
-| `~/.claude/CLAUDE.md` | 개인 | 개인 선호도 |
-
-**개인 선호도 예시**:
-```markdown
-# My Preferences
-
-- 상세한 설명 선호
-- 코드 주석에 항상 예시 포함
-- Vim 키바인딩 사용
-```
-
-### 5. 메모리 모범 사례
-
-> **Pro Tip**: "CLAUDE.md를 git에 공유하고, Claude가 잘못할 때마다 업데이트하세요. 이는 시간이 지남에 따라 Claude의 동작을 개선하는 피드백 루프를 만듭니다."
-
-#### 간결하게 유지
-- Claude가 매 세션마다 읽음
-- 긴 파일은 토큰 낭비
-- 인라인 대신 상세 문서 링크
-
-#### 정기적으로 업데이트
-- 규칙이 진화하면 새로 추가
-- 오래된 정보 제거
-- 분기별 검토
-- **Claude가 실수하면 업데이트** - 반복되는 오류를 방지하는 규칙 추가
-
-#### 구체적으로
-```markdown
-# 나쁜 예
-좋은 변수 이름 사용
-
-# 좋은 예
-설명적인 변수 이름 사용:
-- `userData` not `d`
-- `isLoading` not `loading`
-- `handleSubmit` not `submit`
-```
-
-### 6. 메모리 계층 구조
-
-Claude는 여러 소스의 메모리를 결합합니다:
+### 예시
 
 ```
-1. 프로젝트 CLAUDE.md (특정 규칙)
-      ↓
-2. 상위 디렉토리 CLAUDE.md (상속)
-      ↓
-3. 사용자 CLAUDE.md (개인 선호도)
+> 이 폴더에 있는 파일 목록 보여줘
 ```
 
-### 7. Rules 디렉토리
-
-`.claude/rules/`에 특정 규칙을 별도 파일로 관리할 수 있습니다:
+Claude가 `ls` 명령어를 실행해서 표시합니다.
 
 ```
-.claude/rules/
-├── security.md     # 보안 규칙
-├── testing.md      # 테스트 규칙
-└── api-design.md   # API 설계 규칙
+> node 버전 확인해줘
 ```
 
-**예시** (`.claude/rules/security.md`):
-```markdown
-# 보안 규칙
+Claude가 `node --version`을 실행합니다.
 
-항상 확인할 것:
-- 입력 살균 (sanitization)
-- SQL 인젝션 방지
-- XSS 취약점 확인
-- 민감한 데이터 로깅 금지
+### 승인 절차
+
+명령어를 실행하기 전에 Claude가 확인을 요청합니다:
+
+```
+Claude wants to run: ls -la
+[Allow] [Deny]
 ```
 
-Rules는 자동으로 로드되며 모든 대화에 적용됩니다.
-
-### 8. 응답 언어 설정
-
-Claude의 응답 언어를 설정 파일에서 제어할 수 있습니다:
-
-```json
-// .claude/settings.json
-{
-  "language": "korean"
-}
-```
-
-지원 언어: `korean`, `japanese`, `english`, `chinese`, `spanish` 등
+`Allow`를 선택하면 실행됩니다.
 
 ---
 
-## Resources
+## 알아두면 좋은 터미널 명령어
 
-- [Claude Code 공식 문서](https://code.claude.com/docs)
-- [Memory & Project Context](https://code.claude.com/docs/en/memory)
-- [Settings Reference](https://code.claude.com/docs/en/settings)
-- [마크다운 가이드](https://www.markdownguide.org/)
+직접 외울 필요는 없습니다. Claude가 대신 처리합니다. 하지만 알아두면 대화할 때 편리합니다.
 
----
+### 파일/폴더 관련
 
-## Checklist
+| 명령어 | 기능 | 예시 |
+|--------|------|------|
+| `ls` | 파일 목록 보기 | `ls`, `ls -la` |
+| `cd` | 폴더 이동 | `cd src` |
+| `mkdir` | 폴더 생성 | `mkdir new-folder` |
+| `rm` | 파일 삭제 | `rm file.txt` |
+| `cp` | 파일 복사 | `cp a.txt b.txt` |
+| `mv` | 파일 이동/이름 변경 | `mv old.txt new.txt` |
 
-면접에서 답변하듯이 다음 질문에 답해보세요:
+### 프로젝트 관련
 
-1. **CLAUDE.md란 무엇이고 어디에 배치해야 하나요?**
-   <details>
-   <summary>힌트</summary>
-   프로젝트 메모리 파일, 루트, .claude 폴더, 또는 홈 디렉토리에 배치 가능
-   </details>
+| 명령어 | 기능 | 예시 |
+|--------|------|------|
+| `npm install` | 패키지 설치 | `npm install` |
+| `npm run dev` | 개발 서버 실행 | `npm run dev` |
+| `npm run build` | 빌드 | `npm run build` |
+| `npm test` | 테스트 실행 | `npm test` |
 
-2. **어떤 유형의 정보를 포함해야 하나요?**
-   <details>
-   <summary>힌트</summary>
-   기술 스택, 규칙, 선호도, 금지 패턴, 일반적인 작업
-   </details>
+### 시스템 관련
 
-3. **메모리 계층 구조는 어떻게 작동하나요?**
-   <details>
-   <summary>힌트</summary>
-   프로젝트 > 상위 디렉토리 > 사용자 전역, 더 구체적인 것이 일반적인 것을 오버라이드
-   </details>
-
-4. **프로젝트 메모리와 개인 메모리의 차이는?**
-   <details>
-   <summary>힌트</summary>
-   프로젝트: git 추적, 팀 전체. 개인: 개인 선호도, 공유 안 함.
-   </details>
-
-5. **CLAUDE.md에서 상세함과 간결함의 균형을 어떻게 맞추나요?**
-   <details>
-   <summary>힌트</summary>
-   토큰 절약을 위해 간결하게, 상세 내용은 문서 링크, 정기 업데이트
-   </details>
+| 명령어 | 기능 | 예시 |
+|--------|------|------|
+| `pwd` | 현재 위치 확인 | `pwd` |
+| `cat` | 파일 내용 보기 | `cat package.json` |
+| `which` | 프로그램 위치 확인 | `which node` |
 
 ---
 
-## Mini Project
+## 프로젝트 실행
 
-### Learning Goals
+Claude에게 프로젝트를 실행하라고 요청할 수 있습니다.
 
-이 Chapter를 마스터하기 위해 다음 작업을 완료하세요:
+### 예시
 
-- [ ] 프로젝트 루트에 기술 스택과 디렉토리 구조가 포함된 CLAUDE.md 파일 생성
-- [ ] CLAUDE.md에 최소 5개의 코딩 규칙과 3개의 "하지 마라" 규칙 추가
-- [ ] 새 Claude 세션을 시작하고 Claude가 프로젝트 규칙을 이해하는지 확인
-- [ ] `~/.claude/CLAUDE.md`에 개인 선호도가 포함된 개인 메모리 파일 생성
-- [ ] Claude에게 기능 추가를 요청하고 CLAUDE.md의 규칙을 따르는지 확인
+```
+> 이 프로젝트 어떻게 실행해?
+```
 
-### Try These Prompts
+Claude가 `package.json`을 확인하고 방법을 안내합니다.
 
-```bash
-> Explain this project based on the CLAUDE.md
-> Add a new component following our coding conventions
-> What are the "do not" rules for this project?
-> Show me how to run the tests based on project documentation
+```
+> 개발 서버 켜줘
+```
+
+Claude가 `npm run dev` 같은 명령어를 실행합니다.
+
+```
+> 테스트 돌려줘
+```
+
+Claude가 `npm test`를 실행하고 결과를 표시합니다.
+
+---
+
+## ! 접두사로 바로 실행
+
+`!`를 붙이면 명령어를 바로 실행하고 결과를 Claude에게 전달합니다.
+
+```
+> !npm run build
+```
+
+빌드를 실행하고, 결과(성공/실패)를 Claude가 인식합니다.
+
+```
+> !git status
+```
+
+git 상태를 확인하고, Claude가 그 내용을 인식합니다.
+
+### !와 일반 요청의 차이
+
+| 방식 | 예시 | 차이점 |
+|------|------|--------|
+| 일반 | `npm install 해줘` | Claude가 명령어 결정, 승인 필요 |
+| `!` 접두사 | `!npm install` | 바로 실행, 결과를 Claude가 인식 |
+
+`!`는 실행할 명령어를 정확히 알 때 사용합니다.
+
+---
+
+## 실습: 간단한 프로젝트 만들기
+
+### 1. 폴더 생성
+
+```
+> my-first-project 폴더 만들어줘
+```
+
+### 2. 프로젝트 초기화
+
+```
+> 방금 만든 폴더에서 npm 프로젝트 초기화해줘
+```
+
+Claude가 `npm init -y`를 실행합니다.
+
+### 3. 패키지 설치
+
+```
+> express 설치해줘
+```
+
+Claude가 `npm install express`를 실행합니다.
+
+### 4. 코드 생성
+
+```
+> index.js 만들어줘. 간단한 웹서버로.
+> "Hello World"를 보여주는 서버야.
+```
+
+### 5. 실행
+
+```
+> 서버 실행해줘
+```
+
+Claude가 `node index.js`를 실행합니다.
+
+### 6. 확인
+
+브라우저에서 `http://localhost:3000`을 열어 확인합니다.
+
+---
+
+## 미니 프로젝트: 나만의 API 서버 ⭐
+
+Hello World 서버를 확장해서 간단한 API를 만들어봅니다.
+
+### 목표
+
+- Express 서버 이해
+- API 엔드포인트 생성
+
+### 생성
+
+```
+> 방금 만든 서버에 API 추가해줘.
+> GET /api/hello 하면 { "message": "안녕하세요!" } 응답하는.
+```
+
+### 확장
+
+```
+> GET /api/time 하면 현재 시간 알려주는 API 추가해줘
+
+> GET /api/random 하면 1-100 사이 랜덤 숫자 주는 API 추가해줘
+
+> GET /api/greeting?name=홍길동 하면 "안녕하세요, 홍길동님!" 응답하게 해줘
+```
+
+### 도전 과제
+
+```
+> POST /api/todos로 할 일 추가하고
+> GET /api/todos로 목록 가져오는 API 만들어줘
+> (메모리에 저장해도 돼)
 ```
 
 ---
 
-## Advanced
+## 에러 발생 시
 
-### 모노레포용 CLAUDE.md 구조
-
-모노레포에서는 계층적 CLAUDE.md를 활용하세요:
+명령어 실행 중 에러가 발생하면, Claude에게 그대로 전달합니다.
 
 ```
-monorepo/
-├── CLAUDE.md              # 공통 규칙
-├── packages/
-│   ├── frontend/
-│   │   └── CLAUDE.md      # React 특화 규칙
-│   └── backend/
-│       └── CLAUDE.md      # Node.js 특화 규칙
+> 방금 에러 났는데, 왜 그런거야?
 ```
 
-루트 CLAUDE.md 예시:
-```markdown
-# Monorepo Rules
-- All packages use TypeScript strict mode
-- Run `bun test` before committing
-- See package-specific CLAUDE.md for details
+```
+> 에러 고쳐줘
 ```
 
-### CLAUDE.md 효과 실험
+Claude가 에러 메시지를 분석하고 해결책을 제시합니다.
 
-같은 작업을 CLAUDE.md 유무로 비교해보세요:
+### 자주 발생하는 에러
 
-```bash
-# 1. CLAUDE.md 없이 시작
-mv CLAUDE.md CLAUDE.md.bak
-claude
-> Create a new API endpoint for /users
+**"command not found"**
+→ 해당 프로그램이 설치되지 않음. Claude에게 설치를 요청하세요.
 
-# 2. CLAUDE.md 복원 후 다시 시도
-mv CLAUDE.md.bak CLAUDE.md
-claude
-> Create a new API endpoint for /users
+**"permission denied"**
+→ 권한 문제. `sudo`가 필요할 수 있습니다.
 
-# 차이점 비교: 코딩 스타일, 에러 핸들링, 파일 위치 등
-```
+**"ENOENT: no such file or directory"**
+→ 파일이나 폴더가 없음. 경로를 확인하세요.
 
-### Claude가 실수할 때 CLAUDE.md 업데이트
+---
 
-Claude가 규칙을 어기면 바로 기록하세요:
+## 위험한 명령어
 
-```bash
-# Claude가 var를 사용했다면
-> # Never use var, always use const or let
+Claude는 위험한 명령어 실행 전에 경고합니다.
 
-# Claude가 any 타입을 썼다면
-> # Avoid TypeScript any type, define proper interfaces
-```
+### 주의가 필요한 명령어
 
-> **Pro Tip**: "Claude의 코드에도 사람의 코드와 같은 기준을 적용하세요." 실수가 발생할 때마다 CLAUDE.md를 업데이트하면, 같은 실수가 반복되지 않습니다.
+| 명령어 | 위험도 | 이유 |
+|--------|--------|------|
+| `rm -rf` | 높음 | 파일을 복구 불가능하게 삭제 |
+| `sudo` | 높음 | 관리자 권한으로 실행 |
+| `chmod 777` | 중간 | 보안 설정 변경 |
+
+Claude가 이런 명령어를 사용하려고 하면 한 번 더 확인하세요.
+
+---
+
+## 정리
+
+이번 챕터에서 학습한 것:
+- [x] Claude에게 명령어 실행시키기
+- [x] 자주 사용하는 터미널 명령어
+- [x] `!` 접두사로 바로 실행
+- [x] 프로젝트 실행
+- [x] 에러 대처법
+
+Part 1 (시작하기)을 완료했습니다.
+
+다음 Part에서는 Claude Code의 핵심 기능들을 더 깊이 학습합니다.
+
+[Chapter 06: 효과적인 프롬프팅](../Chapter06/README.ko.md)으로 진행하세요.

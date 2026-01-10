@@ -1,332 +1,288 @@
-# Chapter 07: Hooks
+# Chapter 07: Exploring Code
 
-[한국어](./README.ko.md) | **English**
+**English** | [한국어](./README.ko.md)
 
-## Prerequisites
+## What You Will Learn
 
-Before starting this chapter, ensure you:
-- [ ] Have completed Chapter 00-06
-- [ ] Understand JSON configuration files
-- [ ] Are familiar with shell scripting basics
-
----
-
-## Introduction
-
-Hooks allow you to run custom shell commands automatically in response to Claude Code events. They're like Git hooks, but for your AI assistant—enabling validation, formatting, logging, and custom workflows.
-
-### Why Hooks?
-
-- **Automation**: Auto-format code after edits
-- **Validation**: Check changes before they're applied
-- **Integration**: Connect to external tools and services
-- **Compliance**: Enforce rules automatically
+- Understanding project structure
+- Finding files (Glob)
+- Searching code (Grep)
 
 ---
 
-## Topics
+## Why is Code Exploration Important?
 
-### 1. Hook Events
+When starting a new project, you often wonder "what does this code do?"
 
-Claude Code supports these hook events:
+Claude Code excels at exploring and explaining code. Instead of reading all the code yourself, ask Claude.
 
-| Event | When it fires | Matcher Support |
-|-------|---------------|-----------------|
-| `PreToolUse` | Before tool execution (can block) | Yes |
-| `PostToolUse` | After tool completes | Yes |
-| `PermissionRequest` | On permission dialogs | Yes |
-| `Notification` | When sending notifications | Yes (optional) |
-| `UserPromptSubmit` | Before processing user input | No |
-| `Stop` | When main agent finishes | No |
-| `SubagentStop` | When subagent finishes | No |
-| `PreCompact` | Before context compression | Yes |
-| `SessionStart` | When session begins | Yes |
-| `SessionEnd` | When session ends | No |
+---
 
-### 2. Hook Configuration
+## Understanding Project Structure
 
-Hooks are configured in settings files:
+### Asking About Overall Structure
 
-**Settings file locations**:
-- `~/.claude/settings.json` - User settings
-- `.claude/settings.json` - Project settings
-- `.claude/settings.local.json` - Local project settings (not committed)
-
-**Project hooks** (`.claude/settings.json`):
-```json
-{
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/format.sh",
-            "timeout": 30
-          }
-        ]
-      }
-    ]
-  }
-}
+```
+> Explain this project structure
 ```
 
-**User hooks** (`~/.claude/settings.json`):
-```json
-{
-  "hooks": {
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "echo 'Session started at $(date)' >> ~/.claude/session.log"
-          }
-        ]
-      }
-    ]
-  }
-}
+```
+> What does this project do?
 ```
 
-### 3. Hook Structure
-
-```json
-{
-  "hooks": {
-    "EventName": [
-      {
-        "matcher": "ToolName or regex",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "your-shell-command",
-            "timeout": 60
-          }
-        ]
-      }
-    ]
-  }
-}
+```
+> What tech stack is being used?
 ```
 
-### 4. Available Environment Variables
+Claude analyzes the folder structure and key files to explain.
 
-Hooks can access these environment variables:
+### Looking at Specific Folders
 
-| Variable | Description |
-|----------|-------------|
-| `CLAUDE_PROJECT_DIR` | Absolute path to project root |
-| `CLAUDE_CODE_REMOTE` | "true" for web, empty/unset for CLI |
-| `CLAUDE_ENV_FILE` | File path to persist env vars (SessionStart only) |
-
-### 5. Hook Input (via stdin)
-
-All hooks receive JSON via stdin:
-
-```json
-{
-  "session_id": "abc123",
-  "transcript_path": "/path/to/transcript.jsonl",
-  "cwd": "/current/working/directory",
-  "permission_mode": "default",
-  "hook_event_name": "PreToolUse",
-  "tool_name": "Edit",
-  "tool_input": { ... }
-}
+```
+> @src/ What's inside this folder?
 ```
 
-### 6. Matcher Patterns
+```
+> What's the role of the components folder?
+```
 
-Matchers control when hooks run (case-sensitive):
+---
 
-| Pattern | Matches |
+## Finding Files (Glob)
+
+Glob finds files by name patterns.
+
+### Common Patterns
+
+| Request | What Claude Does |
+|---------|------------------|
+| "Find all js files" | Searches `*.js` pattern |
+| "Find test files" | Searches `*.test.js` or `*.spec.js` |
+| "Find config files" | Searches `*.config.*`, `*.json`, `*.yaml` |
+
+### Examples
+
+```
+> Find all js files in the src folder
+```
+
+```
+> Where are the test files?
+```
+
+```
+> Find package.json
+```
+
+### Pattern Syntax (Reference)
+
+No need to memorize this. Claude handles it.
+
+| Pattern | Meaning |
 |---------|---------|
-| `Edit` | Only Edit tool |
-| `Bash` | Only Bash tool |
-| `Edit\|Write` | Edit or Write (regex) |
-| `Notebook.*` | Tools starting with Notebook (regex) |
-| `*` or `""` | All tools |
+| `*.js` | Files ending in js |
+| `**/*.ts` | ts files in all folders |
+| `src/**/*` | All files in src |
 
-### 7. Hook Return Values
+---
 
-**Exit Codes**:
-- **0**: Success (stdout processed for JSON or context)
-- **2**: Blocking error (only stderr used, execution halts)
-- **Other**: Non-blocking error (stderr shown in verbose mode)
+## Searching Code (Grep)
 
-**JSON Output Format** (Exit Code 0):
-```json
-{
-  "decision": "approve|block|deny|ask",
-  "reason": "Explanation",
-  "continue": true,
-  "stopReason": "Optional message when continue=false",
-  "suppressOutput": false,
-  "systemMessage": "Optional user warning"
-}
+Grep finds specific text inside files.
+
+### Common Searches
+
+```
+> Find files that use "useState"
 ```
 
-### 8. Common Hook Patterns
-
-#### Auto-Format After Edit
-```json
-{
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/format.sh",
-            "timeout": 30
-          }
-        ]
-      }
-    ]
-  }
-}
+```
+> Where is the "handleSubmit" function defined?
 ```
 
-#### Log All Tool Usage
-```json
-{
-  "hooks": {
-    "PostToolUse": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "echo \"$(date): tool used\" >> ~/.claude/tool.log"
-          }
-        ]
-      }
-    ]
-  }
-}
+```
+> Find all TODO comments
 ```
 
-### 9. Debugging Hooks
+### Finding Function Usage
+
+```
+> Where is the fetchUser function called?
+```
+
+Claude finds all files and locations where that function is used.
+
+### Finding API Endpoints
+
+```
+> Find all API endpoints
+```
+
+```
+> Find paths starting with /api/
+```
+
+---
+
+## Exploration Workflow
+
+Order for understanding a new project:
+
+### Step 1: Get the Big Picture
+
+```
+> What is this project? Explain briefly.
+```
+
+### Step 2: Understand Structure
+
+```
+> Show me the folder structure and explain what each folder does.
+```
+
+### Step 3: Find Entry Points
+
+```
+> Where does this app start? What's the main file?
+```
+
+### Step 4: Explore Areas of Interest
+
+```
+> How is the login feature implemented?
+> Find related files and explain.
+```
+
+---
+
+## Safe Exploration with Plan Mode
+
+Use Plan mode when exploring without changing files.
+
+```
+> /plan
+> Analyze this project. Explain only, do not modify.
+```
+
+In Plan mode:
+- Reading files: Allowed
+- Modifying files: Not allowed
+- Running commands: Not allowed
+
+Safe exploration.
+
+---
+
+## Practice
+
+### Practice 1: Exploring Open Source
+
+Clone any project from GitHub and explore.
 
 ```bash
-# Test hook command manually
-CLAUDE_PROJECT_DIR="/path/to/project" ./your-hook-script.sh
-
-# View hook logs
-claude --debug
-
-# Check settings
-claude /config
+git clone https://github.com/expressjs/express.git
+cd express
+claude
 ```
 
-### 10. Security Considerations
+```
+> /plan
+> Explain this project structure
+> What are the main files?
+> What can I do with this project?
+```
 
-> ⚠️ **USE AT YOUR OWN RISK**: Hooks execute arbitrary shell commands on your system.
+### Practice 2: Finding Files
 
-**Best practices**:
-1. Validate and sanitize inputs
-2. Always quote shell variables: `"$VAR"` not `$VAR`
-3. Block path traversal (check for `..`)
-4. Use absolute paths for scripts
-5. Avoid sensitive files (`.env`, `.git/`, keys)
+```
+> Find all test files
+> Where are the config files?
+> Find the README file
+```
 
----
+### Practice 3: Searching Code
 
-## Resources
-
-- [Claude Code Documentation](https://code.claude.com/docs)
-- [Hooks Reference](https://code.claude.com/docs/en/hooks)
-- [Settings Reference](https://code.claude.com/docs/en/settings)
-- [Shell Scripting Guide](https://www.shellscript.sh/)
-
----
-
-## Checklist
-
-Answer these questions as if in an interview:
-
-1. **What are hooks and when would you use them?**
-   <details>
-   <summary>Hint</summary>
-   Auto-run commands on events: formatting, validation, logging, integration
-   </details>
-
-2. **What's the difference between PreToolUse and PostToolUse?**
-   <details>
-   <summary>Hint</summary>
-   Pre: before tool runs (can block). Post: after tool completes.
-   </details>
-
-3. **How do matchers work in hook configuration?**
-   <details>
-   <summary>Hint</summary>
-   Filter by tool name or regex pattern (case-sensitive)
-   </details>
-
-4. **How can hooks block dangerous operations?**
-   <details>
-   <summary>Hint</summary>
-   Return exit code 2 or JSON with "decision": "block"
-   </details>
+```
+> Find files that use "export"
+> Find all "TODO" comments
+> Find lines containing "error"
+```
 
 ---
 
-## Mini Project: Development Workflow Automation
+## Tips for Large Projects
 
-### Project Goals
+When projects are large:
 
-Build a comprehensive hooks system by completing:
+### Limit Scope
 
-- [ ] Create auto-formatting hook that runs Prettier/ESLint after edits
-- [ ] Create session logging hook that tracks session times and tool usage
-- [ ] Add 2+ optional hooks (notifications, backup, etc.)
-- [ ] Configure all hooks in `.claude/settings.json`
-- [ ] Test that hooks work correctly
+```
+> Only analyze the src/auth/ folder
+```
 
-### Ideas to Try
+Do not look at everything at once. Focus on the part you are interested in.
 
-- Create a hook that sends Slack/Discord notifications on certain events
-- Build a backup hook that saves files before destructive operations
-- Implement conditional behavior by parsing stdin JSON
+### Ask Step by Step
+
+```
+# Do not read everything
+> First, just show me the folder structure.
+> I'll look at the api folder in detail from there.
+```
 
 ---
 
-## Advanced
+## Mini Project: Codebase Analysis Report
 
-### stdin JSON Parsing Example
+Analyze an open source project and create a report.
 
-Parse stdin JSON in your hook to extract information:
+### Goals
+
+- Understand real project structures
+- Build code exploration skills
+
+### Choose a Project
 
 ```bash
-#!/bin/bash
-# .claude/hooks/format-on-edit.sh
-
-# Read JSON from stdin
-INPUT=$(cat)
-
-# Extract file path with jq
-FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
-
-if [ -n "$FILE_PATH" ] && [ -f "$CLAUDE_PROJECT_DIR/$FILE_PATH" ]; then
-  npx prettier --write "$CLAUDE_PROJECT_DIR/$FILE_PATH"
-fi
-
-exit 0
+# Recommended projects (by size)
+git clone https://github.com/sindresorhus/ora.git      # Small
+git clone https://github.com/expressjs/express.git    # Medium
+git clone https://github.com/facebook/react.git       # Large
 ```
 
-### Hook Debugging Tips
+### Analyze It
 
-When hooks don't work as expected:
-
-```bash
-# 1. Test script standalone
-echo '{"tool_input":{"file_path":"test.ts"}}' | CLAUDE_PROJECT_DIR="$(pwd)" ./hook.sh
-
-# 2. Run in debug mode
-claude --debug
-
-# 3. Check hook settings
-cat .claude/settings.json | jq '.hooks'
 ```
+> /plan
+> Analyze this project and create a report:
+> 1. Project purpose
+> 2. Tech stack
+> 3. Folder structure
+> 4. Key file explanations
+> 5. Code style characteristics
+```
+
+### Advanced Analysis (For Experts)
+
+```
+> Draw an architecture diagram of this project
+
+> Analyze the dependency graph
+
+> How is test coverage structured?
+
+> Find potential performance bottlenecks
+```
+
+---
+
+## Summary
+
+What you learned in this chapter:
+- [x] Understanding project structure
+- [x] Finding files (name patterns)
+- [x] Searching code (content search)
+- [x] Exploration workflow
+- [x] Safe exploration with Plan mode
+
+Move on to [Chapter 08: Editing Code](../Chapter08/README.md).

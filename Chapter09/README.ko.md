@@ -1,327 +1,283 @@
-# Chapter 09: Subagents와 Skills
+# Chapter 09: Git 기초
 
-**한국어** | [English](./README.md)
+[English](./README.md) | **한국어**
 
-## Prerequisites
+## 이 챕터에서 배우는 것
 
-이 Chapter를 시작하기 전에:
-- [ ] Chapter 00-08 완료
-- [ ] slash commands와 hooks 이해
-- [ ] 마크다운 설정 파일 생성에 익숙함
-
----
-
-## Introduction
-
-Subagents와 Skills는 특화된 AI 어시스턴트를 만들고 Claude에게 도메인 특정 지식을 가르칠 수 있는 고급 기능입니다. Subagents는 특정 작업을 위한 독립적인 작업자이고, Skills는 자동으로 활성화되는 지식 모듈입니다.
-
-### Subagents vs Skills
-
-| 기능 | Subagents | Skills |
-|------|-----------|--------|
-| **목적** | 특정 작업 위임 | 도메인 지식 추가 |
-| **활성화** | 명시적 (직접 호출) | 자동 (컨텍스트 기반) |
-| **컨텍스트** | 별도 대화 | 공유 대화 |
-| **도구** | 에이전트별 설정 가능 | 스킬별 설정 가능 |
+- Git이 뭔지
+- Claude로 커밋하기
+- 브랜치와 PR 만들기
 
 ---
 
-## Topics
+## Git이 뭔가요?
 
-### 1. Subagents 이해하기
+Git은 코드의 버전을 관리하는 도구입니다.
 
-Subagents는 다음 특성을 가진 특화된 AI 어시스턴트입니다:
-- 자체 대화 컨텍스트 보유
-- 특정 도구로 설정 가능
-- 독립적으로 실행하고 결과 보고
+### 왜 필요한가요?
 
-**내장 Subagents**:
-| 이름 | 모델 | 목적 |
-|------|------|------|
-| `Explore` | Haiku | 빠른 코드베이스 탐색 |
-| `Plan` | Sonnet | 구현 계획 |
-| `General-purpose` | Sonnet | 복잡한 다단계 작업 |
+- **되돌리기**: 뭔가 잘못되면 이전 버전으로 돌아갈 수 있습니다
+- **협업**: 여러 사람이 같은 코드를 동시에 작업할 수 있습니다
+- **기록**: 누가 언제 뭘 바꿨는지 알 수 있습니다
 
-### 2. 커스텀 Subagents 생성
+### 기본 개념
 
-`.claude/agents/`에 subagents 생성:
+| 용어 | 뜻 |
+|------|-----|
+| **Repository (저장소)** | Git으로 관리되는 프로젝트 폴더 |
+| **Commit** | 변경 사항을 저장하는 것 (세이브 포인트) |
+| **Branch** | 독립적인 작업 공간 |
+| **Push** | 내 컴퓨터 → 서버로 업로드 |
+| **Pull** | 서버 → 내 컴퓨터로 다운로드 |
+
+---
+
+## Git 설치 확인
+
+```
+> git 설치되어 있어?
+```
+
+Claude가 확인해줍니다. 없으면 설치 방법도 알려줍니다.
+
+---
+
+## 커밋하기
+
+커밋은 "현재 상태를 저장"하는 것입니다. 게임의 세이브 포인트와 같습니다.
+
+### Claude에게 커밋 시키기
+
+```
+> 지금까지 변경한 거 커밋해줘
+```
+
+Claude가:
+1. 뭐가 바뀌었는지 확인 (`git status`)
+2. 변경 내용 분석 (`git diff`)
+3. 적절한 커밋 메시지 작성
+4. 커밋 실행
+
+### 커밋 메시지 형식
+
+Claude는 이런 형식으로 커밋 메시지를 씁니다:
+
+```
+feat: 로그인 기능 추가
+
+- 이메일/비밀번호 입력 폼 생성
+- 로그인 API 연동
+```
+
+**타입 종류**:
+| 타입 | 의미 |
+|------|------|
+| `feat` | 새 기능 |
+| `fix` | 버그 수정 |
+| `docs` | 문서 변경 |
+| `style` | 코드 스타일 (동작 변화 없음) |
+| `refactor` | 리팩토링 |
+
+---
+
+## 상태 확인하기
+
+### 현재 상태 보기
+
+```
+> git 상태 확인해줘
+```
+
+Claude가 `git status`를 실행해서 보여줍니다:
+- 수정된 파일
+- 새로 추가된 파일
+- 커밋 안 된 변경사항
+
+### 변경 내용 보기
+
+```
+> 뭐가 바뀌었는지 보여줘
+```
+
+Claude가 `git diff`로 변경 내용을 보여줍니다.
+
+---
+
+## 브랜치 사용하기
+
+브랜치는 "작업 공간"입니다. 메인 코드에 영향을 주지 않고 따로 작업할 수 있습니다.
+
+### 브랜치 만들기
+
+```
+> 로그인 기능 만들 브랜치 만들어줘
+```
+
+Claude가 `git checkout -b feature/login` 같은 명령어를 실행합니다.
+
+### 브랜치 확인
+
+```
+> 지금 어떤 브랜치야?
+```
+
+```
+> 브랜치 목록 보여줘
+```
+
+### 브랜치 전환
+
+```
+> main 브랜치로 이동해줘
+```
+
+---
+
+## Pull Request (PR) 만들기
+
+PR은 "내 변경사항을 메인에 합쳐달라"고 요청하는 것입니다.
+
+### Claude에게 PR 시키기
+
+```
+> 이 브랜치로 PR 만들어줘
+```
+
+Claude가:
+1. 변경사항 분석
+2. PR 제목과 설명 작성
+3. GitHub에 PR 생성
+
+### PR 형식
 
 ```markdown
-<!-- .claude/agents/code-reviewer.md -->
----
-name: code-reviewer
-description: 전문 코드 리뷰 스페셜리스트. 철저한 코드 리뷰에 사용.
-tools: Read, Grep, Glob
-model: sonnet
----
+## Summary
+- 로그인 폼 구현
+- 비밀번호 검증 추가
 
-# Code Reviewer Agent
-
-## 역할
-품질, 보안, 유지보수성에 집중하는 전문 코드 리뷰어입니다.
-
-## 리뷰 체크리스트
-1. **보안**: 취약점 찾기
-2. **성능**: 병목 식별
-3. **스타일**: 일관성 확인
-4. **로직**: 정확성 검증
-
-## 출력 형식
-구조화된 피드백 제공:
-- 심각도 (Critical/Major/Minor)
-- 위치 (파일:라인)
-- 문제 설명
-- 제안된 수정
+## Test Plan
+- [x] 로그인 성공 테스트
+- [x] 잘못된 비밀번호 테스트
 ```
 
-### 3. Subagent 설정
-
-**Frontmatter 옵션**:
-```yaml
----
-name: agent-name           # 필수: 식별자 (소문자, 하이픈)
-description: 간단한 설명    # 필수: 언제 사용하는지
-tools: Read, Grep, Bash    # 선택: 쉼표로 구분된 도구 목록
-model: sonnet              # 선택: sonnet, opus, haiku, inherit
-permissionMode: default    # 선택: 권한 모드
-skills: skill1, skill2     # 선택: 자동 로드할 스킬
----
-```
-
-**도구 제한**:
-- `Read, Grep, Glob` - 읽기 전용 에이전트
-- `Read, Edit, Write` - 파일 수정 가능
-- `Bash` - 명령 실행 가능
-- 생략하면 모든 도구 상속
-
-### 4. Subagents 사용
-
-```bash
-# 명시적 호출
-> Have the code-reviewer agent review @src/auth/
-
-# Claude가 사용 제안할 수 있음
-> I need a thorough code review
-# Claude: I'll use the code-reviewer agent for this...
-
-# 사용 가능한 에이전트 목록
-/agents
-```
-
-### 5. Skills 이해하기
-
-Skills는 관련 있을 때 Claude가 자동으로 로드하는 지식 모듈입니다:
-
-```markdown
-<!-- .claude/skills/react-patterns/SKILL.md -->
----
-name: react-patterns
-description: 이 프로젝트의 React 모범 사례와 패턴
-allowed-tools: Read, Grep
 ---
 
-# 이 프로젝트의 React 패턴
+## 충돌 해결하기
 
-## 컴포넌트 구조
-- hooks가 있는 함수형 컴포넌트 사용
-- hooks는 컴포넌트 상단에 배치
-- 로직은 커스텀 hooks로 추출
+여러 사람이 같은 파일을 수정하면 "충돌"이 날 수 있습니다.
 
-## 상태 관리
-- 로컬 상태에 useState 사용
-- 서버 상태에 React Query 사용
-- 필요하지 않으면 Redux 피하기
-
-## 파일 이름
-- 컴포넌트: PascalCase.tsx
-- Hooks: useHookName.ts
-- Utils: camelCase.ts
-```
-
-### 6. Skill 구조
+### 충돌이 나면
 
 ```
-.claude/skills/
-├── react-patterns/
-│   ├── SKILL.md          # 메인 스킬 파일 (필수)
-│   ├── examples/         # 코드 예시
-│   │   └── hooks.md
-│   └── anti-patterns.md  # 피해야 할 것
-├── api-design/
-│   └── SKILL.md
-└── testing/
-    └── SKILL.md
+> 머지 충돌 났어. 해결해줘.
 ```
 
-### 7. Skills 활성화 시점
-
-Claude가 다음을 감지하면 Skills가 자동 활성화됩니다:
-- 프롬프트의 키워드
-- 관련 파일 유형
-- 스킬 설명과 일치하는 컨텍스트
-
-```bash
-> Create a new React component
-
-# Claude가 자동으로 react-patterns 스킬 로드
-# 정의된 규칙을 따름
-```
-
-### 8. Skills vs 다른 기능
-
-| 기능 | 자동 활성화 | 범위 | 최적 용도 |
-|------|-----------|------|----------|
-| **Skills** | 예 | 도메인 지식 | 프로젝트 규칙 |
-| **Commands** | 아니오 (명시적) | 재사용 프롬프트 | 반복 작업 |
-| **CLAUDE.md** | 예 (항상) | 프로젝트 규칙 | 전역 가이드라인 |
-| **Subagents** | 아니오 (위임) | 별도 컨텍스트 | 복잡한 작업 |
-
-### 9. 스킬 핫 리로드
-
-스킬이 생성되거나 수정되면 자동으로 다시 로드됩니다—세션 재시작 필요 없음:
-
-```bash
-# 스킬 생성 또는 편집
-vim ~/.claude/skills/my-skill/SKILL.md
-
-# 변경 사항이 현재 세션에 즉시 적용됨
-```
-
-### 10. 포크된 Subagent 컨텍스트
-
-스킬이나 명령을 격리된 컨텍스트에서 실행할 수 있습니다:
-
-```yaml
----
-name: isolated-task
-description: 별도 컨텍스트에서 실행
-context: fork
-agent: custom-agent
----
-# 이 스킬은 자체 컨텍스트에서 실행됨
-```
-
-`context: fork`를 사용하면 메인 대화 컨텍스트에 영향을 주지 않고 독립적으로 작업을 수행합니다.
+Claude가:
+1. 각 버전이 뭔지 설명
+2. 어떻게 합칠지 제안
+3. 수정 적용
 
 ---
 
-## Resources
+## Git 안전 규칙
 
-- [Claude Code 공식 문서](https://code.claude.com/docs)
-- [Agents & Subagents](https://code.claude.com/docs/en/agents)
-- [Skills Reference](https://code.claude.com/docs/en/skills)
+Claude는 위험한 git 명령어 전에 물어봅니다.
 
----
+### 안전한 명령어 (자동 실행 가능)
 
-## Checklist
+- `git status` - 상태 확인
+- `git diff` - 변경 내용 보기
+- `git log` - 기록 보기
+- `git add` - 파일 추가
+- `git commit` - 커밋하기
 
-면접에서 답변하듯이 다음 질문에 답해보세요:
+### 위험한 명령어 (확인 필요)
 
-1. **Subagents와 Skills의 차이점은 무엇인가요?**
-   <details>
-   <summary>힌트</summary>
-   Subagents: 위임된 작업, 별도 컨텍스트. Skills: 지식 모듈, 자동 활성화.
-   </details>
-
-2. **Subagent와 Skill 중 언제 어떤 것을 사용하나요?**
-   <details>
-   <summary>힌트</summary>
-   Subagent: 복잡하고 독립적인 작업. Skill: 광범위하게 적용되는 도메인 지식.
-   </details>
-
-3. **Subagent가 사용할 수 있는 도구를 어떻게 제한하나요?**
-   <details>
-   <summary>힌트</summary>
-   frontmatter의 tools 필드: Read, Grep, Edit 등
-   </details>
-
-4. **Claude가 Skill을 언제 활성화할지 어떻게 결정하나요?**
-   <details>
-   <summary>힌트</summary>
-   키워드, 파일 유형, 스킬 설명과 일치하는 컨텍스트
-   </details>
+- `git push` - 서버로 업로드
+- `git push --force` - 강제 푸시 (매우 위험)
+- `git reset --hard` - 변경사항 삭제 (복구 불가)
 
 ---
 
-## Mini Project: 전문화된 AI 팀
+## 실습해보기
 
-### Project Goals
-
-특화된 subagents와 skills 팀을 구축하세요:
-
-- [ ] 보안 리뷰를 위한 읽기 전용 도구를 가진 Security Auditor subagent 생성
-- [ ] 테스트 파일을 작성할 수 있는 Test Generator subagent 생성
-- [ ] API 문서와 README를 위한 Documentation Writer subagent 생성
-- [ ] 프로젝트 구조를 문서화하는 Project Architecture 스킬 생성
-- [ ] 코딩 규칙을 정의하는 Code Style 스킬 생성
-- [ ] 테스트 구성을 설명하는 Testing Patterns 스킬 생성
-- [ ] 2개 이상의 선택 subagents 또는 skills 추가 (리팩토링, 성능 등)
-- [ ] 에이전트와 스킬이 함께 작동하는지 테스트
-
-### Ideas to Try
-
-- 복잡한 작업에서 서로 조율하는 에이전트 생성
-- 외부 문서를 참조하는 스킬 구축
-- 버전별 스킬 만들기 (예: React 18 vs React 17)
-- 프레임워크 업그레이드를 위한 마이그레이션 어시스턴트 subagent 생성
-
----
-
-## Advanced
-
-### 문서 기반 Skill 만들기
-
-외부 문서를 참조하는 실용적인 skill을 만들어보세요:
-
-```markdown
-<!-- .claude/skills/react-19-migration/SKILL.md -->
----
-name: react-19-migration
-description: React 19 마이그레이션 가이드. React 컴포넌트 작업이나 React 버전 업그레이드 시 사용.
----
-
-# React 19 Migration Guide
-
-## 주요 변경사항
-- use() 훅 추가
-- Server Components 기본 지원
-- ref를 prop으로 전달 가능
-
-## 마이그레이션 체크리스트
-1. forwardRef 제거하고 ref prop 사용
-2. useFormStatus, useFormState 활용
-3. 서버 컴포넌트 / 클라이언트 컴포넌트 분리
-
-자세한 내용: https://react.dev/blog/2024/04/25/react-19
-```
-
-### Subagent 실전 활용
-
-특정 작업에 subagent를 활용하는 패턴:
-
-```bash
-# Security Auditor 활용
-> Have the security-auditor agent review the authentication flow
-> in src/auth/. Focus on token handling and session management.
-
-# 결과를 기반으로 수정
-> Based on the security review, fix the identified issues
-```
-
-### 팀 내 공유 방법
-
-`.claude/` 폴더를 git에 포함하면 팀 전체가 사용할 수 있습니다:
+### 실습 1: 기본 워크플로우
 
 ```
-.claude/
-├── agents/
-│   ├── security-auditor.md    # 팀 공통 에이전트
-│   └── api-designer.md
-├── skills/
-│   ├── our-coding-style.md    # 팀 코딩 컨벤션
-│   └── api-patterns.md
-└── commands/
-    └── review.md
+# 1. 새 폴더 만들고 Git 초기화
+> my-project 폴더 만들고 git 초기화해줘
+
+# 2. 파일 만들기
+> index.html 만들어줘
+
+# 3. 커밋하기
+> 커밋해줘
+
+# 4. 파일 수정하기
+> 제목 바꿔줘
+
+# 5. 다시 커밋
+> 변경사항 커밋해줘
 ```
 
-> **Tip**: 새 팀원이 합류하면 `git pull` 한 번으로 모든 설정이 자동 적용됩니다.
+### 실습 2: 브랜치 사용
+
+```
+# 1. 새 브랜치 만들기
+> feature/button 브랜치 만들어줘
+
+# 2. 파일 수정
+> 버튼 추가해줘
+
+# 3. 커밋
+> 커밋해줘
+
+# 4. main으로 돌아가기
+> main 브랜치로 이동해줘
+
+# 5. 확인
+> 버튼이 있어? (없어야 정상 - 다른 브랜치에 있으니까)
+```
+
+### 실습 3: 기록 보기
+
+```
+> 커밋 히스토리 보여줘
+```
+
+```
+> 마지막 커밋에서 뭐 바뀌었어?
+```
+
+---
+
+## 자주 하는 실수
+
+### "nothing to commit"
+
+커밋할 변경사항이 없습니다. 파일을 수정했는지 확인하세요.
+
+### "not a git repository"
+
+Git 저장소가 아닙니다. `git init`으로 초기화하세요.
+
+### 실수로 커밋했을 때
+
+```
+> 마지막 커밋 취소해줘 (변경사항은 유지)
+```
+
+---
+
+## 정리
+
+이번 챕터에서 배운 것:
+- [x] Git이 뭔지
+- [x] 커밋하기
+- [x] 상태 확인하기
+- [x] 브랜치 사용하기
+- [x] PR 만들기
+
+Git은 처음엔 어려워 보이지만, Claude가 대신 해주니까 걱정하지 않아도 됩니다.
+
+[Chapter 10: 프로젝트 메모리](../Chapter10/README.ko.md)로 넘어가세요.

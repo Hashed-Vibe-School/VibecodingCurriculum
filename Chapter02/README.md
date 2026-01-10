@@ -1,257 +1,212 @@
-# Chapter 02: Code Exploration
+# Chapter 02: Installing Claude Code
 
-[한국어](./README.ko.md) | **English**
+**English** | [한국어](./README.ko.md)
 
-## Prerequisites
+## What You'll Learn
 
-Before starting this chapter, make sure you can:
-- [ ] Use @-mentions to reference files
-- [ ] Maintain multi-turn conversations effectively
-- [ ] Understand the difference between permission modes
-
----
-
-## Introduction
-
-One of Claude Code's greatest strengths is its ability to explore and understand codebases. This chapter teaches you how to use Claude's exploration tools to quickly navigate unfamiliar projects, find specific code patterns, and understand complex architectures.
-
-### Why Code Exploration Matters
-
-- **Onboarding**: Quickly understand new projects
-- **Debugging**: Locate the source of issues
-- **Refactoring**: Find all related code before making changes
-- **Learning**: Study how experienced developers structure code
+- The concept of a terminal
+- Claude Code installation methods
+- Login and first run
 
 ---
 
-## Topics
+## What is a Terminal?
 
-### 1. Core Exploration Tools
+A terminal is a window for communicating with your computer using text.
 
-Claude Code uses three primary tools for code exploration:
-
-| Tool | Purpose | Example Use |
-|------|---------|-------------|
-| **Glob** | Find files by pattern | `*.tsx`, `src/**/*.test.js` |
-| **Grep** | Search file contents | Find all uses of a function |
-| **Read** | View file contents | Examine specific code |
-
-### 2. Using Glob for File Discovery
-
-Glob helps you find files matching specific patterns:
-
-```bash
-# Ask Claude to find files
-> Find all TypeScript files in the src directory
-> Show me all test files in this project
-> List all configuration files (*.config.*, *.json, *.yaml)
-```
-
-**Common Glob Patterns**:
-| Pattern | Matches |
-|---------|---------|
-| `*.js` | All JS files in current dir |
-| `**/*.ts` | All TS files recursively |
-| `src/**/*.test.tsx` | Test files in src |
-| `!node_modules/**` | Exclude node_modules |
-
-### 3. Using Grep for Content Search
-
-Grep searches inside files for specific patterns:
-
-```bash
-# Ask Claude to search
-> Find all files that import "useState"
-> Where is the "handleSubmit" function defined?
-> Search for TODO comments in the codebase
-> Find all API endpoints (look for router.get, router.post, etc.)
-```
-
-**Grep Tips**:
-- Use regex for complex patterns
-- Combine with file type filters
-- Search for function definitions vs usages
-
-### 4. Strategic Exploration Patterns
-
-#### Understanding Project Structure
-```bash
-> What's the overall architecture of this project?
-> Explain the folder structure and what each directory contains
-> What frameworks and libraries does this project use?
-```
-
-#### Tracing Data Flow
-```bash
-> How does user data flow from the login form to the database?
-> Trace the rechapter path for /api/users endpoint
-> Where is the state for user authentication managed?
-```
-
-#### Finding Dependencies
-```bash
-> What files import the UserService class?
-> Which components use the useAuth hook?
-> What would be affected if I change the User type definition?
-```
-
-### 5. Exploration Workflow
-
-A systematic approach to understanding code:
+Normally, folders are clicked and apps are launched with icons. A terminal performs the same operations with text commands.
 
 ```
-1. START BROAD
-   > What does this project do?
-   > What's the tech stack?
-
-2. UNDERSTAND STRUCTURE
-   > Show me the folder structure
-   > What are the main entry points?
-
-3. IDENTIFY KEY FILES
-   > What are the most important files?
-   > Where is the main business logic?
-
-4. DEEP DIVE
-   > Explain how @src/services/auth.ts works
-   > Walk me through the @src/components/Dashboard.tsx component
+# Examples
+cd Documents        # Go to Documents folder
+ls                  # List files in current folder
 ```
 
-### 6. Plan Mode for Safe Exploration
+This may appear complex, but Claude Code handles most of it. For now, knowing how to open a terminal is sufficient.
 
-Use Plan Mode when you only want to explore without making changes:
+### Opening a Terminal
 
-```bash
-# Start in plan mode
-claude --permission-mode plan
+**Mac:**
+1. Press `Command + Space` to open Spotlight
+2. Type "Terminal"
+3. Press Enter
 
-# Or switch during session
-> Switch to plan mode  # or press Shift+Tab twice
-```
-
-In Plan Mode:
-- Claude can read any file
-- No write operations are allowed
-- Perfect for learning and auditing
+**Windows:**
+1. Press the `Windows key`
+2. Type "PowerShell"
+3. Press Enter
 
 ---
 
-## Resources
+## Claude Code Installation
 
-- [Claude Code Tools Documentation](https://docs.anthropic.com/en/docs/claude-code)
-- [Glob Pattern Syntax](https://en.wikipedia.org/wiki/Glob_(programming))
-- [Regular Expression Guide](https://regexlearn.com/)
+### Method 1: Install Script (Recommended)
 
----
+The simplest method. Open your terminal and paste this command.
 
-## Checklist
-
-Answer these questions as if in an interview:
-
-1. **When would you use Glob vs Grep?**
-   <details>
-   <summary>Hint</summary>
-   Glob: finding files by name/path pattern. Grep: searching file contents.
-   </details>
-
-2. **How would you find all files that use a specific function?**
-   <details>
-   <summary>Hint</summary>
-   Grep for the function name, filter by import statements vs usage
-   </details>
-
-3. **What's the recommended approach for exploring a new codebase?**
-   <details>
-   <summary>Hint</summary>
-   Start broad (architecture), understand structure, identify key files, then deep dive
-   </details>
-
-4. **Why is Plan Mode useful for code exploration?**
-   <details>
-   <summary>Hint</summary>
-   Read-only access, no accidental modifications, safe for auditing
-   </details>
-
-5. **How would you trace data flow through an application?**
-   <details>
-   <summary>Hint</summary>
-   Start at entry point, follow function calls, track state changes, identify boundaries
-   </details>
-
----
-
-## Mini Project
-
-### Learning Goals
-
-Complete these tasks to master this chapter:
-
-- [ ] Clone an unfamiliar open-source project and ask Claude to explain its architecture
-- [ ] Use Glob to find files by pattern (e.g., all test files, all config files)
-- [ ] Use Grep to search for specific patterns in file contents
-- [ ] Trace data flow through an application by asking Claude follow-up questions
-- [ ] Use Plan Mode to safely explore without making changes
-
-### Try These Prompts
-
+**Mac / Linux:**
 ```bash
-> What does this project do and what's the tech stack?
-> Show me the folder structure and explain each directory
-> Find all files that import "useState"
-> Where is the main entry point of this application?
-> Trace the rechapter path for /api/users endpoint
+curl -fsSL https://claude.ai/install.sh | bash
+```
+
+**Windows (PowerShell):**
+```powershell
+irm https://claude.ai/install.ps1 | iex
+```
+
+Installation is complete when the process finishes.
+
+### Method 2: Homebrew (Mac Users)
+
+For Homebrew users:
+```bash
+brew install --cask claude-code
+```
+
+### Method 3: npm (Node.js Users)
+
+For those with Node.js installed:
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+### Verify Installation
+
+To confirm successful installation:
+```bash
+claude --version
+```
+
+A version number (e.g., `2.1.3`) indicates success.
+
+---
+
+## Login
+
+Claude Code requires login on first run.
+
+### 1. Start Claude Code
+
+In your terminal:
+```bash
+claude
+```
+
+### 2. Login Screen
+
+A browser window opens. Log in with your Claude account.
+
+Create an account at [claude.ai](https://claude.ai) if needed.
+
+### 3. Login Complete
+
+After login, Claude Code runs in your terminal.
+
+```
+╭────────────────────────────────────────╮
+│ Welcome to Claude Code!                │
+│                                        │
+│ Type your message below.               │
+╰────────────────────────────────────────╯
+
+>
+```
+
+The `>` prompt indicates readiness for conversation.
+
+---
+
+## Pricing Information
+
+Claude Code is a paid service.
+
+### Usage Options
+
+1. **Claude Pro/Max Subscription**: Starting at $20/month. Sufficient for regular use.
+2. **API Key**: Pay-as-you-go. For developers.
+
+For beginners, Claude Pro subscription is recommended. See [claude.ai/pricing](https://claude.ai/pricing).
+
+### Using with API Key (Optional)
+
+For API key users:
+```bash
+export ANTHROPIC_API_KEY="your-api-key"
+claude
 ```
 
 ---
 
-## Advanced
+## First Conversation
 
-### Real-World Grep Patterns
+With login complete, test with a simple message.
 
-Practice frequently used search patterns:
-
-```bash
-# Find TODO/FIXME comments
-> Find all TODO and FIXME comments in the codebase
-
-# Find specific function calls
-> Find all places where "fetchUser" is called
-
-# Find unused imports
-> Find files that import "lodash" but might not use it
-
-# Find error handling patterns
-> Show me all try-catch blocks in the api/ directory
+```
+> Hi! What can you do?
 ```
 
-### Unfamiliar Codebase Challenge
+Claude introduces itself.
 
-Pick a project you've never seen from GitHub and try:
+### Simple Test
 
-```bash
-# 1. Understand the project in 5 minutes
-> I just cloned this repo. Give me a 2-minute overview of what it does,
-> the tech stack, and the main entry points.
-
-# 2. Trace a specific feature
-> How does user authentication work in this project?
-> Walk me through the code path from login to session creation.
-
-# 3. Find modification points
-> If I wanted to add a new API endpoint, which files would I need to modify?
+```
+> What's in this folder?
 ```
 
-**Recommended Projects**: Express.js, Fastify, or any mid-sized open source project you're interested in
+Claude displays the file list in the current folder.
 
-### Large Codebase Strategies
+```
+> Create a file called hello.txt. Write "Hello World" inside.
+```
 
-Context management is critical in large projects:
+A file is created. Open the folder to verify.
+
+---
+
+## Exit
+
+To exit Claude Code:
+
+- Type `/exit`
+- Or press `Ctrl + C` twice
+
+---
+
+## Troubleshooting
+
+### "command not found" Error
+
+Close and reopen the terminal. If the issue persists:
+```bash
+# Mac/Linux
+source ~/.bashrc
+# or
+source ~/.zshrc
+```
+
+### Login Issues
+
+1. Verify login status at [claude.ai](https://claude.ai) in the browser
+2. Try a different browser
+3. Disable VPN if active
+
+### Persistent Issues
 
 ```bash
-# Don't read everything at once, only what's needed
-> Don't read all files. First, show me the directory structure,
-> then I'll tell you which parts to explore.
-
-# Limit exploration scope
-> Focus only on the src/auth/ directory for now
+claude /doctor
 ```
+This command diagnoses the problem.
+
+---
+
+## Summary
+
+Completed in this chapter:
+- [x] Opening the terminal
+- [x] Installing Claude Code
+- [x] Login
+- [x] First conversation
+
+The next chapter covers conversation fundamentals with Claude Code.
+
+Proceed to [Chapter 03: Your First Conversation](../Chapter03/README.md).

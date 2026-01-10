@@ -1,314 +1,278 @@
-# Chapter 06: Slash Commands
+# Chapter 06: 효과적인 프롬프팅
 
-**한국어** | [English](./README.md)
+[English](./README.md) | **한국어**
 
-## Prerequisites
+## 이 챕터에서 배우는 것
 
-이 Chapter를 시작하기 전에:
-- [ ] Chapter 00-05 (Foundation) 완료
-- [ ] CLAUDE.md와 프로젝트 메모리 이해
-- [ ] 마크다운 문법에 익숙함
-
----
-
-## Introduction
-
-Slash commands를 사용하면 간단한 `/command`로 호출할 수 있는 재사용 가능한 프롬프트를 만들 수 있습니다. 일반적인 작업—코드 리뷰, 디버깅, 문서 생성 등—을 위한 매크로라고 생각하세요.
-
-### 왜 Slash Commands인가?
-
-- **일관성**: 매번 같은 프롬프트 구조
-- **속도**: 복잡한 지시 재입력 불필요
-- **팀 공유**: 프로젝트 명령어는 git 추적
-- **모범 사례**: 전문가 지식을 명령어로 인코딩
+- Claude에게 효과적으로 요청하는 법
+- Plan 모드 활용
+- 복잡한 작업 분할
 
 ---
 
-## Topics
+## 프롬프팅이란?
 
-### 1. 내장 명령어
+프롬프팅은 AI에게 요청하는 방법입니다. 같은 내용을 물어봐도 어떻게 표현하느냐에 따라 결과가 달라집니다.
 
-Claude Code는 많은 내장 명령어와 함께 제공됩니다:
+### 나쁜 예 vs 좋은 예
 
-#### 필수 명령어
-
-| 명령어 | 설명 |
-|--------|------|
-| `/help` | 모든 명령어 표시 |
-| `/clear` | 대화 삭제 |
-| `/compact` | 컨텍스트 압축 |
-| `/model` | 모델 변경 |
-| `/cost` | 사용량 표시 |
-| `/config` | 설정 |
-| `/doctor` | 문제 진단 |
-
-#### 파워 유저 명령어
-
-| 명령어 | 설명 |
-|--------|------|
-| `/vim` | 전체 vim 스타일 편집 활성화 (h/j/k/l, ciw, dd 등) |
-| `/context` | 토큰 윈도우에서 무엇이 소비되는지 확인 |
-| `/stats` | Claude Code 사용 통계 확인 |
-| `/rename <name>` | 현재 세션에 이름 붙이기 |
-| `/statusline` | 상태 표시줄 디스플레이 커스터마이즈 |
-| `/chrome` | 웹 작업을 위한 브라우저 상호작용 활성화 |
-
-### 2. 커스텀 명령어 생성
-
-명령어는 `.claude/commands/` 디렉토리의 마크다운 파일입니다.
-
-**프로젝트 명령어** (팀과 공유):
+**나쁜 예:**
 ```
-.claude/commands/
-├── review.md
-├── fix-issue.md
-└── generate-tests.md
+> 버그 고쳐줘
+```
+Claude가 무엇을 수정해야 하는지 알 수 없습니다.
+
+**좋은 예:**
+```
+> @src/login.js에서 로그인 버튼 누르면 에러 발생.
+> "Cannot read property 'email' of undefined" 에러.
+> 수정해줘.
+```
+Claude가 정확히 무엇을 해야 하는지 파악할 수 있습니다.
+
+---
+
+## 좋은 프롬프트의 3가지 원칙
+
+### 1. 구체적으로 표현
+
+```
+# 나쁜 예
+> 웹사이트 만들어줘
+
+# 좋은 예
+> 자기소개 페이지 만들어줘.
+> 이름, 사진, 소개글 섹션이 있고
+> 배경은 파란색으로.
 ```
 
-**개인 명령어** (본인만):
+### 2. 맥락 제공
+
 ```
-~/.claude/commands/
-├── my-review-style.md
-└── daily-standup.md
-```
+# 나쁜 예
+> 함수 추가해줘
 
-### 3. 명령어 파일 구조
-
-간단한 명령어:
-
-```markdown
-<!-- .claude/commands/review.md -->
-이 코드를 다음 관점에서 리뷰해주세요:
-1. 잠재적 버그
-2. 성능 문제
-3. 보안 취약점
-4. 코드 스타일 위반
-
-구체적인 라인 참조와 수정 제안을 제공해주세요.
+# 좋은 예
+> @src/utils.js에 날짜 포맷 함수 추가해줘.
+> 다른 함수들과 비슷한 스타일로.
+> "2024-01-15"를 "2024년 1월 15일"로 변환하는 함수.
 ```
 
-호출: `/review`
+### 3. 한 번에 하나씩
 
-### 4. 인수 사용
-
-동적 입력을 위해 `$ARGUMENTS` 플레이스홀더 사용:
-
-```markdown
-<!-- .claude/commands/fix-issue.md -->
-GitHub 이슈 #$ARGUMENTS를 찾아서 수정해주세요
-
-단계:
-1. 이슈 설명 읽기
-2. 관련 코드 위치 찾기
-3. 수정 구현
-4. 해당되면 테스트 작성
-5. 변경 사항 요약
 ```
+# 나쁜 예
+> 로그인 기능 만들고 회원가입도 만들고 비밀번호 찾기도 만들어줘
 
-호출: `/fix-issue 123`
-
-### 5. 다단계 명령어
-
-복잡한 워크플로우 생성:
-
-```markdown
-<!-- .claude/commands/feature.md -->
-# 기능 구현: $ARGUMENTS
-
-## Phase 1: 조사
-- 요구사항 이해
-- 영향받는 파일 식별
-- 유사 구현 확인
-
-## Phase 2: 구현
-- 필요한 파일 생성
-- 기존 패턴 따르기
-- 적절한 에러 처리 추가
-
-## Phase 3: 품질
-- 단위 테스트 작성
-- 문서 업데이트
-- 문제 자체 검토
-
-## Phase 4: 완료
-- 모든 변경 사항 요약
-- 후속 작업 나열
-```
-
-### 6. 명령어 모범 사례
-
-#### 구체적으로
-```markdown
-<!-- 나쁜 예 -->
-코드 리뷰해줘
-
-<!-- 좋은 예 -->
-@src/auth/의 보안 문제를 리뷰해주세요:
-- SQL 인젝션 확인
-- 입력 살균 검증
-- 적절한 인증 확인
-- 노출된 시크릿 찾기
-```
-
-#### 컨텍스트 포함
-```markdown
-<!-- 프로젝트 특정 컨텍스트 포함 -->
-우리 기술 스택은 React + TypeScript입니다.
-@src/components/Button.tsx의 패턴을 따라주세요.
-데이터 페칭에는 커스텀 `useApi` hook을 사용하세요.
-```
-
-#### 제약 조건 추가
-```markdown
-<!-- 명확한 경계 설정 -->
-규칙:
-- 기존 테스트 수정 금지
-- 변경사항은 하위 호환 유지
-- 최대 3개 파일만 변경
-```
-
-### 7. 명령어 구성
-
-권장 구조:
-```
-.claude/commands/
-├── code/
-│   ├── review.md
-│   ├── refactor.md
-│   └── debug.md
-├── docs/
-│   ├── api-docs.md
-│   └── readme.md
-├── git/
-│   ├── commit.md
-│   └── pr.md
-└── test/
-    ├── unit.md
-    └── e2e.md
+# 좋은 예
+> 먼저 로그인 기능부터 만들자.
+> 이메일과 비밀번호 입력받는 폼.
 ```
 
 ---
 
-## Resources
+## Plan 모드 활용
 
-- [Claude Code 공식 문서](https://code.claude.com/docs)
-- [Slash Commands Reference](https://code.claude.com/docs/en/slash-commands)
-- [마크다운 가이드](https://www.markdownguide.org/)
+Plan 모드는 Claude가 실행하기 전에 계획을 세우게 합니다.
+
+### Plan 모드의 장점
+
+바로 코드를 작성하면 Claude가 잘못된 방향으로 갈 수 있습니다. Plan 모드에서 먼저 계획을 확인하고, 괜찮으면 실행하는 것이 좋습니다.
+
+### 사용법
+
+```
+> /plan
+```
+또는 `Shift + Tab` 두 번
+
+### 예시
+
+```
+> /plan
+> 로그인 기능 어떻게 만들면 좋을까?
+```
+
+Claude가 계획을 표시합니다:
+```
+로그인 기능 구현 계획:
+
+1. src/components/LoginForm.js 생성
+   - 이메일, 비밀번호 입력 필드
+   - 제출 버튼
+
+2. src/api/auth.js 생성
+   - 로그인 API 호출 함수
+
+3. 기존 App.js 수정
+   - 로그인 상태 관리 추가
+
+이렇게 진행할까요?
+```
+
+괜찮으면 Normal 모드로 전환해서 실행합니다.
 
 ---
 
-## Checklist
+## 단계별 진행
 
-면접에서 답변하듯이 다음 질문에 답해보세요:
+복잡한 작업은 분할해서 진행합니다.
 
-1. **Slash commands란 무엇이고 왜 사용하나요?**
-   <details>
-   <summary>힌트</summary>
-   재사용 가능한 프롬프트 템플릿, 일관성, 속도, 팀 공유
-   </details>
+### 나쁜 예
 
-2. **프로젝트 vs 개인 명령어는 어디에 저장되나요?**
-   <details>
-   <summary>힌트</summary>
-   프로젝트: .claude/commands/ (git 추적). 개인: ~/.claude/commands/
-   </details>
+```
+> 쇼핑몰 만들어줘
+```
+요청 범위가 너무 넓습니다.
 
-3. **명령어에 동적 인수를 어떻게 전달하나요?**
-   <details>
-   <summary>힌트</summary>
-   명령어 파일에 $ARGUMENTS 플레이스홀더 사용
-   </details>
+### 좋은 예
 
-4. **좋은 slash command의 특징은?**
-   <details>
-   <summary>힌트</summary>
-   구체적, 컨텍스트 포함, 제약 조건 있음, 잘 조직됨
-   </details>
+```
+# 1단계: 이해
+> 쇼핑몰에 보통 어떤 기능이 있어?
+
+# 2단계: 계획
+> 그중에서 상품 목록 페이지 먼저 만들자.
+> 어떻게 만들면 좋을까?
+
+# 3단계: 실행
+> 좋아, 그 계획대로 만들어줘.
+
+# 4단계: 확인
+> 잘 되는지 확인하자. 실행해줘.
+```
 
 ---
 
-## Mini Project: Command Library
+## 피드백 제공
 
-### Project Goals
+첫 결과가 마음에 들지 않으면 피드백을 제공합니다.
 
-종합적인 slash command 라이브러리를 구축하세요:
+### 예시
 
-- [ ] 보안 및 스타일 검사를 위한 `/review` 명령어 생성
-- [ ] 이슈 번호로 버그를 수정하는 `/fix-bug $ARGUMENTS` 명령어 생성
-- [ ] 파일에 대한 테스트를 생성하는 `/test $ARGUMENTS` 명령어 생성
-- [ ] 문서를 생성하는 `/docs $ARGUMENTS` 명령어 생성
-- [ ] 4개 이상의 창의적 명령어 생성 (예: `/explain`, `/optimize`, `/refactor`)
-- [ ] 적절한 폴더 구조로 명령어 구성
-- [ ] 각 명령어가 올바르게 작동하는지 테스트
+```
+> 버튼 만들어줘
+```
+결과가 나왔는데 너무 작다면:
 
-### Ideas to Try
+```
+> 버튼이 너무 작아. 더 크게 해줘.
+> 글자도 더 굵게.
+```
 
-- 보안 중심 리뷰를 위한 `/security-audit` 명령어 생성
-- 커밋에서 변경 로그를 생성하는 `/changelog` 명령어 구축
-- 일일 스탠드업 요약을 생성하는 `/standup` 명령어 만들기
-- 복잡한 워크플로우를 위해 연결되는 명령어 생성
+계속 다듬어가면 됩니다.
+
+### 되돌리기
+
+완전히 잘못된 방향이면:
+- `Esc Esc` (Esc 두 번): 이전 상태로 되돌리기
+- `Ctrl + C`: 현재 작업 취소
 
 ---
 
-## Advanced
+## Ultrathink: 복잡한 문제 해결
 
-### 프레임워크 특화 명령어
+어려운 문제에는 Claude가 더 깊이 생각하게 할 수 있습니다.
 
-자주 쓰는 프레임워크용 명령어를 만들어보세요:
+### 키워드
 
-**React 컴포넌트 생성** (`.claude/commands/react-component.md`):
-```markdown
-Create a new React component named $ARGUMENTS with:
-- TypeScript + functional component
-- Props interface defined
-- Basic unit test file
-- Storybook story (if stories/ exists)
-Follow patterns in @src/components/Button.tsx
+| 키워드 | 효과 | 사용 시점 |
+|--------|------|-----------|
+| `think` | 보통 수준 | 일반적인 작업 |
+| `think hard` | 깊이 생각 | 복잡한 문제 |
+| `ultrathink` | 최대한 깊이 | 아키텍처 결정 |
+
+### 예시
+
+```
+> ultrathink
+> 이 프로젝트 구조를 어떻게 설계하면 좋을까?
+> 나중에 기능 추가하기 쉽게.
 ```
 
-**API 엔드포인트 생성** (`.claude/commands/api-endpoint.md`):
-```markdown
-Create a new API endpoint for $ARGUMENTS:
-- Follow REST conventions
-- Include validation with zod
-- Add error handling
-- Create test file
-Follow patterns in @src/api/users.ts
+---
+
+## 실습
+
+### 실습 1: 구체적으로 표현
+
+나쁜 프롬프트를 좋은 프롬프트로 변환해보세요:
+
+```
+# 나쁜 예
+> 에러 고쳐줘
+
+# 이걸 구체적으로 변환하세요
+> ???
 ```
 
-### 팀 온보딩 명령어 세트
+### 실습 2: Plan 모드 사용
 
-새 팀원이 바로 생산적이 될 수 있는 명령어들:
-
-```markdown
-<!-- .claude/commands/onboarding/setup.md -->
-Help me set up this project:
-1. Explain the project architecture
-2. Show me how to run it locally
-3. Point out the main files I should know
-4. Explain the testing strategy
-
-<!-- .claude/commands/onboarding/first-task.md -->
-I'm new to this codebase. Help me with my first task: $ARGUMENTS
-- Explain relevant code sections
-- Suggest which files to modify
-- Warn about common pitfalls
+```
+> /plan
+> 할 일 목록 앱을 만들고 싶어.
+> 할 일 추가, 삭제, 완료 체크 기능이 있었으면 좋겠어.
+> 어떻게 만들면 좋을까?
 ```
 
-### 명령어 조합 패턴
+계획을 확인하고 괜찮으면 실행해보세요.
 
-복잡한 작업을 위해 명령어를 순차적으로 사용하세요:
+### 실습 3: 단계별 진행
 
-```bash
-# 1. 먼저 리뷰
-/review
-
-# 2. 발견된 이슈 수정
-/fix-bug found in review
-
-# 3. 테스트 추가
-/test src/utils/newFeature.ts
-
-# 4. 문서화
-/docs src/utils/newFeature.ts
 ```
+# 1단계
+> 간단한 계산기 만들고 싶어. 뭐가 필요해?
+
+# 2단계
+> 더하기 기능부터 만들자.
+
+# 3단계
+> 빼기, 곱하기, 나누기도 추가해줘.
+
+# 4단계
+> 예쁘게 꾸며줘.
+```
+
+---
+
+## 자주 사용하는 패턴
+
+### 탐색
+
+```
+> 이 프로젝트 구조 설명해줘
+> 이 함수가 뭐 하는 거야?
+> 데이터가 어떻게 흘러가?
+```
+
+### 버그 수정
+
+```
+> 이 에러 메시지 발생: [에러 메시지]
+> @파일명 이 파일에서 문제인 것 같아
+> 수정해줘
+```
+
+### 새 기능 구현
+
+```
+> [기능] 만들고 싶어
+> 요구사항: [목록]
+> @기존파일 이거 참고해서 비슷한 스타일로
+```
+
+---
+
+## 정리
+
+이번 챕터에서 학습한 것:
+- [x] 구체적으로 표현
+- [x] 맥락 제공
+- [x] 한 번에 하나씩
+- [x] Plan 모드 활용
+- [x] 단계별 진행
+- [x] 피드백 제공
+
+**핵심**: 잘 표현해야 잘 만들어줍니다.
+
+[Chapter 07: 코드 탐색하기](../Chapter07/README.ko.md)로 진행하세요.

@@ -1,326 +1,283 @@
-# Chapter 09: Subagents & Skills
+# Chapter 09: Git Basics
 
-[한국어](./README.ko.md) | **English**
+**English** | [한국어](./README.ko.md)
 
-## Prerequisites
+## What You Will Learn
 
-Before starting this chapter, ensure you:
-- [ ] Have completed Chapter 00-08
-- [ ] Understand slash commands and hooks
-- [ ] Are comfortable creating markdown configuration files
-
----
-
-## Introduction
-
-Subagents and Skills are advanced features that let you create specialized AI assistants and teach Claude domain-specific knowledge. Subagents are independent workers for specific tasks, while Skills are knowledge modules that activate automatically.
-
-### Subagents vs Skills
-
-| Feature | Subagents | Skills |
-|---------|-----------|--------|
-| **Purpose** | Delegate specific tasks | Add domain knowledge |
-| **Activation** | Explicit (you call them) | Automatic (context-based) |
-| **Context** | Separate conversation | Shared conversation |
-| **Tools** | Configurable per agent | Configurable per skill |
+- What Git is
+- Committing with Claude
+- Creating branches and PRs
 
 ---
 
-## Topics
+## What is Git?
 
-### 1. Understanding Subagents
+Git is a tool for managing versions of code.
 
-Subagents are specialized AI assistants that:
-- Have their own conversation context
-- Can be configured with specific tools
-- Run independently and report back
+### Why Do You Need It?
 
-**Built-in Subagents**:
-| Name | Model | Purpose |
-|------|-------|---------|
-| `Explore` | Haiku | Fast codebase exploration |
-| `Plan` | Sonnet | Implementation planning |
-| `General-purpose` | Sonnet | Complex multi-step tasks |
+- **Undo**: If something goes wrong, go back to a previous version
+- **Collaboration**: Multiple people can work on the same code simultaneously
+- **History**: See who changed what and when
 
-### 2. Creating Custom Subagents
+### Basic Concepts
 
-Create subagents in `.claude/agents/`:
+| Term | Meaning |
+|------|---------|
+| **Repository** | A project folder managed by Git |
+| **Commit** | Saving changes (like a save point) |
+| **Branch** | An independent workspace |
+| **Push** | Upload from your computer to server |
+| **Pull** | Download from server to your computer |
+
+---
+
+## Check Git Installation
+
+```
+> Is git installed?
+```
+
+Claude checks. If not, it provides installation instructions.
+
+---
+
+## Committing
+
+A commit is "saving the current state." Like a save point in a game.
+
+### Let Claude Commit
+
+```
+> Commit the changes made so far
+```
+
+Claude will:
+1. Check what changed (`git status`)
+2. Analyze the changes (`git diff`)
+3. Write an appropriate commit message
+4. Execute the commit
+
+### Commit Message Format
+
+Claude writes commit messages like this:
+
+```
+feat: Add login feature
+
+- Created email/password input form
+- Connected login API
+```
+
+**Type meanings**:
+| Type | Meaning |
+|------|---------|
+| `feat` | New feature |
+| `fix` | Bug fix |
+| `docs` | Documentation change |
+| `style` | Code style (no behavior change) |
+| `refactor` | Refactoring |
+
+---
+
+## Checking Status
+
+### View Current Status
+
+```
+> Check git status
+```
+
+Claude runs `git status` and shows:
+- Modified files
+- Newly added files
+- Uncommitted changes
+
+### View Changes
+
+```
+> Show me what changed
+```
+
+Claude uses `git diff` to show the changes.
+
+---
+
+## Using Branches
+
+Branches are "workspaces." Work separately without affecting the main code.
+
+### Create a Branch
+
+```
+> Create a branch for the login feature
+```
+
+Claude runs something like `git checkout -b feature/login`.
+
+### Check Branches
+
+```
+> What branch am I on?
+```
+
+```
+> Show me the branch list
+```
+
+### Switch Branches
+
+```
+> Move to the main branch
+```
+
+---
+
+## Creating Pull Requests (PR)
+
+A PR is "requesting to merge my changes into main."
+
+### Let Claude Create a PR
+
+```
+> Create a PR for this branch
+```
+
+Claude will:
+1. Analyze the changes
+2. Write PR title and description
+3. Create PR on GitHub
+
+### PR Format
 
 ```markdown
-<!-- .claude/agents/code-reviewer.md -->
----
-name: code-reviewer
-description: Expert code review specialist. Use for thorough code reviews.
-tools: Read, Grep, Glob
-model: sonnet
----
+## Summary
+- Implemented login form
+- Added password validation
 
-# Code Reviewer Agent
-
-## Role
-You are an expert code reviewer focused on quality, security, and maintainability.
-
-## Review Checklist
-1. **Security**: Look for vulnerabilities
-2. **Performance**: Identify bottlenecks
-3. **Style**: Check consistency
-4. **Logic**: Verify correctness
-
-## Output Format
-Provide structured feedback with:
-- Severity (Critical/Major/Minor)
-- Location (file:line)
-- Issue description
-- Suggested fix
+## Test Plan
+- [x] Login success test
+- [x] Wrong password test
 ```
 
-### 3. Subagent Configuration
-
-**Frontmatter Options**:
-```yaml
----
-name: agent-name           # Required: identifier (lowercase, hyphens)
-description: Brief desc    # Required: when to use
-tools: Read, Grep, Bash    # Optional: comma-separated tool list
-model: sonnet              # Optional: sonnet, opus, haiku, inherit
-permissionMode: default    # Optional: permission mode
-skills: skill1, skill2     # Optional: skills to auto-load
----
-```
-
-**Tool Restrictions**:
-- `Read, Grep, Glob` - Read-only agent
-- `Read, Edit, Write` - Can modify files
-- `Bash` - Can run commands
-- Omit to inherit all tools
-
-### 4. Using Subagents
-
-```bash
-# Explicitly invoke
-> Have the code-reviewer agent review @src/auth/
-
-# Claude may suggest using one
-> I need a thorough code review
-# Claude: I'll use the code-reviewer agent for this...
-
-# List available agents
-/agents
-```
-
-### 5. Understanding Skills
-
-Skills are knowledge modules that Claude loads automatically when relevant:
-
-```markdown
-<!-- .claude/skills/react-patterns/SKILL.md -->
----
-name: react-patterns
-description: React best practices and patterns for this project
-allowed-tools: Read, Grep
 ---
 
-# React Patterns for This Project
+## Resolving Conflicts
 
-## Component Structure
-- Use functional components with hooks
-- Place hooks at the top of components
-- Extract logic into custom hooks
+When multiple people modify the same file, "conflicts" can occur.
 
-## State Management
-- Use useState for local state
-- Use React Query for server state
-- Avoid Redux unless necessary
-
-## File Naming
-- Components: PascalCase.tsx
-- Hooks: useHookName.ts
-- Utils: camelCase.ts
-```
-
-### 6. Skill Structure
+### When Conflicts Happen
 
 ```
-.claude/skills/
-├── react-patterns/
-│   ├── SKILL.md          # Main skill file (required)
-│   ├── examples/         # Code examples
-│   │   └── hooks.md
-│   └── anti-patterns.md  # What to avoid
-├── api-design/
-│   └── SKILL.md
-└── testing/
-    └── SKILL.md
+> There's a merge conflict. Help me resolve it.
 ```
 
-### 7. When Skills Activate
-
-Skills activate automatically when Claude detects:
-- Keywords in your prompt
-- Related file types
-- Context matching the skill description
-
-```bash
-> Create a new React component
-
-# Claude automatically loads react-patterns skill
-# and follows the defined conventions
-```
-
-### 8. Skills vs Other Features
-
-| Feature | Auto-Activate | Scope | Best For |
-|---------|--------------|-------|----------|
-| **Skills** | Yes | Domain knowledge | Project conventions |
-| **Commands** | No (explicit) | Reusable prompts | Repeated tasks |
-| **CLAUDE.md** | Yes (always) | Project rules | Global guidelines |
-| **Subagents** | No (delegated) | Separate context | Complex tasks |
-
-### 9. Skill Hot Reload
-
-Skills automatically reload when created or modified—no session restart needed:
-
-```bash
-# Create or edit a skill
-vim ~/.claude/skills/my-skill/SKILL.md
-
-# Changes apply immediately in current session
-```
-
-### 10. Forked Subagent Context
-
-Run skills or commands in isolated contexts:
-
-```yaml
----
-name: isolated-task
-description: Runs in separate context
-context: fork
-agent: custom-agent
----
-# This skill runs in its own context
-```
-
-Using `context: fork` allows independent work without affecting the main conversation context.
+Claude will:
+1. Explain what each version is
+2. Suggest how to merge
+3. Apply the fix
 
 ---
 
-## Resources
+## Git Safety Rules
 
-- [Claude Code Agents Documentation](https://docs.anthropic.com/en/docs/claude-code)
-- [Skills Documentation](https://docs.anthropic.com/en/docs/claude-code)
+Claude asks before dangerous git commands.
 
----
+### Safe Commands (Can Auto-execute)
 
-## Checklist
+- `git status` - Check status
+- `git diff` - View changes
+- `git log` - View history
+- `git add` - Stage files
+- `git commit` - Commit
 
-Answer these questions as if in an interview:
+### Dangerous Commands (Need Confirmation)
 
-1. **What's the difference between subagents and skills?**
-   <details>
-   <summary>Hint</summary>
-   Subagents: delegated tasks, separate context. Skills: knowledge modules, auto-activate.
-   </details>
-
-2. **When would you use a subagent vs a skill?**
-   <details>
-   <summary>Hint</summary>
-   Subagent: complex isolated task. Skill: domain knowledge that applies broadly.
-   </details>
-
-3. **How do you restrict what tools a subagent can use?**
-   <details>
-   <summary>Hint</summary>
-   tools field in frontmatter: Read, Grep, Edit, etc.
-   </details>
-
-4. **How does Claude decide when to activate a skill?**
-   <details>
-   <summary>Hint</summary>
-   Keywords, file types, context matching skill description
-   </details>
+- `git push` - Upload to server
+- `git push --force` - Force push (very dangerous)
+- `git reset --hard` - Delete changes (unrecoverable)
 
 ---
 
-## Mini Project: Specialized AI Team
+## Practice
 
-### Project Goals
-
-Build a team of specialized subagents and skills by completing:
-
-- [ ] Create Security Auditor subagent with read-only tools for security reviews
-- [ ] Create Test Generator subagent that can write test files
-- [ ] Create Documentation Writer subagent for API docs and READMEs
-- [ ] Create Project Architecture skill documenting your project structure
-- [ ] Create Code Style skill defining coding conventions
-- [ ] Create Testing Patterns skill explaining test organization
-- [ ] Add 2+ optional subagents or skills (refactoring, performance, etc.)
-- [ ] Test that agents and skills work together
-
-### Ideas to Try
-
-- Create agents that coordinate with each other on complex tasks
-- Build skills that reference external documentation
-- Make version-specific skills (e.g., React 18 vs React 17)
-- Create a migration assistant subagent for framework upgrades
-
----
-
-## Advanced
-
-### Document-Based Skills
-
-Create practical skills that reference external documentation:
-
-```markdown
-<!-- .claude/skills/react-19-migration/SKILL.md -->
----
-name: react-19-migration
-description: React 19 migration guide. Use when working with React components or upgrading React versions.
----
-
-# React 19 Migration Guide
-
-## Key Changes
-- use() hook added
-- Server Components native support
-- ref can be passed as prop
-
-## Migration Checklist
-1. Remove forwardRef, use ref prop instead
-2. Leverage useFormStatus, useFormState
-3. Separate server components / client components
-
-Details: https://react.dev/blog/2024/04/25/react-19
-```
-
-### Practical Subagent Usage
-
-Patterns for leveraging subagents for specific tasks:
-
-```bash
-# Using Security Auditor
-> Have the security-auditor agent review the authentication flow
-> in src/auth/. Focus on token handling and session management.
-
-# Fix based on results
-> Based on the security review, fix the identified issues
-```
-
-### Team Sharing Method
-
-Include the `.claude/` folder in git so the entire team can use it:
+### Practice 1: Basic Workflow
 
 ```
-.claude/
-├── agents/
-│   ├── security-auditor.md    # Team-shared agents
-│   └── api-designer.md
-├── skills/
-│   ├── our-coding-style.md    # Team coding conventions
-│   └── api-patterns.md
-└── commands/
-    └── review.md
+# 1. Create new folder and initialize Git
+> Create my-project folder and initialize git
+
+# 2. Create file
+> Create index.html
+
+# 3. Commit
+> Commit it
+
+# 4. Modify file
+> Change the title
+
+# 5. Commit again
+> Commit the changes
 ```
 
-> **Tip**: When a new team member joins, a single `git pull` automatically applies all configurations.
+### Practice 2: Using Branches
+
+```
+# 1. Create new branch
+> Create feature/button branch
+
+# 2. Modify file
+> Add a button
+
+# 3. Commit
+> Commit it
+
+# 4. Go back to main
+> Move to main branch
+
+# 5. Check
+> Is the button there? (Should be no - it's in a different branch)
+```
+
+### Practice 3: View History
+
+```
+> Show me the commit history
+```
+
+```
+> What changed in the last commit?
+```
+
+---
+
+## Common Mistakes
+
+### "nothing to commit"
+
+Nothing to commit. Check if you modified a file.
+
+### "not a git repository"
+
+Not a Git repository. Initialize with `git init`.
+
+### Accidentally Committed
+
+```
+> Undo the last commit (keep the changes)
+```
+
+---
+
+## Summary
+
+What you learned in this chapter:
+- [x] What Git is
+- [x] Committing
+- [x] Checking status
+- [x] Using branches
+- [x] Creating PRs
+
+Git may seem difficult at first, but Claude handles it for you.
+
+Move on to [Chapter 10: Project Memory](../Chapter10/README.md).

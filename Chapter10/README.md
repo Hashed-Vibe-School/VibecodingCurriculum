@@ -1,437 +1,353 @@
-# Chapter 10: CI/CD Integration
+# Chapter 10: Project Memory
 
-[한국어](./README.ko.md) | **English**
+**English** | [한국어](./README.ko.md)
 
-## Prerequisites
+## What You Will Learn
 
-Before starting this chapter, ensure you:
-- [ ] Have completed Chapter 00-09
-- [ ] Understand CI/CD concepts and pipelines
-- [ ] Have a GitHub account with Actions enabled
-
----
-
-## Introduction
-
-The ultimate expression of Vibecoding is automation—having Claude work for you even when you're not at your desk. This chapter covers how to integrate Claude Code into CI/CD pipelines for automated code review, testing, and even code generation.
-
-### Why CI/CD Integration?
-
-- **Automated Code Review**: Every PR gets AI-reviewed
-- **Continuous Quality**: Catch issues before they merge
-- **Documentation**: Auto-generate docs on changes
-- **Testing**: AI-assisted test generation and validation
+- What CLAUDE.md is
+- Saving project information
+- Making Claude remember your project
 
 ---
 
-## Topics
+## What is CLAUDE.md?
 
-### 1. Headless Mode
+CLAUDE.md is a "note for Claude."
 
-Claude Code can run without human interaction using `-p` flag:
+Claude reads this file at the start of every new conversation. This eliminates the need to repeat the same things every time.
 
-```bash
-# Basic headless command
-claude -p "Summarize this project"
+### Why Do You Need It?
 
-# With specific tools
-claude -p "Fix the bug in auth.ts" --allowedTools "Read,Edit,Bash"
+Without CLAUDE.md:
+```
+> Make a button
+# Claude makes it in any random style
 
-# JSON output
-claude -p "List all exported functions" --output-format json
+> I need to use Tailwind CSS...
+> Make the button again. With Tailwind.
 ```
 
-#### Output Formats
-
-| Format | Description |
-|--------|-------------|
-| `text` | Human-readable (default) |
-| `json` | Structured JSON output |
-| `stream-json` | Streaming JSON |
-
-### 2. Claude Code Remote
-
-Run Claude on the web and resume locally:
-
-```bash
-# Append "&" to run on web in background
-> Refactor the authentication module &
-# Claude runs on claude.ai/code in the background
-
-# Resume the session locally with teleport
-claude --teleport <session_id>
+With CLAUDE.md:
+```
+> Make a button
+# Claude reads CLAUDE.md and automatically uses Tailwind
 ```
 
-This is perfect for:
-- Long-running tasks while you step away
-- Switching between devices
-- Offloading heavy computation to the cloud
-
-### 3. Structured Output
-
-Get predictable JSON output:
-
-```bash
-claude -p "Extract function names from utils.ts" \
-  --output-format json \
-  --json-schema '{
-    "type": "object",
-    "properties": {
-      "functions": {
-        "type": "array",
-        "items": {"type": "string"}
-      }
-    }
-  }'
-```
-
-### 4. GitHub Actions Integration
-
-#### Using Official Action
-
-```yaml
-# .github/workflows/claude-review.yml
-name: Claude Code Review
-
-on: [pull_request]
-
-jobs:
-  review:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - uses: anthropics/claude-code-action@v1
-        with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          prompt: |
-            Review this PR for:
-            1. Security vulnerabilities
-            2. Performance issues
-            3. Code style violations
-
-            Provide actionable feedback.
-```
-
-#### Custom Headless Workflow
-
-```yaml
-# .github/workflows/claude-custom.yml
-name: Claude Custom Tasks
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-
-jobs:
-  analyze:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install Claude Code
-        run: npm install -g @anthropic-ai/claude-code
-
-      - name: Run Claude Analysis
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: |
-          claude -p "Analyze this codebase for potential bugs" \
-            --allowedTools "Read,Grep,Glob" \
-            --output-format json > analysis.json
-
-      - name: Upload Results
-        uses: actions/upload-artifact@v4
-        with:
-          name: claude-analysis
-          path: analysis.json
-```
-
-### 5. Conversation Continuation
-
-Continue previous sessions in CI:
-
-```bash
-# First run - save session
-claude -p "Find all TODO comments" \
-  --output-format json > step1.json
-
-# Continue the conversation
-claude -p "Now fix the most critical one" \
-  --continue \
-  --allowedTools "Read,Edit,Bash"
-```
-
-### 6. Tool Permissions in CI
-
-Control what Claude can do:
-
-```bash
-# Read-only analysis
-claude -p "Review code" --allowedTools "Read,Grep,Glob"
-
-# With editing
-claude -p "Fix issues" --allowedTools "Read,Edit,Write,Bash"
-
-# Full access (use carefully)
-claude -p "Complete this task" --dangerouslySkipPermissions
-```
-
-### 7. Common CI Patterns
-
-#### Auto-Fix Linting Issues
-```yaml
-- name: Auto-fix with Claude
-  run: |
-    bun run lint 2>&1 || true > lint-errors.txt
-    claude -p "Fix the linting errors in lint-errors.txt" \
-      --allowedTools "Read,Edit"
-```
-
-#### Generate Release Notes
-```yaml
-- name: Generate Changelog
-  run: |
-    CHANGES=$(git log --oneline ${{ github.event.before }}..${{ github.sha }})
-    claude -p "Generate release notes from these commits: $CHANGES" \
-      --output-format json > release-notes.json
-```
-
-#### Security Scan
-```yaml
-- name: Security Review
-  run: |
-    claude -p "Scan for security vulnerabilities in src/" \
-      --allowedTools "Read,Grep,Glob" \
-      --output-format json > security-report.json
-```
-
-### 8. Error Handling
-
-```yaml
-- name: Claude Task with Error Handling
-  continue-on-error: true
-  run: |
-    claude -p "Fix failing tests" \
-      --allowedTools "Read,Edit,Bash" \
-      --timeout 300000 2>&1 | tee claude-output.txt
-
-    if grep -q "error" claude-output.txt; then
-      echo "::warning::Claude encountered issues"
-    fi
-```
-
-### 9. Best Practices for CI
-
-1. **Limit Permissions**: Only grant necessary tools
-2. **Set Timeouts**: Prevent runaway processes
-3. **Cache Results**: Store outputs for review
-4. **Review Changes**: Don't auto-merge AI changes
-5. **Monitor Costs**: Track API usage
-
-### 10. Ralph-Wiggum Plugin: Autonomous Iteration Loop
-
-Ralph-Wiggum is an official plugin that enables Claude to iterate autonomously until task completion:
-
-```bash
-# Basic usage
-/ralph-loop "Your task description" --completion-promise "DONE"
-```
-
-Claude automatically:
-1. Performs the task
-2. Attempts to exit
-3. Stop hook blocks the exit
-4. Re-runs with same prompt
-5. Repeats until completion
-
-**Key Options**:
-| Option | Description |
-|--------|-------------|
-| `--max-iterations <n>` | Maximum iterations (default: unlimited) |
-| `--completion-promise <text>` | Completion signal phrase |
-
-**Practical Example**:
-```bash
-/ralph-loop "Build a REST API for todos. Requirements:
-- CRUD operations
-- Input validation
-- Tests
-Output <promise>COMPLETE</promise> when done." \
---completion-promise "COMPLETE" \
---max-iterations 50
-```
-
-**Good Use Cases**:
-- Tasks with clear success criteria
-- Iterative tasks requiring testing/debugging
-- New project creation
-
-**Use With Caution**:
-- Tasks requiring human judgment
-- Production debugging
-- Unclear success criteria
-
-> **Note**: ralph-wiggum is an [official plugin](https://github.com/anthropics/claude-code/tree/main/plugins/ralph-wiggum).
+No need to say "use Tailwind," "use TypeScript" every time.
 
 ---
 
-## Resources
+## Creating CLAUDE.md
 
-- [Claude Code CI/CD Documentation](https://docs.anthropic.com/en/docs/claude-code)
-- [GitHub Actions Documentation](https://docs.github.com/en/actions)
-- [Ralph-Wiggum Plugin](https://github.com/anthropics/claude-code/tree/main/plugins/ralph-wiggum)
-- [Anthropic API Pricing](https://www.anthropic.com/pricing)
+### Where to Put It?
+
+Create it at the root of your project folder.
+
+```
+my-project/
+├── CLAUDE.md       <- Here
+├── package.json
+├── src/
+└── ...
+```
+
+### Have Claude Create It
+
+```
+> Create a CLAUDE.md for this project
+```
+
+Claude analyzes the project and creates it automatically.
+
+### Create It Yourself
+
+Simple example:
+
+```markdown
+# My Project
+
+## Tech Stack
+- React
+- TypeScript
+- Tailwind CSS
+
+## Rules
+- Use functional components
+- Write comments in Korean
+```
 
 ---
 
-## Checklist
+## What to Write?
 
-Answer these questions as if in an interview:
+### 1. Tech Stack
 
-1. **What is headless mode and when would you use it?**
-   <details>
-   <summary>Hint</summary>
-   Non-interactive mode with -p flag, used in CI/CD and automation
-   </details>
+Specify what the project uses.
 
-2. **How do you control what tools Claude can use in CI?**
-   <details>
-   <summary>Hint</summary>
-   --allowedTools flag with comma-separated list
-   </details>
+```markdown
+## Tech Stack
+- Frontend: React + TypeScript
+- Styling: Tailwind CSS
+- Package manager: npm
+```
 
-3. **What's the difference between text and json output formats?**
-   <details>
-   <summary>Hint</summary>
-   Text: human-readable. JSON: structured, parseable by scripts
-   </details>
+### 2. Folder Structure
 
-4. **How can you continue a Claude conversation in CI?**
-   <details>
-   <summary>Hint</summary>
-   --continue flag to continue previous session
-   </details>
+Specify where files are located.
 
-5. **What security considerations are important for CI integration?**
-   <details>
-   <summary>Hint</summary>
-   Limit tools, protect API keys, review AI changes, set timeouts
-   </details>
+```markdown
+## Folder Structure
+- `src/components/` - Components
+- `src/pages/` - Pages
+- `src/utils/` - Utility functions
+```
+
+### 3. Coding Rules
+
+Specify the code style.
+
+```markdown
+## Coding Rules
+- Variable names in English
+- Comments in Korean
+- 2-space indentation
+```
+
+### 4. Restrictions
+
+Specify what is forbidden.
+
+```markdown
+## Do Not
+- No `any` type
+- No inline styles
+- Do not leave console.log
+```
+
+### 5. Common Commands
+
+```markdown
+## Commands
+- Dev server: `npm run dev`
+- Build: `npm run build`
+- Test: `npm test`
+```
 
 ---
 
-## Mini Project: Automated Development Pipeline
+## Real Examples
 
-### Project Goals
+### Simple Website Project
 
-Build a complete CI/CD pipeline with Claude Code automation by completing:
+```markdown
+# My Portfolio
 
-- [ ] Create PR review workflow that automatically reviews all PRs
-- [ ] Create auto-fix pipeline that attempts to fix failed CI issues
-- [ ] Create documentation generator that updates docs on API changes
-- [ ] Create release notes workflow that generates changelog from commits
-- [ ] Add 2+ optional workflows (test generator, security auditor, etc.)
-- [ ] Configure proper secrets and error handling
-- [ ] Test that all workflows execute successfully
+## Description
+Personal portfolio website
 
-### Ideas to Try
+## Tech Stack
+- HTML, CSS, JavaScript
+- Styling: Tailwind CSS
 
-- Build a custom GitHub Action that wraps Claude Code
-- Create GitLab CI or Jenkins equivalents of your workflows
-- Implement cost optimization with caching strategies
-- Build a dashboard to monitor CI Claude usage and costs
+## Rules
+- File names in lowercase (e.g., about.html)
+- Use Tailwind default colors
+- Mobile responsive required
+```
+
+### React Project
+
+```markdown
+# Todo App
+
+## Tech Stack
+- React 18
+- TypeScript
+- Tailwind CSS
+
+## Folder Structure
+- `src/components/` - Reusable components
+- `src/hooks/` - Custom hooks
+- `src/types/` - TypeScript types
+
+## Coding Rules
+- Components: PascalCase (e.g., TodoItem.tsx)
+- Hooks: camelCase (e.g., useTodos.ts)
+- Functional components + hooks
+
+## Do Not
+- No class components
+- No any type
+- Keep components under 200 lines
+
+## Commands
+- `npm run dev` - Dev server
+- `npm run build` - Build
+- `npm test` - Test
+```
 
 ---
 
-## Advanced
+## Personal Memory vs Project Memory
 
-### CI Cost Optimization
+### Project Memory (For Teams)
 
-Practical tips to reduce Claude API costs:
+Location: `projectfolder/CLAUDE.md`
 
-```yaml
-# 1. Review only changed files
-- name: Get changed files
-  id: changed
-  run: |
-    echo "files=$(gh pr view ${{ github.event.pull_request.number }} --json files -q '.files[].path' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+- Shared by the whole team
+- Saved in Git
+- Project rules
 
-- name: Review only changed files
-  run: |
-    claude -p "Review only these files: ${{ steps.changed.outputs.files }}"
+### Personal Memory (Your Settings)
 
-# 2. Start with smaller models
-- name: Quick review with Haiku
-  run: |
-    claude -p "Quick lint check" --model claude-haiku
+Location: `~/.claude/CLAUDE.md` (home folder)
 
-# 3. Conditional execution
-- name: Deep review for large PRs only
-  if: github.event.pull_request.additions > 100
-  run: |
-    claude -p "Thorough security review"
+- Only you use it
+- Applies to all projects
+- Personal preferences
+
+```markdown
+# My Settings
+
+## Preferences
+- Explain in Korean
+- Add lots of comments to code
+- Always show example code
 ```
 
-### Reusable Workflows
+### Priority
 
-Create workflows that can be reused across multiple repositories:
-
-```yaml
-# .github/workflows/reusable-claude-review.yml
-name: Reusable Claude Review
-
-on:
-  workflow_call:
-    inputs:
-      review_type:
-        required: true
-        type: string
-    secrets:
-      ANTHROPIC_API_KEY:
-        required: true
-
-jobs:
-  review:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Run Claude Review
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: |
-          npm install -g @anthropic-ai/claude-code
-          claude -p "Perform a ${{ inputs.review_type }} review"
+```
+Project CLAUDE.md > Personal CLAUDE.md
 ```
 
-Use in other repositories:
-```yaml
-jobs:
-  review:
-    uses: your-org/workflows/.github/workflows/reusable-claude-review.yml@main
-    with:
-      review_type: "security"
-    secrets:
-      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+Project rules take priority.
+
+---
+
+## When Claude Breaks Rules
+
+Update CLAUDE.md.
+
+### Example Situations
+
+If Claude used `var`:
+
+```markdown
+## Do Not
+- No var, use const or let
 ```
 
-### Failure Notifications
+If Claude wrote comments in English:
 
-Send Slack/Discord notifications when Claude tasks fail:
-
-```yaml
-- name: Notify on failure
-  if: failure()
-  run: |
-    curl -X POST ${{ secrets.SLACK_WEBHOOK }} \
-      -H 'Content-type: application/json' \
-      -d '{"text":"Claude review failed for PR #${{ github.event.pull_request.number }}"}'
+```markdown
+## Rules
+- Comments must be in Korean
 ```
+
+Add these and it will not happen again.
+
+---
+
+## Response Language Setting
+
+If Claude keeps responding in English, change it with a settings file.
+
+`.claude/settings.json` file:
+
+```json
+{
+  "language": "korean"
+}
+```
+
+Or in CLAUDE.md:
+
+```markdown
+## Language
+- Always respond in Korean
+```
+
+---
+
+## Practice
+
+### Practice 1: Create CLAUDE.md
+
+```
+# Create new folder
+> Create my-test-project folder and go into it
+
+# Create CLAUDE.md
+> Create a CLAUDE.md for this project.
+> It's a React + TypeScript project.
+```
+
+### Practice 2: Check Rules
+
+```
+# Check if Claude knows the rules
+> What are the rules for this project?
+
+# Check if it follows the rules
+> Create a button component
+```
+
+### Practice 3: Add Rules
+
+```
+> Add "Test files must end in .test.ts" to CLAUDE.md
+```
+
+---
+
+## Tips: Managing CLAUDE.md
+
+### Keep It Short
+
+Claude reads it every time, so too long is wasteful.
+
+```markdown
+# Bad (too long)
+Our project started in January 2024
+and was originally JavaScript but we switched to TypeScript
+because... (100 lines)
+
+# Good (concise)
+## Tech Stack
+- TypeScript
+- React
+```
+
+### Update Regularly
+
+- Add new rules when they emerge
+- Remove unused rules
+- Add immediately when Claude makes mistakes
+
+### Save in Git
+
+Version control CLAUDE.md like code.
+
+```
+> Commit the CLAUDE.md changes
+```
+
+---
+
+## Summary
+
+What you learned in this chapter:
+- [x] What CLAUDE.md is
+- [x] Where to create it
+- [x] What to write
+- [x] Personal vs Project memory
+- [x] Updating rules
+
+When CLAUDE.md is well written, Claude understands your project exactly.
+
+Congratulations. You have completed Part 2 (Core Features).
+
+In the next Part, we will build real projects.
+
+Move on to [Chapter 11: Website Development](../Chapter11/README.md).

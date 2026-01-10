@@ -1,323 +1,341 @@
-# Chapter 08: MCP Servers
+# Chapter 08: Editing Code
 
-[한국어](./README.ko.md) | **English**
+**English** | [한국어](./README.ko.md)
 
-## Prerequisites
+## What You Will Learn
 
-Before starting this chapter, ensure you:
-- [ ] Have completed Chapter 00-07
-- [ ] Understand API concepts and HTTP
-- [ ] Have basic knowledge of JSON and environment variables
-
----
-
-## Introduction
-
-MCP (Model Context Protocol) servers extend Claude Code's capabilities by connecting it to external tools, databases, and services. Think of MCP as a plugin system that lets Claude interact with the world beyond your local files.
-
-### Why MCP?
-
-- **Database Access**: Query PostgreSQL, MongoDB, etc.
-- **API Integration**: Connect to GitHub, Sentry, Jira
-- **Custom Tools**: Build your own integrations
-- **Team Sharing**: Share MCP configs across projects
+- Getting Claude to edit code
+- Safe editing
+- Improving with feedback
 
 ---
 
-## Topics
+## Code Editing Basics
 
-### 1. Understanding MCP
+Claude Code can directly edit code. It modifies files without copy-paste.
 
-MCP provides a standardized way for Claude to:
-- Discover available tools
-- Call external services
-- Receive structured responses
+### Simple Example
 
-**Transport Types**:
-| Type | Description | Use Case |
-|------|-------------|----------|
-| `stdio` | Local process communication | Local tools, scripts |
-| `http` | HTTP/HTTPS connections | Cloud services |
-| `sse` | Server-sent events (deprecated) | Legacy systems |
-
-### 2. Adding MCP Servers
-
-#### Using CLI Commands
-
-```bash
-# Add an HTTP MCP server
-claude mcp add --transport http sentry https://mcp.sentry.dev/mcp
-
-# Add a local (stdio) MCP server
-claude mcp add --transport stdio postgres -- npx @anthropic-ai/mcp-postgres
-
-# Add with environment variables
-claude mcp add --transport stdio github -- \
-  npx @anthropic-ai/mcp-github \
-  --env GITHUB_TOKEN=your_token
-
-# List configured servers
-claude mcp list
-
-# Remove a server
-claude mcp remove sentry
+```
+> @index.html Change the title to "My Website"
 ```
 
-### 3. Configuration Files
+Claude opens the file, edits it, and saves.
 
-**Project MCP** (`.mcp.json` - git tracked):
-```json
-{
-  "mcpServers": {
-    "postgres": {
-      "command": "npx",
-      "args": ["@anthropic-ai/mcp-postgres"],
-      "env": {
-        "DATABASE_URL": "${DATABASE_URL}"
-      }
-    },
-    "github": {
-      "command": "npx",
-      "args": ["@anthropic-ai/mcp-github"],
-      "env": {
-        "GITHUB_TOKEN": "${GITHUB_TOKEN}"
-      }
-    }
-  }
-}
+### Reviewing Changes
+
+Before editing, Claude shows what will change:
+
+```diff
+- <h1>Hello World</h1>
++ <h1>My Website</h1>
 ```
 
-**User MCP** (`~/.claude.json`):
-```json
-{
-  "mcpServers": {
-    "personal-api": {
-      "type": "http",
-      "url": "https://my-api.example.com/mcp"
-    }
-  }
-}
+- Red (-): Being deleted
+- Green (+): Being added
+
+Select `Allow` if okay, `Deny` if not.
+
+---
+
+## Recommended Workflow: Explore, Plan, Execute
+
+This is the method recommended by Anthropic.
+
+### Step 1: Explore
+
+First, understand the code.
+
+```
+> @src/login.js What does this file do?
 ```
 
-### 4. Popular MCP Servers
+### Step 2: Plan
 
-| Server | Purpose | Installation |
-|--------|---------|--------------|
-| **PostgreSQL** | Database queries | `npx @anthropic-ai/mcp-postgres` |
-| **GitHub** | Issues, PRs, repos | `npx @anthropic-ai/mcp-github` |
-| **Sentry** | Error monitoring | HTTP: `mcp.sentry.dev` |
-| **Slack** | Messaging | `npx @anthropic-ai/mcp-slack` |
-| **Filesystem** | Extended file ops | `npx @anthropic-ai/mcp-filesystem` |
+Create an editing plan.
 
-### 5. Using MCP Tools
-
-Once configured, Claude can use MCP tools naturally:
-
-```bash
-# With PostgreSQL MCP
-> Query the users table to find all premium subscribers
-
-# With GitHub MCP
-> List all open issues labeled "bug" in this repository
-
-# With Sentry MCP
-> Show me the most recent unresolved errors
+```
+> I want to add password validation here.
+> How should I do it? Do not write code yet, just plan.
 ```
 
-### 6. Environment Variables
+### Step 3: Execute (Code)
 
-Secure handling of credentials:
+Edit according to the plan.
 
-```bash
-# Set environment variables
-export DATABASE_URL="postgresql://user:pass@localhost/db"
-export GITHUB_TOKEN="ghp_xxxx"
-
-# Reference in config with ${VAR_NAME}
+```
+> Okay, edit according to that plan.
 ```
 
-**Best Practices**:
-- Never commit credentials to git
-- Use `.env` files for local development
-- Reference variables in MCP config
+### Step 4: Verify
 
-### 7. Creating Custom MCP Servers
+Check if it works.
 
-Basic MCP server structure (Node.js):
-
-```javascript
-// my-mcp-server.js
-import { Server } from "@modelcontextprotocol/sdk/server/index.js";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-
-const server = new Server({
-  name: "my-custom-server",
-  version: "1.0.0",
-});
-
-// Define tools
-server.setRechapterHandler("tools/list", async () => ({
-  tools: [
-    {
-      name: "get_weather",
-      description: "Get weather for a location",
-      inputSchema: {
-        type: "object",
-        properties: {
-          city: { type: "string" }
-        }
-      }
-    }
-  ]
-}));
-
-// Handle tool calls
-server.setRechapterHandler("tools/call", async (rechapter) => {
-  if (rechapter.params.name === "get_weather") {
-    const { city } = rechapter.params.arguments;
-    // Fetch weather data...
-    return { result: `Weather in ${city}: Sunny, 72°F` };
-  }
-});
-
-// Start server
-const transport = new StdioServerTransport();
-await server.connect(transport);
+```
+> Run the tests to verify.
 ```
 
-### 8. Debugging MCP
+**Why do this?**
+- If Claude writes code immediately, it might go the wrong direction
+- Seeing the plan first lets you adjust the direction
 
-```bash
-# Check MCP status
-claude mcp list
+---
 
-# Test MCP server manually
-npx @anthropic-ai/mcp-postgres --help
+## Improving with Feedback
 
-# View MCP logs
-claude --debug
+The first result does not need to be perfect. Provide feedback.
 
-# Verify environment variables
-echo $DATABASE_URL
+### Example
+
+```
+> Make a login form
+```
+
+If the result does not suit you:
+
+```
+> The error messages are too stiff. Make them friendlier.
+```
+
+```
+> The button is too small. Make it bigger.
+```
+
+2-3 rounds of feedback makes it much better.
+
+---
+
+## Undoing
+
+Undo if something went wrong.
+
+| Shortcut | What it does |
+|----------|--------------|
+| `Esc` | Stop current operation |
+| `Esc Esc` | Revert to previous state |
+| `Ctrl + C` | Cancel completely |
+
+### Example
+
+If Claude is going in a wrong direction:
+
+```
+# Press Esc Esc then
+> Not that. Let me explain again.
+> Keep the existing login logic, just add OAuth.
 ```
 
 ---
 
-## Resources
+## Good vs Bad Edit Requests
 
-- [MCP Documentation](https://modelcontextprotocol.io/)
-- [MCP Servers Directory](https://github.com/modelcontextprotocol/servers)
-- [Building MCP Servers Guide](https://modelcontextprotocol.io/docs/building)
+### Bad Example
 
----
+```
+> Fix the bug
+```
+Does not know what to fix.
 
-## Checklist
+### Good Example
 
-Answer these questions as if in an interview:
+```
+> In the validateEmail function in @src/utils.js,
+> there's a bug where invalid emails like "test@" pass through.
+> Fix it to check that the domain part has a dot (.).
+```
 
-1. **What is MCP and why would you use it?**
-   <details>
-   <summary>Hint</summary>
-   Protocol for connecting Claude to external tools/services: databases, APIs, custom tools
-   </details>
+### Even Better (Reference Existing Patterns)
 
-2. **What are the different MCP transport types?**
-   <details>
-   <summary>Hint</summary>
-   stdio (local), http (remote), sse (deprecated)
-   </details>
+```
+> Add a validatePhone function to @src/utils.js.
+> Similar style to validateEmail in @src/utils.js.
+```
 
-3. **Where should MCP configurations be stored?**
-   <details>
-   <summary>Hint</summary>
-   Project: .mcp.json (git tracked). User: ~/.claude.json (personal)
-   </details>
-
-4. **How do you securely handle credentials for MCP servers?**
-   <details>
-   <summary>Hint</summary>
-   Environment variables, ${VAR} references, never commit to git
-   </details>
+Referencing existing code produces consistent style.
 
 ---
 
-## Mini Project: Connected Development Environment
+## TDD Style: Tests First
 
-### Project Goals
+Writing tests first tells Claude exactly what to build.
 
-Build an MCP-powered development environment by completing:
+### Example
 
-- [ ] Configure database integration (PostgreSQL, MySQL, or MongoDB)
-- [ ] Configure issue tracker integration (GitHub Issues, Jira, or Linear)
-- [ ] Configure monitoring integration (Sentry, Datadog, or custom logging)
-- [ ] Add 1+ optional integration (Slack, Notion, CI/CD, etc.)
-- [ ] Create complete `.mcp.json` configuration file
-- [ ] Handle credentials securely with environment variables
-- [ ] Test each integration works end-to-end
+```
+# Step 1: Tests first
+> Write tests for formatDate function.
+> "2024-01-15" should return "January 15, 2024".
+> Empty string should throw an error.
 
-### Ideas to Try
+# Step 2: Run tests (verify failure)
+> Run the tests.
 
-- Build a custom MCP server for your own API
-- Create a workflow that connects monitoring to code fixes
-- Set up notifications that send alerts to Slack/Discord
-- Combine database queries with issue tracking for data investigations
+# Step 3: Implement
+> Now make the function pass the tests.
+
+# Step 4: Verify again
+> Run the tests again.
+```
 
 ---
 
-## Advanced
+## Refactoring Patterns
 
-### Exploring Popular MCP Servers
+### Extract Function
 
-Find useful servers at the [MCP Server Directory](https://github.com/modelcontextprotocol/servers) and try them:
+```
+> Extract the validation logic from lines 50-70 in @src/App.js
+> into a validateForm function.
+```
+
+### Rename
+
+```
+> Rename getUserData function to fetchUserProfile.
+> In all files.
+```
+
+### Move File
+
+```
+> Move @src/utils/helpers.js
+> to @src/lib/helpers.js.
+> Update all import statements too.
+```
+
+---
+
+## Safe Editing
+
+### Using Git
+
+Commit before major edits.
+
+```
+> Commit current state. Backup before refactoring.
+```
+
+If problems occur:
+
+```
+> Something went wrong. Revert to last commit.
+```
+
+### Using Permission Modes
+
+- **Plan mode**: When exploring (no edits allowed)
+- **Normal mode**: When learning (confirm each time)
+- **Accept Edits**: When comfortable (auto-approve)
+
+---
+
+## Practice
+
+### Practice 1: Basic Editing
+
+```
+# Create file
+> Create hello.html. A page that shows "Hello World".
+
+# Edit
+> Change the title to "Hello".
+
+# Add
+> Add a button. Alert on click.
+```
+
+### Practice 2: Explore, Plan, Execute
+
+```
+# Explore
+> @package.json What does this project do?
+
+# Plan
+> I want to add a user profile feature. Make a plan.
+
+# Execute
+> Start with step 1.
+```
+
+### Practice 3: Improve with Feedback
+
+```
+> Make a simple calculator HTML.
+
+# After seeing first result
+> The design is too plain. Make it prettier.
+
+# After seeing again
+> The buttons are too small. Make them bigger.
+```
+
+---
+
+## Mini Project: Code Refactoring
+
+Practice editing skills by refactoring real code.
+
+### Goals
+
+- Master code editing skills
+- Experience refactoring patterns
+
+### Preparation: Create Sample Code
+
+```
+> Create legacy.js with the following:
+> - About 100 lines of complex code
+> - Has duplicate code
+> - Unclear function names
+> - No comments
+```
+
+### Refactoring
+
+```
+> @legacy.js Analyze this code. What can be improved?
+
+> Separate duplicate code into functions
+
+> Rename functions to be meaningful
+
+> Add comments where needed
+```
+
+### Advanced Challenges (For Experts)
+
+```
+> Modernize this code to ES6+ syntax
+
+> Convert to TypeScript. Add proper types.
+
+> Add unit tests. For each function.
+```
+
+### Challenge
+
+Try refactoring a real open source project:
 
 ```bash
-# Filesystem server (local file access)
-npx -y @anthropic-ai/mcp-server-filesystem
-
-# Browser automation server
-npx -y @anthropic-ai/mcp-server-puppeteer
-
-# Git server (advanced git operations)
-npx -y @anthropic-ai/mcp-server-git
+git clone https://github.com/sindresorhus/ora.git
+cd ora
+claude
 ```
 
-### Combining MCP Servers
-
-Practical workflows using multiple MCP servers together:
-
-```bash
-# GitHub Issues + Database combination
-> Look up issue #123 from GitHub, then query our database
-> to find related user complaints from the last week
-
-# Slack + Git combination
-> Summarize today's git commits and post to #dev-updates channel
+```
+> Find parts of this project that can be improved
+> Pick one and create a refactoring plan
 ```
 
-### Building a Simple Custom MCP Server
+---
 
-If you really need one, create a minimal MCP server:
+## Summary
 
-```javascript
-// simple-mcp-server.js
-import { Server } from "@anthropic-ai/mcp-server";
+What you learned in this chapter:
+- [x] Getting Claude to edit code
+- [x] Explore, Plan, Execute workflow
+- [x] Improving with feedback
+- [x] Undoing
+- [x] Safe editing
 
-const server = new Server({
-  name: "my-tools",
-  version: "1.0.0"
-});
-
-server.addTool({
-  name: "get_weather",
-  description: "Get current weather for a city",
-  parameters: { city: { type: "string" } },
-  handler: async ({ city }) => {
-    // Actually call weather API
-    return { temp: 22, condition: "sunny" };
-  }
-});
-
-server.start();
-```
-
-> **Note**: In most cases, existing MCP servers are sufficient. Only create custom servers when you have truly specialized needs.
+Move on to [Chapter 09: Git Basics](../Chapter09/README.md).
