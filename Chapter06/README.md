@@ -263,6 +263,76 @@ Review the plan and execute if it looks good.
 
 ---
 
+## Advanced: Prompting Techniques
+
+### Limit the Scope
+
+The more freedom AI has, the more it may go in unexpected directions. "Make a button" could result in 10 helper functions and 3 utility files.
+
+Being clear about scope prevents this:
+
+```
+> Create a button component.
+> Handle it in this one file, do not create additional files.
+```
+
+### Provide Background Context
+
+The same request can have different optimal solutions depending on context.
+
+| No Context | With Context |
+|-----------|--------------|
+| "Optimize this function" | "This function is called on every page load so it needs to be fast" |
+| "Build login" | "This is for a hackathon prototype. Does not need to be complex" |
+
+When Claude knows "why you are doing this," it can choose appropriate tradeoffs.
+
+### When Results Are Not Good
+
+If you are not getting desired results, review your request:
+
+- Was it too vague?
+- Did I omit important context?
+- Did I ask for too much at once?
+
+Improving your request improves results. This is often a communication issue, not a model limitation.
+
+### The Power of Breaking Things Down
+
+Complex systems are combinations of small parts. AI agents work similarly—they perform small tasks well and combine them to create complex results.
+
+When requesting large tasks at once:
+- Hard to identify where things went wrong
+- Difficult to change direction
+
+When breaking into small units:
+- You can verify each step's results
+- If something fails, just redo that step
+- Progress is clear
+
+```
+# All at once
+> Build the entire payment system
+
+# Step by step
+> First, just make the payment button UI
+> (after verification) Connect the payment API
+> (after verification) Create the payment complete page
+```
+
+### The Iterative Improvement Cycle
+
+You do not need to be perfect from the start. Working with AI is an iterative refinement process:
+
+1. Try something
+2. Check the result
+3. Provide feedback on what is lacking
+4. Get a better result
+
+Spinning this cycle quickly is more efficient than trying to craft the perfect request on the first try.
+
+---
+
 ## Summary
 
 What you learned in this chapter:

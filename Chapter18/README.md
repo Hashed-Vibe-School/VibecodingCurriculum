@@ -344,6 +344,120 @@ Auto-approve frequently used safe tools:
 
 ---
 
+## Advanced: Understanding How AI Agents Work
+
+To get more from AI agents like Claude Code, understanding how they work helps.
+
+### Complex Tasks Through Tool Composition
+
+Claude Code performs complex tasks by **combining basic tools** like file reading, editing, and command execution. When you say "make a website," internally it:
+
+1. Checks the file system (what kind of project)
+2. Creates/modifies necessary files
+3. Runs build commands
+4. Verifies results
+
+These steps are composed together.
+
+Understanding this structure explains why smaller requests are more accurate—you can verify each tool worked correctly along the way.
+
+### Handling Unexpected Requests
+
+When basic tools are well-equipped, Claude can solve problems in ways you might not have anticipated. Tasks like "convert all images in this folder to WebP" are not predefined, but can be accomplished by combining existing tools.
+
+This is why Claude Code is more than a simple code generator.
+
+---
+
+## Advanced: Managing Conversation Context
+
+### Quality Drops as Conversations Get Long
+
+AI models have limits on how much information they can process at once. As conversations lengthen, earlier content may not be remembered well, and overall context comprehension can blur.
+
+`/compact` summarizes the conversation, but if quality has already degraded, the effect is limited.
+
+### Separate Conversations by Topic
+
+Handling auth, DB, and frontend in one conversation mixes contexts. Starting new conversations per topic lets each task stay focused.
+
+### Conversation Reset Technique
+
+When you feel quality has dropped:
+
+1. Save current progress to a file (progress.md, etc.)
+2. Reset conversation with `/clear`
+3. Have Claude read the saved file to restore context
+
+CLAUDE.md is preserved after `/clear`, so project rules remain.
+
+---
+
+## Advanced: Model Selection
+
+Claude Code lets you choose between different models.
+
+| Model | Characteristics | When to Use |
+|-------|----------------|-------------|
+| Sonnet | Fast and cost-effective | Clear tasks, simple implementation, refactoring |
+| Opus | Deep reasoning, higher cost | Complex design decisions, architecture discussions |
+
+**Practical tip**: Use a more powerful model for planning, a faster model for implementation. This balances cost and quality.
+
+```
+> /model opus
+> How should I design this system?
+
+(after plan is set)
+> /model sonnet
+> Build it according to the plan above
+```
+
+---
+
+## Advanced: When You Get Stuck
+
+### Start Fresh
+
+If the conversation is tangled, `/clear` may be the fastest solution. A clean state is often better than accumulated confusion.
+
+### Narrow the Scope
+
+If a large task is not working, break it down.
+
+```
+# Not working
+> Build the entire payment system
+
+# Step by step
+> Just make the payment button UI first
+```
+
+### Show with Examples
+
+If explaining with words is difficult, show an example of the desired result. Claude recognizes patterns well.
+
+```
+> Response format should be like this:
+> { "status": "ok", "data": [...] }
+```
+
+### Approach from a Different Angle
+
+If repeating the same request does not work, express the problem differently.
+
+```
+# Not working
+> Fix the state change logic
+
+# Different approach
+> Reimplement this as a state machine pattern
+```
+
+Changing perspective often leads to sudden success.
+
+---
+
 ## Summary
 
 What you learned in this chapter:

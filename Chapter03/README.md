@@ -193,6 +193,57 @@ claude --resume
 
 ---
 
+## Advanced: Using Claude Code Effectively
+
+### Think → Plan → Execute
+
+When starting with an AI tool, the instinct is to type immediately. But pausing to clarify "what am I trying to build?" leads to much better results.
+
+Plan Mode helps with this. Claude analyzes the code and suggests an approach, and you can verify the plan before proceeding. Getting the direction right early prevents "do I need to redo this?" situations later.
+
+### Choosing the Right Permission Mode
+
+If you are unsure which mode to use, consider two factors:
+
+**1. Risk level of the task**
+- Creating new files → Low
+- Modifying existing code → Medium
+- Config files or database operations → High
+
+**2. Can it be undone?**
+- Tracked by Git → Easy to revert
+- External service calls → Hard to undo
+
+| Situation | Recommended Mode |
+|-----------|-----------------|
+| Low risk + Easy to revert | Accept Edits |
+| Medium risk or unfamiliar task | Normal |
+| High risk or hard to undo | Plan |
+
+### Clear Requests Lead to Clear Results
+
+Saying "make a website" forces Claude to choose from countless possibilities. But "make a portfolio page with intro, 3 projects, and contact sections in dark theme" lets Claude understand exactly what you want.
+
+When making requests, consider:
+- **What**: What result do you want
+- **Where**: Which file/location
+- **How**: Any specific approach you prefer
+- **Why**: Context enables better judgment
+
+### Design Decisions Together
+
+For complex features, rather than jumping into implementation, discuss the structure with Claude in Plan Mode first.
+
+```
+> /plan
+> I want to add user authentication.
+> What options are there, and what fits this project?
+```
+
+When Claude explains options like JWT, sessions, or OAuth, you choose and then proceed with implementation. This prevents "built it but it doesn't match the requirements" situations.
+
+---
+
 ## Summary
 
 Covered in this chapter:
