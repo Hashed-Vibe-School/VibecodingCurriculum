@@ -335,6 +335,70 @@ Version control CLAUDE.md like code.
 
 ---
 
+## Advanced: Getting More from CLAUDE.md
+
+### Add Reasons to Rules
+
+"Do this because of that" is more effective than just "do this." Claude can make the right judgment in similar situations on its own.
+
+```markdown
+# Without reason
+- Use TypeScript strict mode
+
+# With reason
+- Use TypeScript strict mode (prevents bugs from implicit any types)
+```
+
+### Conciseness is Key
+
+The longer CLAUDE.md gets, the less effective it becomes. Like humans, Claude may miss things when given too many instructions.
+
+Focus on **rules that apply right now** rather than project history or background. "Our team in 2023..." is not needed.
+
+### Repeated Corrections = Signal to Add to CLAUDE.md
+
+If you have given Claude the same feedback more than twice, that is a signal to add it to CLAUDE.md.
+
+```
+1st time: "Write comments in English" → Claude fixes it
+2nd time: "English again. Use Korean" → Time to add to CLAUDE.md!
+```
+
+This accumulation means Claude understands your project better over time.
+
+### Managing Long-term Work with External Memory
+
+Conversation context eventually disappears, but files remain. For complex or long tasks, record progress in a file.
+
+```markdown
+# progress.md
+
+## Current Status
+- [x] Login UI complete
+- [ ] API integration in progress
+- [ ] Error handling pending
+
+## Decisions Made
+- Using JWT instead of sessions
+- Token expiry: 7 days
+
+## Next Steps
+- Implement refresh token
+```
+
+This allows:
+- Starting a new conversation and having Claude read the file to continue
+- Clear visibility into progress
+- Useful when sharing with teammates
+
+### The Power of Continuous Improvement
+
+CLAUDE.md is not a write-once document. It is a **living document** that you refine as the project progresses.
+
+Add new rules as they emerge, delete rules that no longer apply. This small investment compounds, and the quality of collaboration with Claude noticeably improves.
+
+---
+
 ## Summary
 
 What you learned in this chapter:

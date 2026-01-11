@@ -392,6 +392,55 @@ Build a fully automated development pipeline.
 
 ---
 
+## Advanced: Using AI as Part of Your System
+
+So far, we have used Claude Code interactively. But the real power comes when it becomes **part of an automated system**.
+
+### One-off Tasks vs Systems
+
+| One-off | System |
+|---------|--------|
+| "Fix this bug" | Auto code review on every PR |
+| "Write a commit message" | Meaningful messages generated on every commit |
+| "Write tests" | Tests auto-supplemented on code changes |
+
+Using headless mode (`-p` flag), you can integrate Claude into scripts and CI pipelines.
+
+### Building Feedback Loops
+
+The real value of automation is that **improvements accumulate**.
+
+1. Claude performs code review
+2. Discovers the same pattern of mistakes repeating
+3. Add that rule to CLAUDE.md
+4. Future reviews catch that mistake proactively
+
+The system gets smarter over time. Quality improves just by refining prompts and settings, without code changes.
+
+### Eliminating Repetitive Work with MCP
+
+If you are constantly copying the same information and pasting it to Claude, you can automate it with MCP servers.
+
+For example:
+- Fetching task details from issue tracker
+- Checking database schema
+- Sharing results to Slack channel
+
+When these tasks are automatically connected, you can focus only on the truly important decisions.
+
+### Growing as a Developer
+
+To use Claude Code effectively, you ultimately need **good development habits**:
+
+- Defining requirements clearly
+- Breaking work into appropriate sizes
+- Verifying results and providing feedback
+- Automating repeating patterns
+
+AI tools let you execute these habits faster—they do not replace the habits themselves. As you work with AI and develop these capabilities, you grow alongside the tools as they evolve.
+
+---
+
 ## Summary
 
 What you learned in this chapter:
@@ -400,6 +449,7 @@ What you learned in this chapter:
 - [x] Using GitHub Actions
 - [x] Headless mode
 - [x] Auto-deploy pipelines
+- [x] Using AI as part of systems
 
 In the next chapter, we bring together everything you have learned.
 
