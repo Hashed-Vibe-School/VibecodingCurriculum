@@ -20,6 +20,15 @@ Games incorporate all aspects of development:
 - Processing logic (JavaScript)
 - Managing state (score, level)
 
+**Game request tips:**
+
+```
+> Make a number guessing game. Range 1-100.
+> Show attempt count, and display a congratulations message if solved within 10 tries.
+```
+
+Describe game rules and desired features specifically for more polished results.
+
 ---
 
 ## Game 1: Number Guessing

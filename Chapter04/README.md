@@ -119,7 +119,16 @@ Red (-) indicates removal, green (+) indicates addition.
 > Read @README.md
 ```
 
-Claude reads and displays file contents. For long files, important sections may be summarized.
+Claude reads and displays file contents.
+
+**For long files:**
+
+```
+> @README.md Summarize the key points
+> @config.json Find only the port setting
+```
+
+Be specific about what you need to find it faster.
 
 ---
 

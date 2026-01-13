@@ -257,7 +257,15 @@ Claude will run a simple server. Typically accessible at `http://localhost:3000`
 > CSS isn't being applied. What's wrong?
 ```
 
-Claude will check and fix it.
+Claude checks file paths, link tags, selectors, and more.
+
+**Troubleshooting tip:**
+
+```
+> CSS isn't applying. Check both @index.html and @style.css.
+```
+
+Reference related files together for faster problem-solving.
 
 ### When Layout Breaks
 

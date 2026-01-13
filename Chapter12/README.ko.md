@@ -60,6 +60,15 @@ Claude가:
 2. GitHub에 저장소 생성
 3. 코드 푸시
 
+**배포 요청 팁:**
+
+```
+> 이 프로젝트 GitHub에 올려줘. 저장소는 public으로.
+> 커밋 메시지는 "Initial commit"으로 해줘.
+```
+
+저장소 설정(public/private)이나 커밋 메시지를 지정하면 원하는 대로 배포됩니다.
+
 ### 2단계: Vercel 연결
 
 1. [vercel.com](https://vercel.com) 접속

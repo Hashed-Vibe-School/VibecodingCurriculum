@@ -31,7 +31,7 @@ Now you can create various projects using Claude Code.
 
 - Website development
 - Deployment (Vercel, Railway)
-- Data storage (Supabase)
+- Data storage (localStorage, CRUD)
 - Making mini games
 
 ### Part 4: Practical Projects II (Chapter 15-17)
@@ -219,11 +219,11 @@ Use everything you've learned to complete one project.
 ```
 > Create a personal dashboard.
 > - Todo list
-> - Today's weather
-> - Recent GitHub activity
+> - Random quote (using Quotable API)
+> - Recent GitHub activity (public API)
 > - Notepad
 
-> Store data with Supabase
+> Store data with localStorage
 > Deploy with Vercel
 > Write good CLAUDE.md
 > Version control with Git
@@ -269,8 +269,8 @@ With Claude Code, you can turn any idea into reality.
 ### Tools
 
 - [Vercel](https://vercel.com) - Deployment
-- [Supabase](https://supabase.com) - Database
 - [GitHub](https://github.com) - Code repository
+- [PokeAPI](https://pokeapi.co) - Free Pokemon API
 
 ---
 

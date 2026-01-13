@@ -16,6 +16,10 @@ CLAUDE.md is a "note for Claude."
 
 Claude reads this file at the start of every new conversation. This eliminates the need to repeat the same things every time.
 
+**Why does this work?**
+
+LLMs have something called a "context window." They reference information within this window during conversations. When CLAUDE.md is read, its contents are included in the context, creating an effect as if you "just mentioned it."
+
 ### Why Do You Need It?
 
 Without CLAUDE.md:
@@ -57,7 +61,15 @@ my-project/
 > Create a CLAUDE.md for this project
 ```
 
-Claude analyzes the project and creates it automatically.
+Claude analyzes the project and creates it. It examines `package.json`, folder structure, existing code style, and more to understand the project's characteristics.
+
+**For a better CLAUDE.md:**
+
+```
+> Create CLAUDE.md. Emphasize naming conventions and folder structure.
+```
+
+Tell Claude what to emphasize and it will customize accordingly.
 
 ### Create It Yourself
 
@@ -245,7 +257,7 @@ If Claude wrote comments in English:
 - Comments must be in Korean
 ```
 
-Add these and it will not happen again.
+Add these and from the next conversation, CLAUDE.md will be included in the context, and Claude will follow those rules.
 
 ---
 
@@ -408,7 +420,7 @@ What you learned in this chapter:
 - [x] Personal vs Project memory
 - [x] Updating rules
 
-When CLAUDE.md is well written, Claude understands your project exactly.
+CLAUDE.md leverages the LLM's context mechanism. When well written, Claude starts each task already understanding your project context without you having to repeat the same explanations.
 
 Congratulations. You have completed Part 2 (Core Features).
 

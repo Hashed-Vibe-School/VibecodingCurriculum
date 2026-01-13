@@ -77,7 +77,7 @@ Plan mode makes Claude plan before executing.
 
 ### Why Plan Mode?
 
-If Claude writes code immediately, it might go in the wrong direction. Review the plan first in Plan mode, then execute if it looks good.
+When LLMs receive a request, they immediately start generating in the direction that seems most appropriate. But this "seems appropriate" doesn't always match your intent. Reviewing the plan in Plan mode first lets you adjust direction before execution.
 
 ### How to Use
 
@@ -172,7 +172,7 @@ If it went completely wrong:
 
 ## Ultrathink: Solving Complex Problems
 
-For difficult problems, make Claude think more deeply.
+LLMs go through an internal "reasoning process" when generating responses. More complex problems require more reasoning. Certain keywords can guide Claude to use more reasoning time.
 
 ### Keywords
 

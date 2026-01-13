@@ -76,8 +76,10 @@ Check if it works.
 ```
 
 **Why do this?**
-- If Claude writes code immediately, it might go the wrong direction
-- Seeing the plan first lets you adjust the direction
+
+When LLMs receive a request, they select the most appropriate pattern from their training. But even "password validation" has multiple implementation approaches (regex, libraries, custom logic, etc.). Reviewing the plan first:
+- Shows you which direction Claude is heading
+- Lets you correct course before any code is written
 
 ---
 

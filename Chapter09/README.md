@@ -38,7 +38,7 @@ Git is a tool for managing versions of code.
 > Is git installed?
 ```
 
-Claude checks. If not, it provides installation instructions.
+Claude runs a terminal command to check. If Git isn't installed, it will guide you through OS-specific installation steps.
 
 ---
 
@@ -57,6 +57,15 @@ Claude will:
 2. Analyze the changes (`git diff`)
 3. Write an appropriate commit message
 4. Execute the commit
+
+**Tips for better commit messages:**
+
+```
+> Commit the changes. Use Conventional Commits format.
+> This change is a bug fix.
+```
+
+Provide context for more accurate messages. Hints like "new feature", "bug fix", or "refactoring" help.
 
 ### Commit Message Format
 
@@ -177,6 +186,15 @@ Claude will:
 2. Suggest how to merge
 3. Apply the fix
 
+**Tips for conflict resolution:**
+
+```
+> Resolve the conflict. Keep my branch's login logic.
+> I need both versions. Merge them together.
+```
+
+Tell Claude which version you prefer, or if you need both—it will resolve accordingly.
+
 ---
 
 ## Git Safety Rules
@@ -278,6 +296,6 @@ What you learned in this chapter:
 - [x] Using branches
 - [x] Creating PRs
 
-Git may seem difficult at first, but Claude handles it for you.
+You do not need to memorize Git commands. What matters is **understanding the concepts**. If you know concepts like "commits are save points" and "branches are workspaces," you can communicate your intent to Claude, and Claude will execute the appropriate commands.
 
 Move on to [Chapter 10: Project Memory](../Chapter10/README.md).

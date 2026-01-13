@@ -14,7 +14,16 @@
 
 When starting a new project, you often wonder "what does this code do?"
 
-Claude Code excels at exploring and explaining code. Instead of reading all the code yourself, ask Claude.
+Instead of reading all the code yourself, ask Claude and it will identify and explain the key points.
+
+**Effective exploration requests:**
+
+```
+> Find the authentication-related code in this project
+> What does the src/utils folder do?
+```
+
+Specify a feature or folder for more accurate answers.
 
 ---
 
@@ -76,7 +85,7 @@ Glob finds files by name patterns.
 
 ### Pattern Syntax (Reference)
 
-No need to memorize this. Claude handles it.
+No need to memorize this. Make natural language requests and Claude converts them to appropriate patterns.
 
 | Pattern | Meaning |
 |---------|---------|

@@ -60,6 +60,15 @@ Claude will:
 2. Create repository on GitHub
 3. Push code
 
+**Deployment request tips:**
+
+```
+> Upload this project to GitHub. Make the repository public.
+> Use "Initial commit" as the commit message.
+```
+
+Specify repository settings (public/private) or commit messages to deploy exactly as you want.
+
 ### Step 2: Connect Vercel
 
 1. Go to [vercel.com](https://vercel.com)

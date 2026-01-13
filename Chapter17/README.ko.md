@@ -1,402 +1,461 @@
-# Chapter 17: API 연동
+# Chapter 17: 풀스택 앱 만들기
 
 [English](./README.md) | **한국어**
 
 ## 이 챕터에서 배우는 것
 
-- API가 무엇인지
-- 외부 API 사용하기
-- 실전 API 프로젝트
+- 프론트엔드와 백엔드를 함께 만드는 방법
+- API 설계와 구현
+- 데이터 저장과 조회
 
 ---
 
-## API란?
+## 왜 풀스택인가?
 
-API는 프로그램끼리 대화하는 방법입니다.
+지금까지 만든 프로젝트들은 대부분 프론트엔드만 있었습니다. 하지만 실제 서비스는:
+- 여러 사용자의 데이터를 저장해야 하고
+- 데이터를 영구적으로 보관해야 하며
+- 보안이 필요한 로직이 있습니다
 
-레스토랑에 비유하면:
-- **당신** = 클라이언트 (주문하는 사람)
-- **웨이터** = API (요청을 전달하는 사람)
-- **주방** = 서버 (요청을 처리하는 곳)
+이런 것들을 처리하려면 백엔드가 필요합니다.
 
-### 예시
+**풀스택 요청 팁:**
 
-날씨 앱이 날씨 데이터를 보여주는 과정:
-1. 앱이 날씨 API에 "서울 날씨 알려줘" 요청
-2. API가 날씨 서버에 전달
-3. 서버가 데이터 응답
-4. 앱이 화면에 표시
-
----
-
-## API 호출하기
-
-### fetch 사용법
-
-```javascript
-// 기본 GET 요청
-const response = await fetch('https://api.example.com/data')
-const data = await response.json()
-console.log(data)
+```
+> 북마크 저장 앱을 만들어줘.
+> 프론트엔드는 React,
+> 백엔드는 Express,
+> 데이터베이스는 SQLite.
+>
+> 기능:
+> - 북마크 추가 (URL, 제목)
+> - 북마크 목록 보기
+> - 북마크 삭제
 ```
 
-### POST 요청 (데이터 보내기)
+프론트/백엔드 기술 스택과 필요한 기능을 명시하면 전체 구조를 잡아줍니다.
+
+---
+
+## 프로젝트: 할 일 관리 앱
+
+간단하지만 완전한 풀스택 앱을 만들어봅시다.
+
+### Step 1: 프로젝트 시작
+
+```
+> 할 일 관리 풀스택 앱을 만들어줘.
+>
+> 구조:
+> - frontend/ (React + Vite)
+> - backend/ (Express + SQLite)
+>
+> 일단 프로젝트 폴더 구조만 잡아줘.
+```
+
+Claude가 만드는 구조:
+```
+todo-app/
+├── frontend/
+│   ├── src/
+│   │   ├── App.jsx
+│   │   └── components/
+│   └── package.json
+├── backend/
+│   ├── index.js
+│   ├── routes/
+│   └── package.json
+└── README.md
+```
+
+### Step 2: 백엔드 API 만들기
+
+```
+> 백엔드에 할 일 API를 만들어줘.
+>
+> 엔드포인트:
+> GET /api/todos - 모든 할 일 조회
+> POST /api/todos - 새 할 일 추가
+> PATCH /api/todos/:id - 완료 상태 토글
+> DELETE /api/todos/:id - 할 일 삭제
+>
+> SQLite로 데이터 저장.
+```
+
+Claude가 만드는 API:
 
 ```javascript
-const response = await fetch('https://api.example.com/users', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    name: '홍길동',
-    email: 'hong@email.com'
-  })
+// backend/index.js
+const express = require('express')
+const Database = require('better-sqlite3')
+const cors = require('cors')
+
+const app = express()
+const db = new Database('todos.db')
+
+app.use(cors())
+app.use(express.json())
+
+// 테이블 생성
+db.exec(`
+  CREATE TABLE IF NOT EXISTS todos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    text TEXT NOT NULL,
+    completed INTEGER DEFAULT 0,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+  )
+`)
+
+// 전체 조회
+app.get('/api/todos', (req, res) => {
+  const todos = db.prepare('SELECT * FROM todos ORDER BY created_at DESC').all()
+  res.json(todos)
+})
+
+// 추가
+app.post('/api/todos', (req, res) => {
+  const { text } = req.body
+  const result = db.prepare('INSERT INTO todos (text) VALUES (?)').run(text)
+  res.json({ id: result.lastInsertRowid, text, completed: 0 })
+})
+
+// 토글
+app.patch('/api/todos/:id', (req, res) => {
+  const { id } = req.params
+  db.prepare('UPDATE todos SET completed = NOT completed WHERE id = ?').run(id)
+  res.json({ success: true })
+})
+
+// 삭제
+app.delete('/api/todos/:id', (req, res) => {
+  const { id } = req.params
+  db.prepare('DELETE FROM todos WHERE id = ?').run(id)
+  res.json({ success: true })
+})
+
+app.listen(3001, () => {
+  console.log('Server running on http://localhost:3001')
+})
+```
+
+### Step 3: 프론트엔드 연결
+
+```
+> 프론트엔드에서 백엔드 API를 호출하는 코드 만들어줘.
+>
+> - 할 일 목록 표시
+> - 새 할 일 추가 폼
+> - 체크박스로 완료 토글
+> - 삭제 버튼
+```
+
+```javascript
+// frontend/src/App.jsx
+import { useState, useEffect } from 'react'
+
+const API_URL = 'http://localhost:3001/api/todos'
+
+function App() {
+  const [todos, setTodos] = useState([])
+  const [newTodo, setNewTodo] = useState('')
+
+  useEffect(() => {
+    fetch(API_URL)
+      .then(res => res.json())
+      .then(setTodos)
+  }, [])
+
+  const addTodo = async () => {
+    if (!newTodo.trim()) return
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: newTodo })
+    })
+    const todo = await res.json()
+    setTodos([todo, ...todos])
+    setNewTodo('')
+  }
+
+  const toggleTodo = async (id) => {
+    await fetch(`${API_URL}/${id}`, { method: 'PATCH' })
+    setTodos(todos.map(t =>
+      t.id === id ? { ...t, completed: !t.completed } : t
+    ))
+  }
+
+  const deleteTodo = async (id) => {
+    await fetch(`${API_URL}/${id}`, { method: 'DELETE' })
+    setTodos(todos.filter(t => t.id !== id))
+  }
+
+  return (
+    <div>
+      <h1>할 일 목록</h1>
+      <input
+        value={newTodo}
+        onChange={e => setNewTodo(e.target.value)}
+        placeholder="할 일 입력"
+      />
+      <button onClick={addTodo}>추가</button>
+
+      <ul>
+        {todos.map(todo => (
+          <li key={todo.id}>
+            <input
+              type="checkbox"
+              checked={todo.completed}
+              onChange={() => toggleTodo(todo.id)}
+            />
+            <span style={{
+              textDecoration: todo.completed ? 'line-through' : 'none'
+            }}>
+              {todo.text}
+            </span>
+            <button onClick={() => deleteTodo(todo.id)}>삭제</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+export default App
+```
+
+### Step 4: 실행
+
+```bash
+# 터미널 1: 백엔드
+cd backend && npm install && node index.js
+
+# 터미널 2: 프론트엔드
+cd frontend && npm install && npm run dev
+```
+
+---
+
+## 기능 확장하기
+
+### 카테고리 추가
+
+```
+> 할 일에 카테고리 기능을 추가해줘.
+> - 카테고리 생성/삭제
+> - 할 일에 카테고리 지정
+> - 카테고리별 필터링
+```
+
+### 마감일 기능
+
+```
+> 할 일에 마감일을 설정할 수 있게 해줘.
+> - 날짜 선택 UI
+> - 마감일 순 정렬
+> - 오늘 마감인 것 강조
+```
+
+### 검색 기능
+
+```
+> 할 일 검색 기능 추가해줘.
+> - 텍스트로 검색
+> - 검색어 하이라이트
+```
+
+---
+
+## 두 번째 프로젝트: 메모 앱
+
+마크다운을 지원하는 메모 앱을 만들어봅시다.
+
+### 기본 설정
+
+```
+> 마크다운 메모 앱을 만들어줘.
+>
+> 프론트엔드: React
+> 백엔드: Express + SQLite
+>
+> 기능:
+> - 메모 작성 (마크다운 지원)
+> - 메모 목록 (사이드바)
+> - 실시간 미리보기
+> - 메모 삭제
+```
+
+### 마크다운 렌더링
+
+```
+> react-markdown 라이브러리로 마크다운 렌더링해줘.
+> 코드 블록에는 syntax highlighting도 적용해줘.
+```
+
+### 자동 저장
+
+```
+> 메모 작성 중에 자동 저장되게 해줘.
+> 타이핑 멈춘 후 1초 뒤에 저장.
+> 저장 중일 때 상태 표시.
+```
+
+---
+
+## 인증 추가하기
+
+실제 서비스에는 로그인이 필요합니다.
+
+### 간단한 인증
+
+```
+> 간단한 로그인 기능을 추가해줘.
+> - 회원가입 (이메일, 비밀번호)
+> - 로그인
+> - JWT 토큰 사용
+> - 로그인한 사용자만 자기 할 일 보기
+```
+
+### 백엔드 인증
+
+```javascript
+// 로그인 API
+app.post('/api/login', async (req, res) => {
+  const { email, password } = req.body
+  const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email)
+
+  if (!user || !await bcrypt.compare(password, user.password)) {
+    return res.status(401).json({ error: '로그인 실패' })
+  }
+
+  const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET)
+  res.json({ token })
+})
+
+// 인증 미들웨어
+function auth(req, res, next) {
+  const token = req.headers.authorization?.split(' ')[1]
+  if (!token) return res.status(401).json({ error: '인증 필요' })
+
+  try {
+    const { userId } = jwt.verify(token, process.env.JWT_SECRET)
+    req.userId = userId
+    next()
+  } catch {
+    res.status(401).json({ error: '유효하지 않은 토큰' })
+  }
+}
+
+// 보호된 라우트
+app.get('/api/todos', auth, (req, res) => {
+  const todos = db.prepare('SELECT * FROM todos WHERE user_id = ?').all(req.userId)
+  res.json(todos)
 })
 ```
 
 ---
 
-## 무료 공개 API 모음
+## 배포하기
 
-연습하기 좋은 무료 API들입니다:
-
-| API | 설명 | 인증 필요 |
-|-----|------|-----------|
-| JSONPlaceholder | 테스트용 가짜 데이터 | X |
-| OpenWeatherMap | 날씨 정보 | O (무료 키) |
-| The Cat API | 고양이 사진 | X |
-| Pokemon API | 포켓몬 데이터 | X |
-| 공공데이터포털 | 한국 공공 데이터 | O (무료) |
-
----
-
-## 프로젝트 1: 날씨 앱
-
-### 준비
-
-1. [OpenWeatherMap](https://openweathermap.org/api) 가입
-2. 무료 API 키 발급
-
-### 만들기
+### 풀스택 앱 배포
 
 ```
-> 날씨 앱 만들어줘.
-> - 도시 이름 입력
-> - OpenWeatherMap API로 날씨 조회
-> - 온도, 날씨 상태, 아이콘 표시
+> 이 풀스택 앱을 배포하려고 해.
+> 프론트엔드는 Vercel,
+> 백엔드는 Railway에 배포하는 방법 알려줘.
 ```
 
-### 핵심 코드
-
-```javascript
-async function getWeather(city) {
-  const API_KEY = 'your-api-key'
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric&lang=kr`
-
-  const response = await fetch(url)
-  const data = await response.json()
-
-  return {
-    temp: data.main.temp,
-    description: data.weather[0].description,
-    icon: data.weather[0].icon
-  }
-}
-```
-
-### 개선하기
+### 환경변수 설정
 
 ```
-> 현재 위치 기반으로 날씨 보여줘
+> 프로덕션에서 필요한 환경변수들 정리해줘.
+> - 데이터베이스 연결
+> - JWT 시크릿
+> - 프론트엔드 URL
+```
 
-> 5일 예보도 보여줘
+### 배포 체크리스트
 
-> 날씨에 따라 배경색 바꿔줘
+Claude에게 물어보세요:
+```
+> 배포 전에 체크해야 할 것들 알려줘.
+> - 보안
+> - 성능
+> - 에러 처리
 ```
 
 ---
 
-## 프로젝트 2: 랜덤 명언 앱
-
-### 만들기
-
-```
-> 명언 앱 만들어줘.
-> - 페이지 로드하면 랜덤 명언 표시
-> - "새 명언" 버튼 누르면 다른 명언
-> - 명언 복사 기능
-```
-
-### API 사용
-
-```javascript
-async function getQuote() {
-  const response = await fetch('https://api.quotable.io/random')
-  const data = await response.json()
-
-  return {
-    content: data.content,
-    author: data.author
-  }
-}
-```
-
----
-
-## 프로젝트 3: 포켓몬 도감
-
-### 만들기
-
-```
-> 포켓몬 도감 만들어줘.
-> - 포켓몬 번호나 이름으로 검색
-> - PokeAPI 사용
-> - 이미지, 타입, 능력치 표시
-```
-
-### API 사용
-
-```javascript
-async function getPokemon(nameOrId) {
-  const response = await fetch(
-    `https://pokeapi.co/api/v2/pokemon/${nameOrId}`
-  )
-  const data = await response.json()
-
-  return {
-    name: data.name,
-    image: data.sprites.front_default,
-    types: data.types.map(t => t.type.name),
-    stats: data.stats
-  }
-}
-```
-
-### 개선하기
-
-```
-> 한글 이름으로도 검색되게 해줘
-
-> 진화 정보도 보여줘
-
-> 즐겨찾기 기능 추가해줘
-```
-
----
-
-## 프로젝트 4: 환율 계산기
-
-### 만들기
-
-```
-> 환율 계산기 만들어줘.
-> - 금액 입력
-> - 원화 ↔ 달러/엔/유로 변환
-> - 실시간 환율 사용
-```
-
-### API 사용
-
-```javascript
-async function getExchangeRate(from, to) {
-  const response = await fetch(
-    `https://api.exchangerate-api.com/v4/latest/${from}`
-  )
-  const data = await response.json()
-
-  return data.rates[to]
-}
-
-// 사용
-const rate = await getExchangeRate('USD', 'KRW')
-console.log(`1 달러 = ${rate} 원`)
-```
-
----
-
-## API 에러 처리
-
-### 기본 에러 처리
-
-```javascript
-async function fetchData(url) {
-  try {
-    const response = await fetch(url)
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
-
-    return await response.json()
-  } catch (error) {
-    console.error('API 에러:', error)
-    return null
-  }
-}
-```
-
-### 사용자에게 알리기
-
-```
-> API 에러나면 사용자에게 친절하게 알려줘.
-> - 네트워크 에러: "인터넷 연결을 확인해주세요"
-> - 404: "데이터를 찾을 수 없습니다"
-> - 500: "서버에 문제가 생겼습니다"
-```
-
----
-
-## 로딩 상태 관리
-
-### 로딩 표시
-
-```javascript
-async function fetchWithLoading() {
-  showLoading()  // 로딩 시작
-
-  try {
-    const data = await fetchData(url)
-    displayData(data)
-  } catch (error) {
-    showError(error)
-  } finally {
-    hideLoading()  // 로딩 끝
-  }
-}
-```
-
-### 스켈레톤 로딩
-
-```
-> 데이터 로딩 중에 스켈레톤 UI 보여줘
-```
-
----
-
-## API 키 보안
-
-### 프론트엔드에서는 조심
-
-```
-// 나쁜 예 - API 키가 노출됩니다!
-const API_KEY = 'sk-1234567890'
-fetch(`https://api.example.com?key=${API_KEY}`)
-```
-
-### 해결 방법
-
-1. **백엔드 서버 경유**
-```
-> API 호출을 대신해주는 백엔드 만들어줘.
-> 프론트에서는 백엔드만 호출하게.
-```
-
-2. **서버리스 함수 사용**
-```
-> Vercel Edge Function으로 API 프록시 만들어줘
-```
-
----
-
-## 캐싱으로 최적화
-
-### 같은 요청 반복 방지
-
-```javascript
-const cache = new Map()
-
-async function fetchWithCache(url) {
-  if (cache.has(url)) {
-    return cache.get(url)
-  }
-
-  const data = await fetchData(url)
-  cache.set(url, data)
-
-  return data
-}
-```
-
-### localStorage 활용
-
-```javascript
-async function fetchWithLocalStorage(key, url) {
-  const cached = localStorage.getItem(key)
-  if (cached) {
-    return JSON.parse(cached)
-  }
-
-  const data = await fetchData(url)
-  localStorage.setItem(key, JSON.stringify(data))
-
-  return data
-}
-```
-
----
-
-## 실습: API 앱 만들기
+## 실습 과제
 
 ### 기본 과제
 
-위 프로젝트 중 하나를 완성하세요.
+```
+> 북마크 관리 앱을 만들어줘.
+>
+> 기능:
+> - URL과 제목으로 북마크 추가
+> - 북마크 목록 보기
+> - 태그로 분류
+> - 검색
+>
+> 기술: React + Express + SQLite
+```
 
-### 추가 도전
+### 심화 과제
 
 ```
-> GitHub API로 내 프로필 보여주는 앱 만들어줘
+> 간단한 블로그 시스템을 만들어줘.
+>
+> - 글 작성/수정/삭제
+> - 마크다운 지원
+> - 카테고리
+> - 간단한 관리자 인증
+```
 
-> 영화 검색 앱 만들어줘 (TMDB API)
-
-> 뉴스 헤드라인 앱 만들어줘 (News API)
+```
+> 파일 공유 서비스를 만들어줘.
+>
+> - 파일 업로드
+> - 공유 링크 생성
+> - 다운로드 카운터
+> - 만료 시간 설정
 ```
 
 ---
 
-## 미니 프로젝트: API 매시업
+## API 설계 팁
 
-여러 API를 조합해서 멋진 앱을 만들어보세요!
-
-### 목표
-
-- 여러 API 통합
-- 복합적인 데이터 활용
-
-### 만들기: 여행 도우미
+### RESTful 설계
 
 ```
-> 여행 도우미 앱 만들어줘.
-> - 도시 검색
-> - 날씨 API로 현재 날씨
-> - 환율 API로 현지 화폐
-> - 지도 API로 위치 표시
+> RESTful API 설계 원칙 알려줘.
+> - 리소스 네이밍
+> - HTTP 메서드
+> - 상태 코드
 ```
 
-### 다른 아이디어
+| 메서드 | 용도 | 예시 |
+|--------|------|------|
+| GET | 조회 | GET /api/todos |
+| POST | 생성 | POST /api/todos |
+| PUT | 전체 수정 | PUT /api/todos/1 |
+| PATCH | 부분 수정 | PATCH /api/todos/1 |
+| DELETE | 삭제 | DELETE /api/todos/1 |
+
+### 에러 처리
 
 ```
-> 개발자 대시보드 만들어줘.
-> - GitHub API로 내 저장소
-> - Stack Overflow API로 인기 질문
-> - Hacker News API로 최신 뉴스
-
-> 건강 트래커 만들어줘.
-> - 날씨 API로 운동하기 좋은 날
-> - 레시피 API로 건강 식단
-> - 운동 API로 추천 운동
+> API 에러 응답 형식을 통일해줘.
+> 프론트엔드에서 처리하기 쉽게.
 ```
 
-### 심화 과제 (숙련자용)
-
-```
-> WebSocket으로 실시간 데이터 스트리밍 구현해줘
-
-> Rate limiting 처리 로직 추가해줘
-
-> API 응답 캐싱 레이어 만들어줘
-
-> 여러 API 요청을 병렬로 처리해줘 (Promise.all)
+```javascript
+// 일관된 에러 형식
+{
+  "error": true,
+  "message": "할 일을 찾을 수 없습니다",
+  "code": "NOT_FOUND"
+}
 ```
 
 ---
@@ -404,13 +463,27 @@ async function fetchWithLocalStorage(key, url) {
 ## 정리
 
 이번 챕터에서 배운 것:
-- [x] API 개념 이해
-- [x] fetch로 API 호출
-- [x] 다양한 API 프로젝트
-- [x] 에러 처리
-- [x] 보안과 최적화
+- [x] 프론트엔드와 백엔드 구조
+- [x] REST API 설계
+- [x] 데이터베이스 연동
+- [x] 인증 구현
+- [x] 풀스택 앱 배포
 
-축하합니다! Part 4 (실전 프로젝트 II)를 완료했습니다.
+풀스택 개발의 핵심은 **프론트/백엔드 간의 데이터 흐름**입니다:
+1. 프론트엔드에서 요청
+2. 백엔드에서 처리
+3. 데이터베이스에 저장/조회
+4. 응답 반환
+5. 프론트엔드에서 표시
+
+Claude에게 요청할 때:
+1. 프론트/백엔드 기술 스택 명시
+2. 필요한 API 엔드포인트 설명
+3. 데이터 구조 설명
+
+이 세 가지를 명확히 하면 전체 앱을 만들 수 있습니다.
+
+축하합니다! Part 4 (실전 II)를 완료했습니다.
 
 다음 Part에서는 Claude Code의 고급 기능을 배웁니다.
 

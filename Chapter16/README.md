@@ -1,360 +1,289 @@
-# Chapter 16: Data Processing
+# Chapter 16: Building Chatbots
 
 **English** | [한국어](./README.ko.md)
 
 ## What You Will Learn
 
-- Working with files (CSV, JSON)
-- Transforming data
-- Building automation scripts
+- Building a Discord bot with Claude
+- Progressively extending bot features
+- Applying patterns to Slack bots
 
 ---
 
-## Why Data Processing?
+## Why Chatbots?
 
-A lot of coding is about handling data:
-- Organizing Excel files
-- Merging multiple files
-- Converting formats (CSV → JSON)
-- Automating repetitive tasks
+Chatbots are projects that produce actually usable results:
+- Use directly in your Discord server
+- Automate tasks in your team's Slack
+- 24/7 automation tools
 
-Claude can help you do these quickly.
+**Chatbot request tips:**
+
+```
+> Create a Discord bot.
+> When /hello command is entered, respond with "Hello!",
+> and when /dice command is entered, show a random number between 1-6.
+```
+
+Clearly describe command names, trigger conditions, and response content to get the bot you want.
 
 ---
 
-## Understanding File Formats
+## Project: Building a Discord Bot
 
-### CSV (Like Excel)
+### Step 1: Preparation (One-time setup)
 
-Comma-separated data:
-```csv
-name,age,city
-John,25,Seoul
-Jane,30,Busan
+You need to create a bot in the Discord Developer Portal. Ask Claude:
+
+```
+> I want to create a Discord bot.
+> Show me how to create a bot in Discord Developer Portal
+> and invite it to my server.
 ```
 
-### JSON (Structured Data)
+Steps Claude will guide you through:
+1. Access Discord Developer Portal
+2. Create new Application
+3. Generate Bot token
+4. Invite to server via OAuth2 URL
 
-Format commonly used in programming:
-```json
-[
-  {"name": "John", "age": 25, "city": "Seoul"},
-  {"name": "Jane", "age": 30, "city": "Busan"}
-]
+**Important**: The token is like a password. Never put it directly in code!
+
+### Step 2: Start the Project
+
 ```
+> Create a Discord bot project.
+> Use discord.js,
+> and manage the token with a .env file.
+> Start with just printing a message to console when the bot comes online.
+```
+
+What Claude creates with this request:
+- Project folder structure
+- package.json
+- .env file template
+- Basic bot code
+
+### Step 3: First Command
+
+```
+> Add a /ping command.
+> It should show the bot's response time in milliseconds.
+```
+
+After confirming it works, add the next command:
+
+```
+> Add a /dice command.
+> Accept number of sides as an option (default 6),
+> and show the dice roll result.
+```
+
+**Request tip**: Don't request multiple commands at once. Add and test one at a time.
 
 ---
 
-## Working with CSV
+## Extending Features
 
-### Reading CSV
-
-```
-> Read data.csv and show me the contents
-```
-
-### CSV → JSON Conversion
+### Poll Feature
 
 ```
-> Convert data.csv to data.json
+> Create a /poll command.
+> - Accept a question and 2-4 options
+> - Display in a nice embed
+> - Automatically add emoji reactions to each option
 ```
 
-Code Claude creates:
-```javascript
-const fs = require('fs')
-
-// Read CSV
-const csv = fs.readFileSync('data.csv', 'utf-8')
-const lines = csv.split('\n')
-const headers = lines[0].split(',')
-
-// Convert to JSON
-const data = lines.slice(1).map(line => {
-  const values = line.split(',')
-  return headers.reduce((obj, header, i) => {
-    obj[header] = values[i]
-    return obj
-  }, {})
-})
-
-// Save
-fs.writeFileSync('data.json', JSON.stringify(data, null, 2))
-```
-
-### Filtering CSV
+### Reminder Feature
 
 ```
-> Extract only people age 30 or older from data.csv
-> and save to a new file
+> Create a /remind command.
+> - Input how many minutes until reminder
+> - Input reminder content
+> - When time's up, mention the user and notify them
 ```
 
----
-
-## Working with JSON
-
-### Reading and Modifying JSON
+### Utility
 
 ```
-> Change the port value in config.json from 3000 to 8080
-```
-
-### Merging Multiple JSON Files
-
-```
-> Merge data1.json and data2.json into one
-```
-
-### Formatting JSON
-
-```
-> Format this JSON nicely (apply indentation)
-```
-
----
-
-## Real Project: Data Cleanup Tool
-
-### Situation
-
-Say you have this messy CSV:
-
-```csv
-name,phone,email
-John Doe ,  010-1234-5678, john@email.com
- Jane Smith,01098765432,JANE@EMAIL.COM
-Bob Wilson,  010.5555.6666  ,bob@email
-```
-
-### Goal
-
-- Remove whitespace
-- Standardize phone format
-- Convert email to lowercase
-- Flag invalid emails
-
-### Building It
-
-```
-> Make a CSV cleanup tool.
-> - Remove leading/trailing whitespace
-> - Phone format: 010-0000-0000
-> - Email to lowercase
-> - Validate email format
-```
-
-### Result
-
-```csv
-name,phone,email,valid
-John Doe,010-1234-5678,john@email.com,OK
-Jane Smith,010-9876-5432,jane@email.com,OK
-Bob Wilson,010-5555-6666,bob@email,Invalid email
+> Create an /avatar command.
+> When a user is selected, show their profile image in large size.
+> If no one is selected, show the requester's own image.
 ```
 
 ---
 
-## Batch File Processing
+## Event-based Features
 
-### Process Multiple Files at Once
+Beyond slash commands, you can react to various events.
 
-```
-> Convert all CSV files in the data folder to JSON
-```
-
-### Bulk Rename Files
+### Welcome Message
 
 ```
-> Add "2024_" prefix to all files in the images folder
+> When a new member joins the server,
+> send a welcome message to the #welcome channel.
+> Use a nice embed with their profile picture.
 ```
 
-### Organize Folders
+### Message Logging
 
 ```
-> In the downloads folder:
-> - Move images to images folder
-> - Move documents to docs folder
-> - Move rest to others folder
+> When a message is deleted, log it to the #logs channel.
+> Show who deleted what message,
+> and exclude bot messages.
 ```
 
----
-
-## Automation Scripts
-
-### Automate Daily Tasks
+### Auto Reactions
 
 ```
-> Create a script to run every morning:
-> 1. Find yesterday's files in data folder
-> 2. Clean up the data
-> 3. Save results to report folder
-> 4. Print summary statistics
-```
-
-### Example: Backup Script
-
-```
-> Create a project backup script.
-> - Important files only (exclude node_modules)
-> - Save in date-based folders
-> - Delete backups older than 7 days
+> When a message contains "lol",
+> react with the 😂 emoji.
 ```
 
 ---
 
-## Data Analysis
+## Practical Bot Examples
 
-### Basic Statistics
-
-```
-> Analyze sales.csv file:
-> - Total sales
-> - Average sale
-> - Best selling product
-> - Monthly sales trend
-```
-
-### Visualization
+### Server Management Bot
 
 ```
-> Show the analysis results in a chart
+> Create a server management bot with these commands:
+>
+> /kick [user] [reason]
+> - Admin only
+> - Kick the user from server
+>
+> /clear [count]
+> - Admin only
+> - Delete the last N messages
+>
+> /serverinfo
+> - Anyone can use
+> - Show server info (member count, creation date, etc.)
 ```
 
-Claude will create graphs using Chart.js or other libraries.
-
----
-
-## Web Scraping Basics
-
-### Cautions
-
-- Check website terms of service
-- Don't make too many requests
-- Follow robots.txt
-
-### Simple Scraping
+### Mini Economy System
 
 ```
-> Extract product price list from this webpage:
-> [URL]
-```
-
-### Save Data
-
-```
-> Save the extracted data as CSV
+> Create a bot with a mini economy system.
+>
+> /balance - Check my balance
+> /daily - Get 100 coins once per day
+> /give [user] [amount] - Send to another user
+>
+> Save data in a JSON file.
+> Use user ID as key, balance as value.
 ```
 
 ---
 
-## Practice: Build Automation Tools
+## Extending to Slack Bots
 
-### Basic Tasks
+The patterns you learned with Discord apply to Slack too.
 
-```
-# Task 1: File Converter
-> Make a CSV ↔ JSON converter.
-> Drag and drop file to convert.
+### Core Concepts are the Same
 
-# Task 2: Data Cleaner
-> Make a tool that cleans data pasted from Excel.
-```
+| Concept | Discord | Slack |
+|---------|---------|-------|
+| Commands | /ping | /ping |
+| Event reaction | client.on('event') | app.event('event') |
+| Message response | interaction.reply() | say() |
 
-### Extra Challenges
-
-```
-# Image Resizer
-> Tool to resize all images in a folder to specific dimensions
-
-# Log Analyzer
-> Tool to analyze server log files and show summary
-
-# Duplicate Finder
-> Tool to find duplicate files in a folder
-```
-
----
-
-## Useful Libraries
-
-### Node.js
-
-| Library | Purpose |
-|---------|---------|
-| `csv-parser` | Read CSV |
-| `json2csv` | JSON → CSV |
-| `glob` | File pattern search |
-| `sharp` | Image processing |
-| `cheerio` | Web scraping |
-
-### Python
-
-| Library | Purpose |
-|---------|---------|
-| `pandas` | Data analysis |
-| `openpyxl` | Excel processing |
-| `beautifulsoup4` | Web scraping |
-| `pillow` | Image processing |
+### Starting a Slack Bot
 
 ```
-> Show me an example of analyzing CSV with pandas
+> Create a Slack bot project.
+> Use the Bolt framework,
+> starting with a basic bot that responds to /ping.
+> Also show me how to set up the Slack app.
+```
+
+### Work Automation Examples
+
+```
+> Add these features to the Slack bot:
+>
+> /standup command
+> - Open a modal to input today's tasks, yesterday's work, blockers
+> - When submitted, format nicely and post to #standup channel
+```
+
+```
+> When the bot is mentioned, respond automatically.
+> If "meeting room" keyword is present, share meeting room booking link,
+> otherwise respond with "How can I help you?"
 ```
 
 ---
 
-## Error Handling
+## Deploying Your Bot
 
-### When File Doesn't Exist
-
-```javascript
-const fs = require('fs')
-
-try {
-  const data = fs.readFileSync('data.csv', 'utf-8')
-} catch (error) {
-  if (error.code === 'ENOENT') {
-    console.log('File not found')
-  }
-}
-```
-
-### Invalid Format
+If you only run locally, the bot stops when you turn off your computer. Deploy for 24/7 operation.
 
 ```
-> If there's an error parsing CSV, skip that line
-> and log which line had the error
+> Show me how to deploy this Discord bot to Railway.
+> Also how to set environment variables.
 ```
+
+### Free Deployment Options
+
+| Service | Features |
+|---------|----------|
+| Railway | $5 free credits/month, easy setup |
+| Render | Free, sleeps when inactive |
+| Fly.io | Has free tier |
 
 ---
 
-## Mini Project: Data Dashboard
+## Debugging Tips
 
-Build a dashboard that collects and visualizes data.
-
-### Goals
-
-- Automate data processing
-- Visualization
-
-### Build It
+When the bot doesn't respond:
 
 ```
-> Create a sales data dashboard.
-> - CSV file upload
-> - Data cleanup and analysis
-> - Chart visualization (bar, line, pie)
-> - Summary statistics display
+> The bot isn't responding to commands.
+> No errors in console, and the bot shows as online.
+> What could be the problem?
 ```
 
-### Advanced Challenges (For Experts)
+Things Claude will check:
+- If slash commands are registered with Discord
+- Bot permission settings
+- Intents configuration
+- If token is correct
+
+---
+
+## Practice
+
+### Basic Task
+
+Create your own Discord bot:
 
 ```
-> Create a cron job for periodic data collection
+> Create a Discord bot with these features:
+>
+> 1. /quote - Show a random quote
+> 2. /choose [options] - Pick one from multiple options
+> 3. /8ball [question] - Random answer like a magic 8-ball
+>
+> Start with basic structure and add one at a time.
+```
 
-> Add real-time data update feature
+### Advanced Challenges
 
-> Add automatic PDF report generation
+```
+> Create a music recommendation bot.
+> When /mood [feeling] command is entered,
+> recommend song genres or vibes matching that mood.
+> (Actual music playback is complex, so just recommendations)
+```
 
-> Add anomaly detection alerts
+```
+> Create a todo management bot.
+> - /todo add [content] - Add a todo
+> - /todo list - View my todo list
+> - /todo done [number] - Mark as complete
+> - Save data as JSON
 ```
 
 ---
@@ -362,12 +291,21 @@ Build a dashboard that collects and visualizes data.
 ## Summary
 
 What you learned in this chapter:
-- [x] Working with CSV, JSON files
-- [x] Transforming data
-- [x] Batch processing
-- [x] Building automation scripts
-- [x] Data analysis basics
+- [x] Starting a Discord bot project
+- [x] Adding slash commands
+- [x] Reacting to events
+- [x] Extending patterns to Slack bots
+- [x] Deploying bots
 
-In the next chapter, we'll learn how to integrate external APIs.
+The core of chatbots is **"when this event happens, respond like this"**. Understanding this pattern lets you build bots on any platform.
 
-[Chapter 17: API Integration](../Chapter17/README.md)
+When requesting from Claude:
+1. What command/event to react to
+2. What input to receive
+3. What output to produce
+
+Clarify these three things and you can build the bot you want.
+
+In the next chapter, we'll build a full-stack app with both frontend and backend.
+
+Proceed to [Chapter 17: Building Full-Stack Apps](../Chapter17/README.md).

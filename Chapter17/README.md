@@ -1,402 +1,461 @@
-# Chapter 17: API Integration
+# Chapter 17: Building Full-Stack Apps
 
 **English** | [한국어](./README.ko.md)
 
 ## What You Will Learn
 
-- What an API is
-- Using external APIs
-- Real API projects
+- Building frontend and backend together
+- API design and implementation
+- Data storage and retrieval
 
 ---
 
-## What is an API?
+## Why Full-Stack?
 
-An API is how programs talk to each other.
+Most projects we've built so far had only frontend. But real services need to:
+- Store data from multiple users
+- Persist data permanently
+- Have secure logic
 
-Think of it like a restaurant:
-- **You** = Client (the one ordering)
-- **Waiter** = API (delivers requests)
-- **Kitchen** = Server (processes requests)
+You need a backend to handle these things.
 
-### Example
+**Full-stack request tips:**
 
-How a weather app shows weather data:
-1. App requests "Give me Seoul weather" to weather API
-2. API delivers to weather server
-3. Server responds with data
-4. App displays on screen
-
----
-
-## Making API Calls
-
-### Using fetch
-
-```javascript
-// Basic GET request
-const response = await fetch('https://api.example.com/data')
-const data = await response.json()
-console.log(data)
+```
+> Create a bookmark saving app.
+> Frontend: React,
+> Backend: Express,
+> Database: SQLite.
+>
+> Features:
+> - Add bookmark (URL, title)
+> - View bookmark list
+> - Delete bookmark
 ```
 
-### POST Request (Sending Data)
+Specify frontend/backend tech stack and required features to get the full structure.
+
+---
+
+## Project: Todo Management App
+
+Let's build a simple but complete full-stack app.
+
+### Step 1: Start the Project
+
+```
+> Create a full-stack todo app.
+>
+> Structure:
+> - frontend/ (React + Vite)
+> - backend/ (Express + SQLite)
+>
+> Just set up the folder structure first.
+```
+
+Structure Claude creates:
+```
+todo-app/
+├── frontend/
+│   ├── src/
+│   │   ├── App.jsx
+│   │   └── components/
+│   └── package.json
+├── backend/
+│   ├── index.js
+│   ├── routes/
+│   └── package.json
+└── README.md
+```
+
+### Step 2: Create Backend API
+
+```
+> Create a todo API in the backend.
+>
+> Endpoints:
+> GET /api/todos - Get all todos
+> POST /api/todos - Add new todo
+> PATCH /api/todos/:id - Toggle completion status
+> DELETE /api/todos/:id - Delete todo
+>
+> Store data in SQLite.
+```
+
+API Claude creates:
 
 ```javascript
-const response = await fetch('https://api.example.com/users', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    name: 'John Doe',
-    email: 'john@email.com'
-  })
+// backend/index.js
+const express = require('express')
+const Database = require('better-sqlite3')
+const cors = require('cors')
+
+const app = express()
+const db = new Database('todos.db')
+
+app.use(cors())
+app.use(express.json())
+
+// Create table
+db.exec(`
+  CREATE TABLE IF NOT EXISTS todos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    text TEXT NOT NULL,
+    completed INTEGER DEFAULT 0,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+  )
+`)
+
+// Get all
+app.get('/api/todos', (req, res) => {
+  const todos = db.prepare('SELECT * FROM todos ORDER BY created_at DESC').all()
+  res.json(todos)
+})
+
+// Add
+app.post('/api/todos', (req, res) => {
+  const { text } = req.body
+  const result = db.prepare('INSERT INTO todos (text) VALUES (?)').run(text)
+  res.json({ id: result.lastInsertRowid, text, completed: 0 })
+})
+
+// Toggle
+app.patch('/api/todos/:id', (req, res) => {
+  const { id } = req.params
+  db.prepare('UPDATE todos SET completed = NOT completed WHERE id = ?').run(id)
+  res.json({ success: true })
+})
+
+// Delete
+app.delete('/api/todos/:id', (req, res) => {
+  const { id } = req.params
+  db.prepare('DELETE FROM todos WHERE id = ?').run(id)
+  res.json({ success: true })
+})
+
+app.listen(3001, () => {
+  console.log('Server running on http://localhost:3001')
+})
+```
+
+### Step 3: Connect Frontend
+
+```
+> Create code in the frontend that calls the backend API.
+>
+> - Display todo list
+> - Form to add new todo
+> - Checkbox to toggle completion
+> - Delete button
+```
+
+```javascript
+// frontend/src/App.jsx
+import { useState, useEffect } from 'react'
+
+const API_URL = 'http://localhost:3001/api/todos'
+
+function App() {
+  const [todos, setTodos] = useState([])
+  const [newTodo, setNewTodo] = useState('')
+
+  useEffect(() => {
+    fetch(API_URL)
+      .then(res => res.json())
+      .then(setTodos)
+  }, [])
+
+  const addTodo = async () => {
+    if (!newTodo.trim()) return
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: newTodo })
+    })
+    const todo = await res.json()
+    setTodos([todo, ...todos])
+    setNewTodo('')
+  }
+
+  const toggleTodo = async (id) => {
+    await fetch(`${API_URL}/${id}`, { method: 'PATCH' })
+    setTodos(todos.map(t =>
+      t.id === id ? { ...t, completed: !t.completed } : t
+    ))
+  }
+
+  const deleteTodo = async (id) => {
+    await fetch(`${API_URL}/${id}`, { method: 'DELETE' })
+    setTodos(todos.filter(t => t.id !== id))
+  }
+
+  return (
+    <div>
+      <h1>Todo List</h1>
+      <input
+        value={newTodo}
+        onChange={e => setNewTodo(e.target.value)}
+        placeholder="Enter todo"
+      />
+      <button onClick={addTodo}>Add</button>
+
+      <ul>
+        {todos.map(todo => (
+          <li key={todo.id}>
+            <input
+              type="checkbox"
+              checked={todo.completed}
+              onChange={() => toggleTodo(todo.id)}
+            />
+            <span style={{
+              textDecoration: todo.completed ? 'line-through' : 'none'
+            }}>
+              {todo.text}
+            </span>
+            <button onClick={() => deleteTodo(todo.id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+export default App
+```
+
+### Step 4: Run
+
+```bash
+# Terminal 1: Backend
+cd backend && npm install && node index.js
+
+# Terminal 2: Frontend
+cd frontend && npm install && npm run dev
+```
+
+---
+
+## Extending Features
+
+### Add Categories
+
+```
+> Add category feature to todos.
+> - Create/delete categories
+> - Assign category to todo
+> - Filter by category
+```
+
+### Due Dates
+
+```
+> Add ability to set due dates for todos.
+> - Date picker UI
+> - Sort by due date
+> - Highlight items due today
+```
+
+### Search Feature
+
+```
+> Add todo search feature.
+> - Search by text
+> - Highlight search terms
+```
+
+---
+
+## Second Project: Notes App
+
+Let's build a notes app with markdown support.
+
+### Basic Setup
+
+```
+> Create a markdown notes app.
+>
+> Frontend: React
+> Backend: Express + SQLite
+>
+> Features:
+> - Write notes (markdown support)
+> - Notes list (sidebar)
+> - Real-time preview
+> - Delete notes
+```
+
+### Markdown Rendering
+
+```
+> Use react-markdown library for markdown rendering.
+> Apply syntax highlighting to code blocks too.
+```
+
+### Auto Save
+
+```
+> Auto-save while writing notes.
+> Save 1 second after typing stops.
+> Show saving status indicator.
+```
+
+---
+
+## Adding Authentication
+
+Real services need login.
+
+### Simple Auth
+
+```
+> Add simple login feature.
+> - Signup (email, password)
+> - Login
+> - Use JWT tokens
+> - Logged in users only see their own todos
+```
+
+### Backend Auth
+
+```javascript
+// Login API
+app.post('/api/login', async (req, res) => {
+  const { email, password } = req.body
+  const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email)
+
+  if (!user || !await bcrypt.compare(password, user.password)) {
+    return res.status(401).json({ error: 'Login failed' })
+  }
+
+  const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET)
+  res.json({ token })
+})
+
+// Auth middleware
+function auth(req, res, next) {
+  const token = req.headers.authorization?.split(' ')[1]
+  if (!token) return res.status(401).json({ error: 'Auth required' })
+
+  try {
+    const { userId } = jwt.verify(token, process.env.JWT_SECRET)
+    req.userId = userId
+    next()
+  } catch {
+    res.status(401).json({ error: 'Invalid token' })
+  }
+}
+
+// Protected route
+app.get('/api/todos', auth, (req, res) => {
+  const todos = db.prepare('SELECT * FROM todos WHERE user_id = ?').all(req.userId)
+  res.json(todos)
 })
 ```
 
 ---
 
-## Free Public APIs
+## Deployment
 
-Good free APIs for practice:
-
-| API | Description | Auth Required |
-|-----|-------------|---------------|
-| JSONPlaceholder | Fake data for testing | No |
-| OpenWeatherMap | Weather info | Yes (free key) |
-| The Cat API | Cat photos | No |
-| Pokemon API | Pokemon data | No |
-| NASA API | Space data | Yes (free) |
-
----
-
-## Project 1: Weather App
-
-### Preparation
-
-1. Sign up at [OpenWeatherMap](https://openweathermap.org/api)
-2. Get free API key
-
-### Building It
+### Deploying Full-Stack Apps
 
 ```
-> Make a weather app.
-> - Enter city name
-> - Get weather from OpenWeatherMap API
-> - Display temperature, condition, icon
+> I want to deploy this full-stack app.
+> Show me how to deploy frontend to Vercel,
+> backend to Railway.
 ```
 
-### Core Code
-
-```javascript
-async function getWeather(city) {
-  const API_KEY = 'your-api-key'
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
-
-  const response = await fetch(url)
-  const data = await response.json()
-
-  return {
-    temp: data.main.temp,
-    description: data.weather[0].description,
-    icon: data.weather[0].icon
-  }
-}
-```
-
-### Improving It
+### Environment Variables
 
 ```
-> Show weather based on current location
+> List the environment variables needed for production.
+> - Database connection
+> - JWT secret
+> - Frontend URL
+```
 
-> Show 5-day forecast too
+### Deployment Checklist
 
-> Change background color based on weather
+Ask Claude:
+```
+> Tell me what to check before deployment.
+> - Security
+> - Performance
+> - Error handling
 ```
 
 ---
 
-## Project 2: Random Quote App
-
-### Building It
-
-```
-> Make a quote app.
-> - Show random quote on page load
-> - "New Quote" button shows different quote
-> - Add copy feature
-```
-
-### Using the API
-
-```javascript
-async function getQuote() {
-  const response = await fetch('https://api.quotable.io/random')
-  const data = await response.json()
-
-  return {
-    content: data.content,
-    author: data.author
-  }
-}
-```
-
----
-
-## Project 3: Pokemon Pokedex
-
-### Building It
-
-```
-> Make a Pokemon Pokedex.
-> - Search by number or name
-> - Use PokeAPI
-> - Show image, types, stats
-```
-
-### Using the API
-
-```javascript
-async function getPokemon(nameOrId) {
-  const response = await fetch(
-    `https://pokeapi.co/api/v2/pokemon/${nameOrId}`
-  )
-  const data = await response.json()
-
-  return {
-    name: data.name,
-    image: data.sprites.front_default,
-    types: data.types.map(t => t.type.name),
-    stats: data.stats
-  }
-}
-```
-
-### Improving It
-
-```
-> Allow search by localized names too
-
-> Show evolution info
-
-> Add favorites feature
-```
-
----
-
-## Project 4: Currency Converter
-
-### Building It
-
-```
-> Make a currency converter.
-> - Enter amount
-> - Convert USD ↔ EUR/JPY/GBP
-> - Use real-time rates
-```
-
-### Using the API
-
-```javascript
-async function getExchangeRate(from, to) {
-  const response = await fetch(
-    `https://api.exchangerate-api.com/v4/latest/${from}`
-  )
-  const data = await response.json()
-
-  return data.rates[to]
-}
-
-// Usage
-const rate = await getExchangeRate('USD', 'EUR')
-console.log(`1 USD = ${rate} EUR`)
-```
-
----
-
-## API Error Handling
-
-### Basic Error Handling
-
-```javascript
-async function fetchData(url) {
-  try {
-    const response = await fetch(url)
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
-
-    return await response.json()
-  } catch (error) {
-    console.error('API error:', error)
-    return null
-  }
-}
-```
-
-### Notifying Users
-
-```
-> Show friendly messages for API errors.
-> - Network error: "Please check your internet connection"
-> - 404: "Data not found"
-> - 500: "Server is having issues"
-```
-
----
-
-## Loading State Management
-
-### Showing Loading
-
-```javascript
-async function fetchWithLoading() {
-  showLoading()  // Start loading
-
-  try {
-    const data = await fetchData(url)
-    displayData(data)
-  } catch (error) {
-    showError(error)
-  } finally {
-    hideLoading()  // End loading
-  }
-}
-```
-
-### Skeleton Loading
-
-```
-> Show skeleton UI while data is loading
-```
-
----
-
-## API Key Security
-
-### Be Careful in Frontend
-
-```
-// Bad - API key exposed!
-const API_KEY = 'sk-1234567890'
-fetch(`https://api.example.com?key=${API_KEY}`)
-```
-
-### Solutions
-
-1. **Go Through Backend Server**
-```
-> Create a backend that makes API calls.
-> Frontend only calls the backend.
-```
-
-2. **Use Serverless Functions**
-```
-> Create an API proxy with Vercel Edge Function
-```
-
----
-
-## Optimization with Caching
-
-### Prevent Repeated Requests
-
-```javascript
-const cache = new Map()
-
-async function fetchWithCache(url) {
-  if (cache.has(url)) {
-    return cache.get(url)
-  }
-
-  const data = await fetchData(url)
-  cache.set(url, data)
-
-  return data
-}
-```
-
-### Using localStorage
-
-```javascript
-async function fetchWithLocalStorage(key, url) {
-  const cached = localStorage.getItem(key)
-  if (cached) {
-    return JSON.parse(cached)
-  }
-
-  const data = await fetchData(url)
-  localStorage.setItem(key, JSON.stringify(data))
-
-  return data
-}
-```
-
----
-
-## Practice: Build an API App
+## Practice
 
 ### Basic Task
 
-Complete one of the projects above.
+```
+> Create a bookmark management app.
+>
+> Features:
+> - Add bookmark with URL and title
+> - View bookmark list
+> - Categorize with tags
+> - Search
+>
+> Tech: React + Express + SQLite
+```
 
-### Extra Challenges
+### Advanced Challenges
 
 ```
-> Make an app that shows my GitHub profile using GitHub API
+> Create a simple blog system.
+>
+> - Create/edit/delete posts
+> - Markdown support
+> - Categories
+> - Simple admin auth
+```
 
-> Make a movie search app (TMDB API)
-
-> Make a news headlines app (News API)
+```
+> Create a file sharing service.
+>
+> - File upload
+> - Generate share link
+> - Download counter
+> - Set expiration time
 ```
 
 ---
 
-## Mini Project: API Mashup
+## API Design Tips
 
-Combine multiple APIs to build a comprehensive app.
-
-### Goals
-
-- Integrate multiple APIs
-- Use complex data
-
-### Build It: Travel Helper
+### RESTful Design
 
 ```
-> Create a travel helper app.
-> - City search
-> - Weather API for current weather
-> - Exchange API for local currency
-> - Map API for location display
+> Explain RESTful API design principles.
+> - Resource naming
+> - HTTP methods
+> - Status codes
 ```
 
-### Other Ideas
+| Method | Purpose | Example |
+|--------|---------|---------|
+| GET | Read | GET /api/todos |
+| POST | Create | POST /api/todos |
+| PUT | Full update | PUT /api/todos/1 |
+| PATCH | Partial update | PATCH /api/todos/1 |
+| DELETE | Delete | DELETE /api/todos/1 |
+
+### Error Handling
 
 ```
-> Create a developer dashboard.
-> - GitHub API for my repos
-> - Stack Overflow API for popular questions
-> - Hacker News API for latest news
-
-> Create a health tracker.
-> - Weather API for good exercise days
-> - Recipe API for healthy meals
-> - Exercise API for workout recommendations
+> Standardize the API error response format.
+> Make it easy for frontend to handle.
 ```
 
-### Advanced Challenges (For Experts)
-
-```
-> Implement real-time data streaming with WebSocket
-
-> Add rate limiting handling logic
-
-> Create an API response caching layer
-
-> Handle multiple API requests in parallel (Promise.all)
+```javascript
+// Consistent error format
+{
+  "error": true,
+  "message": "Todo not found",
+  "code": "NOT_FOUND"
+}
 ```
 
 ---
@@ -404,14 +463,28 @@ Combine multiple APIs to build a comprehensive app.
 ## Summary
 
 What you learned in this chapter:
-- [x] Understanding API concepts
-- [x] API calls with fetch
-- [x] Various API projects
-- [x] Error handling
-- [x] Security and optimization
+- [x] Frontend and backend structure
+- [x] REST API design
+- [x] Database integration
+- [x] Authentication implementation
+- [x] Full-stack app deployment
 
-This completes Part 4 (Practical Projects II).
+The core of full-stack development is **data flow between frontend and backend**:
+1. Request from frontend
+2. Process in backend
+3. Save/retrieve from database
+4. Return response
+5. Display in frontend
 
-In the next Part, we cover advanced Claude Code features.
+When requesting from Claude:
+1. Specify frontend/backend tech stack
+2. Describe required API endpoints
+3. Describe data structure
 
-[Chapter 18: Advanced Features](../Chapter18/README.md)
+Clarify these three things and you can build the entire app.
+
+Congratulations! You've completed Part 4 (Practical II).
+
+In the next Part, you'll learn advanced Claude Code features.
+
+Proceed to [Chapter 18: Advanced Features](../Chapter18/README.md).

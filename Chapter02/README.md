@@ -22,7 +22,7 @@ cd Documents        # Go to Documents folder
 ls                  # List files in current folder
 ```
 
-This may appear complex, but Claude Code handles most of it. For now, knowing how to open a terminal is sufficient.
+This may appear complex, but don't worry. Claude has learned countless terminal commands, so when you say "show me the files in this folder," it knows to run the appropriate command (`ls`). For now, knowing how to open a terminal is sufficient.
 
 ### Opening a Terminal
 
@@ -153,7 +153,7 @@ Claude introduces itself.
 > What's in this folder?
 ```
 
-Claude displays the file list in the current folder.
+Claude understands the request for "file listing" and executes the appropriate terminal command (`ls` or `dir`), then displays the results.
 
 ```
 > Create a file called hello.txt. Write "Hello World" inside.

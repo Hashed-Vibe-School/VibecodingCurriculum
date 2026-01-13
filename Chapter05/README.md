@@ -43,7 +43,7 @@ Select `Allow` to execute.
 
 ## Useful Terminal Commands
 
-Memorization is not required. Claude handles these. However, familiarity improves communication.
+Memorization is not required. Say "show me the files" and Claude runs `ls`. However, knowing basic commands helps you communicate more precisely.
 
 ### File/Folder Commands
 
@@ -185,7 +185,7 @@ When a command fails, inform Claude.
 > Fix the error
 ```
 
-Claude analyzes the error message and suggests solutions.
+LLMs are particularly strong at error analysis. Their training data includes countless error messages and solutions, enabling them to recognize error patterns and suggest appropriate fixes.
 
 ### Common Errors
 

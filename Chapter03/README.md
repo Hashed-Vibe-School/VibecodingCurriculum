@@ -51,7 +51,15 @@ Any question works. Multiple languages including Korean are supported.
 
 Claude Code has three modes. **This is the most important concept.**
 
-Claude Code can create, modify, and delete files. Accidental deletion of important files is possible.
+### Why Permission Management?
+
+LLMs "interpret" your requests and execute them. They're usually accurate, but occasionally interpret differently than intended.
+
+For example, "clean up this folder" could mean:
+- Organizing files by category
+- Deleting unnecessary files
+
+The LLM selects the most appropriate interpretation from context, but cannot be 100% certain. That's why confirmation before important operations is safer.
 
 ### 1. Plan Mode (Safest)
 
@@ -114,7 +122,7 @@ File edits auto-approved. Only asks for dangerous commands.
 
 > "Almost always start in Plan mode."
 
-For new work, press `Shift + Tab` twice to enter Plan mode. Let Claude examine the code and create a plan first, then switch to Normal or Accept Edits for execution. This approach yields better results.
+For new work, press `Shift + Tab` twice to enter Plan mode. LLMs generate better code when they understand the full context first. Analyzing code and planning before execution reduces situations where "it interpreted differently than intended, now I need to redo it."
 
 ---
 

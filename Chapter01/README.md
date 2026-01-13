@@ -26,6 +26,16 @@ Now it's different.
 
 **Tell AI "make this for me" and AI writes the code.**
 
+### Why Is This Possible?
+
+LLMs (Large Language Models) like Claude have learned from vast amounts of code on the internet. They've seen billions of lines from GitHub repositories, Stack Overflow answers, and technical blogs.
+
+So when you say "a web page with a blue heading":
+- "blue heading" → `color: blue` pattern
+- "web page" → HTML structure pattern
+
+The model combines learned patterns to generate code. It's not magic—it's **pattern matching**.
+
 Clear communication leads to better results. That's why this curriculum exists.
 
 ### Example: Creating a Simple Web Page
@@ -54,7 +64,7 @@ All of this had to be memorized and written manually.
 "Make a web page with a blue heading that says 'Hello',
 and below it 'My name is John'"
 ```
-This instruction produces the code above.
+When an LLM receives this request, it combines the most appropriate patterns from its training. It already knows web page structure (`<html>`, `<body>`), heading styles (`color: blue`), and text layout.
 
 ---
 
