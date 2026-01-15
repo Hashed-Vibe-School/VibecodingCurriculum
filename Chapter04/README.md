@@ -10,6 +10,26 @@
 
 ---
 
+## Why Do You Need This?
+
+Files are everything in coding. Every website, app, or tool you build is made of files. Learning to work with files is like learning to use ingredients in cooking--you can't make anything without them.
+
+**Real-world scenarios:**
+- You want to create a website (need to make HTML, CSS files)
+- You want to update an existing document
+- You want to organize messy project files
+- You want Claude to understand your project structure
+
+### Simple Analogy: Filing Cabinet
+
+Think of your computer as a giant filing cabinet. Each drawer is a folder, and each paper inside is a file.
+
+When you say `@report.txt`, you're pointing to a specific paper and saying "look at this one." When you say `@documents/`, you're pointing to a whole drawer and saying "check everything in here."
+
+The `@` symbol is your finger pointing at what you want Claude to see.
+
+---
+
 ## Referencing Files with @
 
 In Claude Code, `@` references files.
@@ -286,6 +306,64 @@ CSS variable-based theming - essential for modern web
 > Split into multiple pages (index.html, about.html, contact.html)
 ```
 Multi-page architecture and navigation design
+
+---
+
+## Try It Yourself
+
+Let's practice file operations step by step:
+
+### Exercise 1: Create Your First File
+```
+> Create a file called my-notes.txt with "Learning Claude Code is fun!" inside
+```
+After Claude creates it, verify by asking:
+```
+> @my-notes.txt Show me what's inside
+```
+
+### Exercise 2: Modify a File
+```
+> @my-notes.txt Add a new line that says "I created this with AI!"
+```
+Watch how Claude shows you the changes before applying them.
+
+### Exercise 3: Create Multiple Files at Once
+```
+> Create a folder called my-website with index.html, style.css, and script.js inside.
+> Make it a simple page that says "Welcome to My Site"
+```
+
+### Exercise 4: Explore Files
+```
+> What files are in this folder?
+> @my-website/ Explain the structure
+```
+
+---
+
+## If It Doesn't Work...
+
+**"File not found" error?**
+- Check if you spelled the filename correctly
+- Use the autocomplete feature (type `@` and start typing)
+- The file might be in a different folder - try including the path: `@folder/file.txt`
+
+**File created in wrong location?**
+- Specify the full path: "Create `my-folder/file.txt`"
+- Check your current working directory: "Where am I?"
+
+**Changes not showing up?**
+- Make sure you approved the change (clicked Allow)
+- Ask Claude to show the file contents again
+
+**Claude can't see a file you know exists?**
+- The file might be in a hidden folder (starting with `.`)
+- Try using the `!ls -la` command to see all files
+
+**Created the wrong file?**
+- Ask Claude to delete it: "Delete the file you just created"
+- Or manually delete it from your file explorer
 
 ---
 

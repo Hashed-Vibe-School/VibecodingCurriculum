@@ -10,6 +10,29 @@
 
 ---
 
+## Why Do You Need This?
+
+Files alone don't make software work. You need to run commands to install tools, start servers, and test your code. Think of commands as the actions that bring your files to life.
+
+**Real-world scenarios:**
+- You created a website, now you want to see it in your browser
+- You need to install a package to add new features
+- You want to run tests to make sure your code works
+- Your code has an error and you need to debug it
+
+### Simple Analogy: Kitchen Appliances
+
+If files are ingredients, then terminal commands are your kitchen appliances.
+
+- `npm install` = Going shopping (getting the ingredients you need)
+- `npm run dev` = Turning on the stove (starting your project)
+- `npm test` = Taste-testing (checking if it's good)
+- `npm run build` = Packaging for delivery (preparing for the real world)
+
+You don't need to know how the stove works internally. You just need to know "turn it on to cook." Same with commands--Claude knows the details, you just say what you want to happen.
+
+---
+
 ## Having Claude Execute Commands
 
 Claude Code can execute terminal commands on your behalf.
@@ -249,6 +272,98 @@ Extend the Hello World server to build a simple API.
 > and GET /api/todos to get the list
 > (storing in memory is acceptable)
 ```
+
+---
+
+## Try It Yourself
+
+Let's practice running commands step by step:
+
+### Exercise 1: Check Your Environment
+```
+> What version of node do I have?
+```
+Claude will run `node --version` and tell you.
+
+```
+> Is npm installed?
+```
+Claude will check and let you know.
+
+### Exercise 2: Create and Run a Simple Project
+Follow along to create a mini web server:
+
+```
+1. Create a folder called test-server
+2. Initialize npm in that folder
+3. Install express
+4. Create a simple server file
+5. Run it and open in browser
+```
+
+Tell Claude each step or ask it to guide you through the whole process:
+```
+> Help me create a simple Express server from scratch. Guide me step by step.
+```
+
+### Exercise 3: Deal with an Error
+If something fails (and something probably will), practice error handling:
+```
+> That just errored. What went wrong?
+> How do I fix it?
+```
+
+---
+
+## Common Mistakes
+
+### 1. Running Commands in the Wrong Folder
+If you create a project in `my-project` folder but run commands from a different location, things won't work. Always check where you are:
+```
+> Where am I right now?
+```
+
+### 2. Not Waiting for Commands to Finish
+Some commands (like `npm install`) take time. Don't start typing new requests until the command finishes.
+
+### 3. Forgetting to Install Dependencies
+If Claude creates a project with a `package.json`, you need to run `npm install` before running the project. Otherwise you'll get "module not found" errors.
+
+### 4. Closing the Terminal While Server is Running
+If you start a server with `npm run dev` and close the terminal, the server stops. Keep the terminal open while using the server.
+
+### 5. Ignoring Error Messages
+Error messages look scary but they contain useful information. Copy the error and ask Claude to explain it.
+
+---
+
+## If It Doesn't Work...
+
+**"command not found" error?**
+- The program isn't installed. Ask Claude to install it.
+- Example: "Install node" or "Install npm"
+
+**"permission denied" error?**
+- You might need admin rights. Ask Claude about using `sudo` (use carefully).
+- On Windows, try running the terminal as Administrator.
+
+**"ENOENT: no such file or directory"?**
+- You're trying to access a file that doesn't exist.
+- Check your current folder location.
+- Make sure you spelled the file/folder name correctly.
+
+**Server won't start?**
+- Another program might be using the same port.
+- Ask Claude: "Port 3000 seems busy. How do I fix this?"
+
+**Changes not showing in browser?**
+- Try refreshing with `Ctrl + F5` (hard refresh)
+- Check if the server is still running
+- Make sure you saved the file
+
+**Everything seems stuck?**
+- Press `Ctrl + C` to stop the current operation
+- Try restarting Claude Code with `/exit` and `claude`
 
 ---
 

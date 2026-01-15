@@ -10,6 +10,36 @@
 
 ---
 
+## Why do you need this?
+
+**Real-world scenario**: You ask Claude Code "Show me all the TypeScript files in this project and fix any errors" but it takes forever and costs a lot. Why? Because you don't understand how it works under the hood.
+
+Understanding the architecture helps you:
+- Know why some requests are fast and others are slow
+- Debug when something goes wrong
+- Save money by making efficient requests
+
+### Simple Analogy: Restaurant Kitchen
+
+Think of Claude Code like ordering at a restaurant:
+
+```
+You (Customer) --> Waiter (Claude Code CLI) --> Kitchen (Anthropic API)
+                                                    |
+                                                    v
+                                              Chef prepares food
+                                                    |
+                                                    v
+                              Waiter <-- brings back --> You get your meal
+```
+
+- The **waiter** (CLI) takes your order and communicates with the kitchen
+- The **kitchen** (API) does the actual cooking (thinking)
+- Every trip to the kitchen takes time (API round trip)
+- If you order "surprise me with something good", the waiter has to make multiple trips to ask questions!
+
+---
+
 ## Why Understand the Architecture?
 
 Thinking of Claude Code as "magic" has limitations. Understanding how it works gives you:
@@ -45,6 +75,20 @@ Thinking of Claude Code as "magic" has limitations. Understanding how it works g
 ```
 
 **Key point**: Claude doesn't run directly on your computer. It communicates through the API, and only tool execution happens locally.
+
+### What is an API? (For Beginners)
+
+An **API** (Application Programming Interface) is like a messenger between two programs. When you use Claude Code:
+
+1. Your computer sends your message to Anthropic's servers
+2. Claude (on their servers) thinks about your request
+3. The response comes back to your computer
+4. If Claude needs to do something (read a file, run a command), that happens on YOUR computer
+
+**Why does this matter?**
+- Claude can't see your files until it asks for them
+- Every question Claude asks = another round trip = more time and cost
+- Being specific upfront saves round trips!
 
 ### API Communication Cycle
 
@@ -471,6 +515,102 @@ Bash commands run in a sandbox by default. This protects your system while worki
 ### 3. Verify Before Proceeding
 
 If Claude modified a file, verify the result before moving to the next step. You can immediately fix anything that's wrong.
+
+---
+
+## Try it yourself
+
+Here's a simple exercise to understand the tool system better:
+
+### Exercise 1: Watch the Tools
+
+```
+> How many files are in this folder?
+```
+
+Watch Claude's response. Did it use `Glob` or `Bash`? The result is the same, but the efficiency differs.
+
+### Exercise 2: Compare Approaches
+
+Try these two requests and notice the difference:
+
+```
+# Approach A - Vague
+> Tell me about this project
+
+# Approach B - Specific
+> Read the package.json and tell me what dependencies this project uses
+```
+
+Approach B is faster because Claude knows exactly which tool to use (Read).
+
+### Exercise 3: Count the Round Trips
+
+```
+> Find all TODO comments in this project and list them
+```
+
+Watch how many tool calls happen. Each one is an API round trip!
+
+---
+
+## If it doesn't work?
+
+### Problem: Claude seems slow or stuck
+
+**Possible causes:**
+1. Your request requires many tool calls (round trips)
+2. You're processing a very large file
+3. Network issues with the API
+
+**Solutions:**
+- Break down large requests into smaller steps
+- Be specific about what you want
+- Check your internet connection
+- Use `/clear` to start fresh if context got confused
+
+### Problem: Claude uses the wrong tool
+
+**Example:** You ask to search for text, but Claude uses `Bash` with `grep` instead of the built-in `Grep` tool.
+
+**Solution:** Be explicit about tools when needed:
+```
+# Instead of
+> search for "TODO" in this project
+
+# Try
+> Use grep tool to search for "TODO" in all files
+```
+
+### Problem: Permission denied errors
+
+**Cause:** Claude Code needs permission for dangerous operations.
+
+**Solution:** Press `y` to approve, or configure auto-approve in settings for safe tools.
+
+---
+
+## Common mistakes
+
+1. **Asking for too much at once**
+   - Bad: "Analyze this project, fix all bugs, add tests, and deploy"
+   - Good: "First, analyze the project structure"
+
+2. **Not being specific about locations**
+   - Bad: "Show me the config file"
+   - Good: "Show me the tsconfig.json file"
+
+3. **Forgetting context limits**
+   - Long conversations lose context
+   - Use `/compact` or `/clear` periodically
+
+4. **Ignoring the tool output**
+   - Always check what Claude actually did before moving on
+   - You can catch mistakes early
+
+5. **Not understanding costs**
+   - More round trips = more API calls = more cost
+   - Specific requests are cheaper!
 
 ---
 

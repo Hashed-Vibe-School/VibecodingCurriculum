@@ -10,6 +10,84 @@
 
 ---
 
+## Why do you need this?
+
+**Real-world scenario**: Every time you ask Claude to edit a file, you manually run `npm run lint` to check formatting. Every time. That's tedious!
+
+Hooks and Commands automate the repetitive parts so you can focus on the creative work.
+
+### Simple Analogy: Smart Home Automation
+
+Think of Hooks like smart home rules:
+- **"When I leave home"** (trigger) --> **"Turn off lights"** (action)
+- **"When I open the door"** (trigger) --> **"Turn on AC"** (action)
+
+In Claude Code:
+- **"When Claude edits a file"** (trigger) --> **"Run linter"** (action)
+- **"When I press enter"** (trigger) --> **"Add context"** (action)
+
+Commands are like voice shortcuts: "Hey Siri, start my morning routine" = `/commit`
+
+---
+
+## Your First Hook (Start Here!)
+
+Before diving into all the options, let's create one working hook:
+
+### Step 1: Add to settings.json
+
+Add this to your `~/.claude/settings.json`:
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit",
+        "command": "echo 'File edited!' >> ~/.claude/hook-log.txt"
+      }
+    ]
+  }
+}
+```
+
+### Step 2: Test It
+
+Ask Claude to edit any file:
+
+```
+> Add a comment to this file: test.js
+```
+
+### Step 3: Check the Log
+
+```bash
+cat ~/.claude/hook-log.txt
+```
+
+You should see "File edited!" - your hook worked!
+
+### Step 4: Make It Useful
+
+Now replace the echo with something practical:
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit",
+        "command": "npx prettier --write $FILE_PATH"
+      }
+    ]
+  }
+}
+```
+
+Now every edited file gets auto-formatted!
+
+---
+
 ## Why Learn Hooks and Commands?
 
 Configuration alone has limits. Understanding Hooks and Commands gives you:
@@ -506,6 +584,130 @@ Committing `.claude/commands/` to git lets the whole team use the same Commands.
 - `/deploy` - Deploy to staging
 - `/hotfix <issue>` - Emergency fix
 ```
+
+---
+
+## Try it yourself
+
+### Exercise 1: Create a Simple Hook
+
+Create a hook that logs every time Claude runs a Bash command:
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "command": "echo 'Bash command executed' >> ~/.claude/bash-log.txt"
+      }
+    ]
+  }
+}
+```
+
+### Exercise 2: Create Your First Command
+
+1. Create the commands folder: `mkdir -p .claude/commands`
+2. Create a file `.claude/commands/hello.md`:
+
+```markdown
+Say hello and tell me what project I'm working on.
+Look at the folder structure and give me a brief summary.
+```
+
+3. Use it: `> /hello`
+
+### Exercise 3: Command with Variables
+
+Create `.claude/commands/explain.md`:
+
+```markdown
+Explain the $ARGUMENTS file in simple terms.
+What does it do? What are the key functions?
+```
+
+Use it: `> /explain src/index.ts`
+
+---
+
+## If it doesn't work?
+
+### Problem: Hook not triggering
+
+**Possible causes:**
+1. Wrong matcher name (case-sensitive)
+2. JSON syntax error
+3. Hook added to wrong section
+
+**Solutions:**
+- Check matcher names: `Edit`, `Write`, `Bash`, `Read`, etc.
+- Validate JSON: `cat ~/.claude/settings.json | jq .`
+- Make sure hooks are inside `"hooks": { }` section
+
+### Problem: Hook command fails silently
+
+**Possible causes:**
+1. Command not found
+2. Permission denied
+3. Wrong file path
+
+**Solutions:**
+- Test command manually in terminal first
+- Check if command exists: `which npm`, `which npx`
+- Use absolute paths when possible
+
+### Problem: Command not found
+
+**Possible causes:**
+1. File not in `.claude/commands/` folder
+2. File extension is not `.md`
+3. Folder is in wrong location
+
+**Solutions:**
+- Check folder exists: `ls -la .claude/commands/`
+- Make sure file ends with `.md`
+- Commands folder should be in project root or `~/.claude/`
+
+### Problem: $ARGUMENTS not working
+
+**Possible causes:**
+1. Using wrong variable name
+2. Not providing arguments when calling
+
+**Solutions:**
+- Use exactly `$ARGUMENTS` (case-sensitive)
+- Provide arguments: `/explain src/file.ts` not just `/explain`
+
+---
+
+## Common mistakes
+
+1. **Wrong hook timing**
+   - `PreToolUse`: Before the tool runs (can block it)
+   - `PostToolUse`: After the tool runs (for follow-up actions)
+   - Mixing these up causes unexpected behavior
+
+2. **Forgetting to escape special characters**
+   ```json
+   // BAD - unescaped quotes
+   "command": "echo "hello""
+
+   // GOOD - use single quotes
+   "command": "echo 'hello'"
+   ```
+
+3. **Commands that hang**
+   - If your hook command waits for input, Claude Code will hang
+   - Always use non-interactive commands
+
+4. **Overcomplicating hooks**
+   - Start simple, add complexity gradually
+   - One hook doing one thing is easier to debug
+
+5. **Not testing commands manually first**
+   - Always run your command in terminal first
+   - If it doesn't work there, it won't work in a hook
 
 ---
 

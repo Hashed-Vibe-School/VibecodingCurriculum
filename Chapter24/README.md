@@ -10,6 +10,21 @@
 
 ---
 
+## Why do you need this?
+
+**Real-world scenario**: Your team loves Claude Code, but everyone uses it differently. One person uses certain commands, another has different settings. New team members are confused. Code reviews are inconsistent.
+
+Standardizing Claude Code for your team means everyone works the same way, and it's easier to onboard new members.
+
+### Simple Analogy: Team Playbook
+
+Think of team configuration like a sports team playbook:
+- Everyone knows the same plays (commands)
+- Everyone uses the same terminology (agents)
+- New players can learn quickly (onboarding)
+
+---
+
 ## Why Learn Team Collaboration?
 
 Using alone vs in a team is different:
@@ -403,6 +418,20 @@ What you learned in this chapter:
 - [x] Team rules documentation
 
 **Key point**: Good team settings let all members work consistently.
+
+---
+
+## Quick Tips for Success
+
+1. **Start small** - Don't create 20 commands at once. Start with 2-3 essential ones.
+
+2. **Document everything** - If it's not in the README, it doesn't exist for new members.
+
+3. **Iterate** - Your first version won't be perfect. Improve based on feedback.
+
+4. **Lead by example** - Use the team tools yourself consistently.
+
+5. **Celebrate wins** - When team tools save time, share that success!
 
 ---
 

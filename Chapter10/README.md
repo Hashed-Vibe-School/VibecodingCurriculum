@@ -39,6 +39,10 @@ With CLAUDE.md:
 
 No need to say "use Tailwind," "use TypeScript" every time.
 
+**Think of CLAUDE.md as a project instruction manual:**
+- Without CLAUDE.md: You're training a new team member from scratch every single day
+- With CLAUDE.md: The team member already knows your project's rules and style
+
 ---
 
 ## Creating CLAUDE.md
@@ -408,6 +412,147 @@ This allows:
 CLAUDE.md is not a write-once document. It is a **living document** that you refine as the project progresses.
 
 Add new rules as they emerge, delete rules that no longer apply. This small investment compounds, and the quality of collaboration with Claude noticeably improves.
+
+---
+
+## Try It Yourself
+
+Let's create and use CLAUDE.md right now:
+
+### Exercise 1: Create Your First CLAUDE.md
+
+```
+# Go to any project folder (or create one)
+> Create a folder called my-project and go into it
+
+# Ask Claude to create CLAUDE.md
+> Create a CLAUDE.md for this project.
+> It's a React + TypeScript project using Tailwind CSS.
+```
+
+### Exercise 2: Test If It Works
+
+```
+# Ask Claude to create something
+> Create a button component
+
+# Check if Claude followed the rules
+> Did you use TypeScript and Tailwind like the CLAUDE.md says?
+```
+
+### Exercise 3: Add a Custom Rule
+
+```
+# Add a specific rule
+> Add to CLAUDE.md: "All components must have a comment explaining what they do"
+
+# Test it
+> Create a Card component
+> (Check if it has the comment)
+```
+
+### Exercise 4: Update Based on Feedback
+
+```
+# If Claude did something wrong
+> You used inline styles, but we use Tailwind.
+> Add "Never use inline styles" to CLAUDE.md.
+```
+
+---
+
+## If It Doesn't Work?
+
+**Claude doesn't seem to read CLAUDE.md?**
+- Check the file name: Must be exactly `CLAUDE.md` (case sensitive)
+- Check the location: Must be in the project root folder
+- Try: "Read CLAUDE.md and tell me what's in it"
+
+**Claude ignores certain rules?**
+- Make the rule more explicit and direct
+- Bad: "Prefer TypeScript"
+- Good: "Always use TypeScript. Never use JavaScript."
+
+**CLAUDE.md is getting too long?**
+- Keep it under 50 lines if possible
+- Remove outdated rules
+- Focus on rules that apply NOW, not project history
+
+**Rules conflict with each other?**
+- Prioritize them: Put most important rules first
+- Be specific: "For components use X, for utils use Y"
+
+**Personal and project rules clash?**
+- Project rules (local CLAUDE.md) override personal rules
+- If needed, adjust your personal settings for that project
+
+---
+
+## Common Mistakes
+
+### Mistake 1: Writing a Novel Instead of Rules
+
+```markdown
+# Bad - Too much backstory
+Our team started this project in 2023 when we decided
+that we needed a better way to manage our inventory.
+After many discussions, we chose React because...
+(continues for 200 lines)
+
+# Good - Just the rules
+## Tech Stack
+- React 18, TypeScript, Tailwind CSS
+
+## Rules
+- Functional components only
+- No inline styles
+```
+
+### Mistake 2: Being Too Vague
+
+```markdown
+# Bad
+- Write good code
+- Use best practices
+
+# Good
+- Use TypeScript strict mode
+- No any types allowed
+- Components under 200 lines
+```
+
+### Mistake 3: Not Updating When Rules Change
+
+```
+# Problem: Your team decided to switch from CSS Modules to Tailwind
+# But CLAUDE.md still says "Use CSS Modules"
+
+# Solution
+> Update CLAUDE.md: We now use Tailwind CSS instead of CSS Modules
+```
+
+### Mistake 4: Forgetting to Explain Why
+
+```markdown
+# Bad - Rule without reason
+- Keep components under 200 lines
+
+# Good - Rule with reason (Claude understands better)
+- Keep components under 200 lines (for maintainability and easier testing)
+```
+
+### Mistake 5: Not Testing the Rules
+
+```
+# Bad - Adding rules without checking
+> Add to CLAUDE.md: "Use camelCase for filenames"
+[Never actually check if Claude follows it]
+
+# Good - Test after adding
+> Add to CLAUDE.md: "Use camelCase for filenames"
+> Create a utility file
+> (Check: Is the filename in camelCase?)
+```
 
 ---
 

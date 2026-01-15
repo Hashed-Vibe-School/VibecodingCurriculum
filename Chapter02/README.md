@@ -10,6 +10,24 @@
 
 ---
 
+## Why Do You Need This?
+
+Before you can talk to Claude Code, you need to install it on your computer. Think of it like downloading a messaging app before you can chat with friends.
+
+**Real-world scenario**: You have an idea for a personal website. You want Claude to build it for you. But first, Claude needs to be on your computer so it can actually create and save files.
+
+### Simple Analogy: Hiring an Assistant
+
+Imagine you hired a brilliant assistant who can write code, but they're waiting outside your office. Before they can help you:
+
+1. **Open the door** (open the terminal)
+2. **Let them in** (install Claude Code)
+3. **Introduce yourself** (login)
+
+That's exactly what we're doing in this chapter.
+
+---
+
 ## What is a Terminal?
 
 A terminal is a window for communicating with your computer using text.
@@ -196,6 +214,80 @@ source ~/.zshrc
 claude /doctor
 ```
 This command diagnoses the problem.
+
+---
+
+## Try It Yourself
+
+Let's make sure everything is working. Follow these steps:
+
+### Step 1: Open Terminal
+- Mac: Press `Command + Space`, type "Terminal", press Enter
+- Windows: Press `Windows key`, type "PowerShell", press Enter
+
+### Step 2: Check Installation
+```bash
+claude --version
+```
+You should see a version number like `2.1.3`.
+
+### Step 3: Start Claude Code
+```bash
+claude
+```
+You should see the welcome screen with `>` prompt.
+
+### Step 4: Say Hello
+```
+> Hello! Can you hear me?
+```
+Claude should respond. If it does, you're all set.
+
+### Step 5: Exit
+Type `/exit` or press `Ctrl + C` twice.
+
+---
+
+## Common Mistakes
+
+### 1. Typing in the Wrong Place
+Make sure you're typing in the terminal, not in a text editor or browser. The terminal is the black/white window with text.
+
+### 2. Copying Commands Wrong
+When copying installation commands, make sure to copy the entire line. Sometimes the first or last character gets missed.
+
+### 3. Not Waiting for Installation
+Installation can take a minute or two. Don't close the terminal while it's still running. Wait for it to say "Installation complete" or similar.
+
+### 4. Forgetting to Restart Terminal
+After installation, the terminal needs to be closed and reopened. This refreshes the settings so it knows Claude Code exists.
+
+### 5. VPN or Firewall Issues
+If login fails, try disabling VPN. Some corporate firewalls block the login process.
+
+---
+
+## If It Doesn't Work...
+
+**Terminal won't open?**
+- Mac: Try searching for "Terminal" in Spotlight (Command + Space)
+- Windows: Try right-clicking the Start button and selecting "Windows Terminal" or "PowerShell"
+
+**Installation command fails?**
+- Check your internet connection
+- Try a different installation method (npm if you have Node.js, or Homebrew on Mac)
+
+**"claude: command not found" after installation?**
+- Close the terminal completely and reopen it
+- If still not working, restart your computer
+
+**Login page doesn't open?**
+- Try opening [claude.ai](https://claude.ai) manually in your browser first
+- Make sure you're logged in there, then try `claude` again
+
+**Still stuck?**
+- Run `claude /doctor` to see what's wrong
+- Check the [official documentation](https://docs.anthropic.com/claude-code) for latest troubleshooting
 
 ---
 

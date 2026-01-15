@@ -10,6 +10,23 @@
 
 ---
 
+## Why Do You Need This?
+
+Imagine ordering at a restaurant. If you just say "give me food," the waiter has no idea what you want. But if you say "I'd like a medium-rare steak with mashed potatoes," you get exactly what you want.
+
+Prompting works the same way. The more clearly you communicate with Claude, the better results you get.
+
+**Real-world scenarios:**
+- You have a bug but just say "fix it" - Claude doesn't know what's broken
+- You want a website but just say "make a website" - Claude doesn't know what kind
+- You need a function but don't explain what it should do - Claude guesses (often wrong)
+
+**Think of prompting like giving directions:**
+- Bad: "Go that way" (vague, unhelpful)
+- Good: "Turn left at the coffee shop, then go straight for 2 blocks" (clear, actionable)
+
+---
+
 ## What is Prompting?
 
 Prompting is how you communicate with AI. The same question phrased differently can produce very different results.
@@ -330,6 +347,116 @@ You do not need to be perfect from the start. Working with AI is an iterative re
 4. Get a better result
 
 Spinning this cycle quickly is more efficient than trying to craft the perfect request on the first try.
+
+---
+
+## Try It Yourself
+
+Let's practice prompting right now. Open Claude Code and try these:
+
+### Exercise 1: Turn a Bad Prompt into a Good One
+
+```
+# Start with this bad prompt:
+> Make a button
+
+# Now try this improved version:
+> Make a blue button with the text "Submit".
+> It should be 200px wide and have rounded corners.
+> When I hover over it, make it slightly darker.
+```
+
+See the difference? The second prompt gives Claude exactly what you want.
+
+### Exercise 2: Use Context
+
+```
+# Try this in any project folder:
+> @package.json What framework is this project using?
+> Now create a component that fits this project's style.
+```
+
+### Exercise 3: Step-by-Step Approach
+
+```
+> I want to build a contact form. Let's do it step by step.
+> First, just create the HTML structure with name, email, and message fields.
+```
+
+Wait for Claude to finish, check the result, then continue:
+
+```
+> Good. Now add CSS to make it look nice.
+```
+
+---
+
+## If It Doesn't Work?
+
+**Claude is not responding as expected?**
+- Check if your prompt is too vague
+- Add more context: what file, what error, what you expected
+
+**Claude made something completely different?**
+- Press `Esc Esc` to undo
+- Try breaking your request into smaller pieces
+- Use Plan mode first: `/plan How should I build this?`
+
+**Claude keeps making the same mistake?**
+- Be more explicit: "Do NOT use inline styles" instead of "use good styling"
+- Reference an existing file: "Follow the same pattern as @src/Button.js"
+
+**Still stuck?**
+- Start a new conversation (sometimes context gets confusing)
+- Try `ultrathink` for complex problems
+
+---
+
+## Common Mistakes
+
+### Mistake 1: Being Too Vague
+```
+# Bad
+> Fix the code
+
+# Good
+> In @src/login.js line 42, the email validation is failing.
+> It allows "test@" without a domain. Fix this.
+```
+
+### Mistake 2: Asking for Everything at Once
+```
+# Bad
+> Build me a complete e-commerce site with user auth,
+> payment, inventory, admin panel, and analytics
+
+# Good
+> Let's start with user registration.
+> Just the signup form for now.
+```
+
+### Mistake 3: Not Providing Examples
+```
+# Bad
+> Format dates nicely
+
+# Good
+> Format dates like this: "January 15, 2024"
+> Input: "2024-01-15"
+> Output: "January 15, 2024"
+```
+
+### Mistake 4: Forgetting to Mention Constraints
+```
+# Bad
+> Add form validation
+
+# Good
+> Add form validation.
+> - Email must have @ and a domain
+> - Password must be at least 8 characters
+> - Show error messages in red below each field
+```
 
 ---
 

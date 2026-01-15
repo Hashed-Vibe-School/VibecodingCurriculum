@@ -10,7 +10,37 @@
 
 ---
 
-## 왜 풀스택인가?
+## 왜 필요합니까?
+
+**풀스택 기술이 빛나는 실제 상황들:**
+
+- **어떤 기기에서도 작동하는 투두 앱 만들기** - 데이터가 브라우저가 아닌 데이터베이스에 저장되어 있어서 어디서든 동기화됩니다
+- **여러 사용자를 위한 서비스 만들기** - 각 사람이 자신만의 계정과 데이터를 안전하게 분리해서 가집니다
+- **실제 비즈니스 운영하기** - 결제 처리, 이메일 발송, 사용자 인증 등 모두 백엔드 로직이 필요합니다
+- **오프라인에서도 작동하는 앱 만들기** - 로컬에 데이터를 저장하고 온라인일 때 동기화합니다
+
+백엔드 없이는 여러분의 앱은 기초 없는 집과 같습니다. 보기에는 좋지만 오래 가지 못합니다.
+
+---
+
+## 쉬운 비유: 풀스택은 레스토랑과 같습니다
+
+레스토랑을 생각해 보시기 바랍니다:
+- **프론트엔드 (식당 홀)**: 손님이 보는 것 - 메뉴, 테이블, 인테리어, 주문받는 웨이터
+- **백엔드 (주방)**: 실제 작업이 일어나는 곳 - 요리, 재료 저장, 레시피 관리
+- **데이터베이스 (창고/저장실)**: 모든 재료와 물품이 정리되어 있는 곳
+
+음식을 주문하면:
+1. 웨이터(프론트엔드)에게 원하는 걸 말합니다
+2. 웨이터가 주문을 주방(백엔드)에 전달합니다
+3. 주방이 저장실(데이터베이스)에서 재료를 가져옵니다
+4. 음식이 준비되어 웨이터를 통해 다시 전달됩니다
+
+웹 앱도 정확히 같은 방식으로 작동합니다.
+
+---
+
+## 왜 풀스택입니까?
 
 지금까지 만든 프로젝트들은 대부분 프론트엔드만 있었습니다. 하지만 실제 서비스는:
 - 여러 사용자의 데이터를 저장해야 하고
@@ -235,6 +265,75 @@ cd frontend && npm install && npm run dev
 
 ---
 
+## 따라해보세요: 최소 동작 예제
+
+전체 투두 앱을 만들기 전에, 프론트엔드와 백엔드가 서로 통신할 수 있는지 확인해봅시다:
+
+**1. 최소한의 백엔드 (`server.js`) 만들기:**
+
+```javascript
+// server.js - 가장 간단한 Express 서버
+const express = require('express')
+const cors = require('cors')
+
+const app = express()
+app.use(cors())
+app.use(express.json())
+
+// 메모리 내 데이터 (테스트용)
+let message = '백엔드에서 인사드립니다!'
+
+// GET: 데이터 조회
+app.get('/api/message', (req, res) => {
+  res.json({ message })
+})
+
+// POST: 데이터 업데이트
+app.post('/api/message', (req, res) => {
+  message = req.body.message
+  res.json({ success: true, message })
+})
+
+app.listen(3001, () => {
+  console.log('백엔드 실행 중: http://localhost:3001')
+})
+```
+
+**2. curl로 테스트 (또는 브라우저에서):**
+
+```bash
+# 서버 시작
+npm init -y && npm install express cors
+node server.js
+
+# 다른 터미널에서 API 테스트
+curl http://localhost:3001/api/message
+# {"message":"백엔드에서 인사드립니다!"}
+
+curl -X POST http://localhost:3001/api/message \
+  -H "Content-Type: application/json" \
+  -d '{"message":"업데이트됨!"}'
+# {"success":true,"message":"업데이트됨!"}
+```
+
+**3. 프론트엔드에서 연결:**
+
+```javascript
+// React 컴포넌트에서
+const [message, setMessage] = useState('')
+
+// 로드 시 데이터 가져오기
+useEffect(() => {
+  fetch('http://localhost:3001/api/message')
+    .then(res => res.json())
+    .then(data => setMessage(data.message))
+}, [])
+```
+
+React 앱에서 "백엔드에서 인사드립니다!"가 보이면 연결에 성공한 것입니다. 이제 전체 투두 앱을 만들 수 있습니다.
+
+---
+
 ## 기능 확장하기
 
 ### 카테고리 추가
@@ -456,6 +555,175 @@ Claude에게 물어보세요:
   "message": "할 일을 찾을 수 없습니다",
   "code": "NOT_FOUND"
 }
+```
+
+---
+
+## 안 되면? 문제 해결 팁
+
+### CORS 오류: "Access-Control-Allow-Origin"
+
+```javascript
+// 백엔드: cors 미들웨어가 있는지 확인
+const cors = require('cors')
+app.use(cors())  // 라우트보다 먼저 추가하세요!
+
+// 여전히 문제가 있으면 더 구체적으로:
+app.use(cors({
+  origin: 'http://localhost:5173',  // 프론트엔드 URL
+  credentials: true
+}))
+```
+
+### "Network Error" 또는 "Failed to Fetch"
+
+```bash
+# 백엔드가 실제로 실행 중인지 확인
+curl http://localhost:3001/api/todos
+
+# 응답이 없으면 백엔드가 실행 중이 아님
+# 올바른 디렉토리에 있는지 확인
+cd backend && node index.js
+```
+
+### 서버 재시작하면 데이터가 사라짐
+
+메모리 저장은 그것이 정상입니다. 데이터베이스를 사용하시기 바랍니다:
+
+```javascript
+// SQLite 사용 (영구 저장)
+const Database = require('better-sqlite3')
+const db = new Database('mydata.db')
+
+// 재시작해도 데이터가 유지됩니다
+```
+
+### 새 항목 추가 후에도 프론트엔드에 이전 데이터가 보임
+
+```javascript
+// API 호출 후 상태를 업데이트하고 있는지 확인
+const addTodo = async () => {
+  const res = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text: newTodo })
+  })
+  const todo = await res.json()
+
+  // 상태 업데이트 - 잊지 마시기 바랍니다
+  setTodos([todo, ...todos])
+}
+```
+
+### 포트가 이미 사용 중이라는 오류
+
+```bash
+# 해당 포트를 사용 중인 프로세스 찾기
+lsof -i :3001
+
+# 종료하기 (PID를 실제 프로세스 ID로 대체)
+kill -9 <PID>
+
+# 또는 다른 포트 사용
+app.listen(3002, ...)
+```
+
+---
+
+## 자주 하는 실수
+
+### 1. JSON Body 파싱을 빼먹음
+
+```javascript
+// 틀림 - req.body가 undefined됨
+app.post('/api/todos', (req, res) => {
+  console.log(req.body)  // undefined!
+})
+
+// 맞음 - JSON 미들웨어 추가
+app.use(express.json())  // 라우트보다 먼저 추가
+app.post('/api/todos', (req, res) => {
+  console.log(req.body)  // 이제 작동함!
+})
+```
+
+### 2. HTTP 메서드 혼동
+
+```javascript
+// GET: 데이터 조회 (body 없음)
+// POST: 새 데이터 생성
+// PUT: 리소스 전체 교체
+// PATCH: 리소스 일부 수정
+// DELETE: 데이터 삭제
+
+// 틀림 - GET으로 데이터 생성
+app.get('/api/todos/create', ...)
+
+// 맞음 - 생성은 POST 사용
+app.post('/api/todos', ...)
+```
+
+### 3. 프론트엔드에서 에러 처리 안 함
+
+```javascript
+// 틀림 - 에러 시 조용히 실패
+const data = await fetch(API_URL).then(r => r.json())
+
+// 맞음 - 에러를 우아하게 처리
+try {
+  const res = await fetch(API_URL)
+  if (!res.ok) throw new Error('API 오류')
+  const data = await res.json()
+  setTodos(data)
+} catch (err) {
+  console.error('가져오기 실패:', err)
+  setError('할 일을 불러올 수 없습니다')
+}
+```
+
+### 4. API URL 하드코딩
+
+```javascript
+// 틀림 - 배포하면 안 됨
+const API_URL = 'http://localhost:3001/api'
+
+// 맞음 - 환경변수 사용
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api'
+```
+
+### 5. 백엔드 입력값 검증 안 함
+
+```javascript
+// 틀림 - 누구나 아무거나 보낼 수 있음
+app.post('/api/todos', (req, res) => {
+  const { text } = req.body
+  db.prepare('INSERT INTO todos (text) VALUES (?)').run(text)
+})
+
+// 맞음 - 먼저 검증
+app.post('/api/todos', (req, res) => {
+  const { text } = req.body
+
+  if (!text || typeof text !== 'string' || text.length > 500) {
+    return res.status(400).json({ error: '유효하지 않은 할 일 텍스트' })
+  }
+
+  db.prepare('INSERT INTO todos (text) VALUES (?)').run(text.trim())
+})
+```
+
+### 6. 프론트엔드와 백엔드를 같은 포트에서 실행
+
+```bash
+# 백엔드는 3001
+# 프론트엔드 개발 서버는 5173 (Vite 기본값)
+# 반드시 다른 포트여야 합니다
+
+# 백엔드
+app.listen(3001, ...)
+
+# 프론트엔드가 백엔드에 연결
+const API_URL = 'http://localhost:3001/api'
 ```
 
 ---

@@ -10,7 +10,43 @@
 
 ---
 
-## 왜 데이터 저장이 필요한가요?
+## 왜 필요합니까?
+
+온라인에서 폼을 작성하다가 실수로 탭을 닫아본 적이 있습니까? 열심히 쓴 내용이 다 사라졌을 때의 그 공포를 느껴본 적이 있을 것입니다. 이것이 바로 데이터 저장 없이 일어나는 일입니다.
+
+**데이터 저장이 필요한 실제 상황:**
+
+- **할 일 앱**: 새로고침해도 할 일 목록이 유지되어야 함
+- **사용자 설정**: 다크 모드 설정이 매번 초기화되면 안 됨
+- **장바구니**: 쇼핑하는 동안 담은 물건이 남아있어야 함
+- **게임 진행**: 최고 점수와 해금한 레벨이 저장되어야 함
+- **임시 저장**: 반쯤 쓴 글이 사라지면 안 됨
+
+> 데이터 저장 없이는, 당신의 앱은 금붕어 같은 기억력을 갖습니다 - 눈 돌리는 순간 모든 걸 잊어버립니다.
+
+### 쉬운 비유: 공책 vs 화이트보드
+
+화이트보드는 빠르게 메모하기 좋지만, 지우거나 방을 나가면 모든 게 사라집니다. 데이터 저장 없는 앱이 이렇습니다.
+
+공책은 덮어도 메모가 남아있습니다. 데이터 저장이 있는 앱이 이렇습니다. localStorage는 앱의 공책입니다.
+
+---
+
+## 따라해보세요: 한 가지만 저장하고 불러오기
+
+완전한 앱을 만들기 전에, 가장 간단한 예제로 데이터 저장이 어떻게 동작하는지 봅시다.
+
+```
+> HTML 페이지 만들어줘. 입력 필드 하나랑 "저장" 버튼만 있게.
+> 저장 버튼 누르면 입력값을 localStorage에 저장해.
+> 페이지 로드될 때 저장된 값을 입력 필드에 보여줘.
+```
+
+뭔가 입력하고, 저장 누르고, 페이지 새로고침하세요. 텍스트가 그대로 있는 것을 확인할 수 있습니다. 이것이 바로 localStorage의 기능입니다.
+
+---
+
+## 왜 데이터 저장이 필요합니까?
 
 지금까지 만든 웹사이트는 "정적"입니다. 페이지를 새로고침하면 입력한 내용이 사라집니다.
 
@@ -48,7 +84,7 @@ localStorage는 브라우저가 제공하는 저장 공간입니다.
 - **영구적**: 브라우저를 닫아도 데이터 유지
 - **용량**: 약 5MB (대부분의 앱에 충분)
 
-### 어떻게 작동하나요?
+### 어떻게 작동합니까?
 
 ```javascript
 // 저장하기
@@ -124,7 +160,7 @@ function addTodo(text) {
 }
 ```
 
-**JSON.stringify/parse는 뭔가요?**
+**JSON.stringify/parse는 무엇입니까?**
 
 localStorage는 문자열만 저장할 수 있습니다. 배열이나 객체를 저장하려면 문자열로 변환해야 합니다. `JSON.stringify`는 객체→문자열, `JSON.parse`는 문자열→객체로 변환합니다.
 
@@ -203,7 +239,7 @@ localStorage에 저장된 데이터를 확인하려면:
 
 ---
 
-## 언제 localStorage를 쓰고, 언제 데이터베이스를 쓸까?
+## 언제 localStorage를 쓰고, 언제 데이터베이스를 사용합니까?
 
 ### localStorage가 좋을 때
 
@@ -257,6 +293,107 @@ localStorage에 저장된 데이터를 확인하려면:
 > localStorage 데이터를 JSON 파일로 내보내기/가져오기 기능 추가해줘.
 > 백업과 복원 용도로.
 ```
+
+---
+
+## 안 되면?
+
+데이터 저장은 까다로울 수 있습니다. 자주 발생하는 문제와 해결법입니다.
+
+### 새로고침하면 데이터가 사라집니다
+- `localStorage.setItem()`을 실제로 호출했습니까?
+- 브라우저 콘솔에서 에러를 확인하시기 바랍니다 (F12 > Console)
+```
+> 데이터가 저장 안 돼. localStorage 코드 확인해줘.
+```
+
+### JSON.parse 에러
+저장된 데이터가 유효한 JSON이 아닐 때 발생합니다:
+```
+> localStorage 데이터 파싱할 때 "Unexpected token" 에러 나와.
+> 어떻게 고쳐?
+```
+빠른 해결: localStorage 지우고 새로 시작:
+```javascript
+localStorage.clear()
+```
+
+### 데이터가 "[object Object]"로 보입니다
+저장하기 전에 stringify를 깜빡한 경우입니다:
+```javascript
+// 잘못됨
+localStorage.setItem('data', myObject)
+
+// 올바름
+localStorage.setItem('data', JSON.stringify(myObject))
+```
+
+### localStorage가 꽉 찼습니다
+localStorage는 5MB 제한이 있습니다. 많이 저장했다면:
+```
+> localStorage가 꽉 찼어. 뭐가 공간 차지하는지 확인하고
+> 불필요한 데이터 정리하는 것 도와줘.
+```
+
+### 로컬에서는 되는데 배포 후에는 안 됩니다
+localStorage는 브라우저별로 저장됩니다. 본인 컴퓨터의 데이터가 다른 사람 브라우저에 나타나지 않는 것은 정상입니다.
+
+### 개발자 도구에서 localStorage가 안 보입니다
+- 올바른 도메인에 있는지 확인하시기 바랍니다
+- Application 탭 > Local Storage > 사이트 URL을 선택하시기 바랍니다
+
+---
+
+## 자주 하는 실수
+
+이런 함정을 피하시기 바랍니다.
+
+### 실수 1: 읽을 때 parse 깜빡하기
+```javascript
+// 잘못됨 - 이건 문자열이지 배열이 아닙니다!
+const todos = localStorage.getItem('todos')
+todos.push(newTodo)  // 에러!
+
+// 올바름
+const todos = JSON.parse(localStorage.getItem('todos')) || []
+todos.push(newTodo)
+```
+
+### 실수 2: null/빈 값 처리 안 하기
+처음 사용하는 유저는 데이터가 없습니다:
+```javascript
+// 저장된 게 없으면 크래시
+const todos = JSON.parse(localStorage.getItem('todos'))
+
+// 안전한 방법 - 빈 배열을 기본값으로
+const todos = JSON.parse(localStorage.getItem('todos')) || []
+```
+
+### 실수 3: 키 이름 잘못 쓰기
+키는 대소문자 구분하고 정확해야 합니다:
+```javascript
+localStorage.setItem('todos', data)
+localStorage.getItem('Todos')  // null 반환! (대문자 T)
+```
+
+### 실수 4: 변경 후 저장 안 하기
+데이터 수정 후, 다시 저장해야 합니다:
+```javascript
+const todos = JSON.parse(localStorage.getItem('todos')) || []
+todos.push(newTodo)
+// 저장 깜빡함! 새로고침하면 변경 사라짐
+
+// 이거 잊지 마세요:
+localStorage.setItem('todos', JSON.stringify(todos))
+```
+
+### 실수 5: 민감한 데이터 저장하기
+localStorage는 보안이 안 됩니다. 절대 저장하면 안 되는 것:
+- 비밀번호
+- API 키
+- 개인정보
+
+누구나 개발자 도구 열고 localStorage를 볼 수 있습니다!
 
 ---
 

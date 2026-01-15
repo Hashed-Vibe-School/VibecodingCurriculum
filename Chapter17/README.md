@@ -10,6 +10,36 @@
 
 ---
 
+## Why Do You Need This?
+
+**Real-world scenarios where full-stack skills shine:**
+
+- **Building a todo app that works on any device** - Your data syncs everywhere because it's stored in a database, not just your browser
+- **Creating a service for multiple users** - Each person has their own account, their own data, securely separated
+- **Running a real business** - Accept payments, send emails, handle user authentication - all require backend logic
+- **Making your app work offline** - Store data locally but sync when online
+
+Without a backend, your app is like a house with no foundation - it looks nice but won't last!
+
+---
+
+## Simple Analogy: Full-Stack is Like a Restaurant
+
+Think of a restaurant:
+- **Frontend (Dining Area)**: What customers see - the menu, tables, decor, waiters taking orders
+- **Backend (Kitchen)**: Where the actual work happens - cooking, storing ingredients, managing recipes
+- **Database (Pantry/Storage)**: Where all ingredients and supplies are kept organized
+
+When you order food:
+1. You tell the waiter (frontend) what you want
+2. The waiter sends your order to the kitchen (backend)
+3. The kitchen gets ingredients from storage (database)
+4. Food is prepared and sent back through the waiter to you
+
+A web app works exactly the same way!
+
+---
+
 ## Why Full-Stack?
 
 Most projects we've built so far had only frontend. But real services need to:
@@ -235,6 +265,75 @@ cd frontend && npm install && npm run dev
 
 ---
 
+## Try It Yourself: Minimal Working Example
+
+Before building the full todo app, let's make sure frontend and backend can talk to each other:
+
+**1. Create a minimal backend (`server.js`):**
+
+```javascript
+// server.js - Simplest possible Express server
+const express = require('express')
+const cors = require('cors')
+
+const app = express()
+app.use(cors())
+app.use(express.json())
+
+// In-memory data (just for testing)
+let message = 'Hello from backend!'
+
+// GET: Retrieve data
+app.get('/api/message', (req, res) => {
+  res.json({ message })
+})
+
+// POST: Update data
+app.post('/api/message', (req, res) => {
+  message = req.body.message
+  res.json({ success: true, message })
+})
+
+app.listen(3001, () => {
+  console.log('Backend running on http://localhost:3001')
+})
+```
+
+**2. Test with curl (or browser):**
+
+```bash
+# Start the server
+npm init -y && npm install express cors
+node server.js
+
+# In another terminal, test the API
+curl http://localhost:3001/api/message
+# {"message":"Hello from backend!"}
+
+curl -X POST http://localhost:3001/api/message \
+  -H "Content-Type: application/json" \
+  -d '{"message":"Updated!"}'
+# {"success":true,"message":"Updated!"}
+```
+
+**3. Connect from frontend:**
+
+```javascript
+// In your React component
+const [message, setMessage] = useState('')
+
+// Fetch on load
+useEffect(() => {
+  fetch('http://localhost:3001/api/message')
+    .then(res => res.json())
+    .then(data => setMessage(data.message))
+}, [])
+```
+
+If you see "Hello from backend!" in your React app, the connection works! Now you can build the full todo app.
+
+---
+
 ## Extending Features
 
 ### Add Categories
@@ -456,6 +555,175 @@ Ask Claude:
   "message": "Todo not found",
   "code": "NOT_FOUND"
 }
+```
+
+---
+
+## If It Doesn't Work? Troubleshooting Tips
+
+### CORS Error: "Access-Control-Allow-Origin"
+
+```javascript
+// Backend: Make sure you have cors middleware
+const cors = require('cors')
+app.use(cors())  // Add this BEFORE your routes!
+
+// If still having issues, be more specific:
+app.use(cors({
+  origin: 'http://localhost:5173',  // Your frontend URL
+  credentials: true
+}))
+```
+
+### "Network Error" or "Failed to Fetch"
+
+```bash
+# Check if backend is actually running
+curl http://localhost:3001/api/todos
+
+# If no response, your backend isn't running
+# Make sure you're in the right directory
+cd backend && node index.js
+```
+
+### Data disappears when server restarts
+
+That's normal with in-memory storage! Use a database:
+
+```javascript
+// With SQLite (persistent storage)
+const Database = require('better-sqlite3')
+const db = new Database('mydata.db')
+
+// Data survives restarts!
+```
+
+### Frontend shows old data after adding new item
+
+```javascript
+// Make sure you're updating state after API call
+const addTodo = async () => {
+  const res = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text: newTodo })
+  })
+  const todo = await res.json()
+
+  // UPDATE STATE - don't forget this!
+  setTodos([todo, ...todos])
+}
+```
+
+### Port already in use error
+
+```bash
+# Find what's using the port
+lsof -i :3001
+
+# Kill it (replace PID with actual process ID)
+kill -9 <PID>
+
+# Or just use a different port
+app.listen(3002, ...)
+```
+
+---
+
+## Common Mistakes
+
+### 1. Forgetting to Parse JSON Body
+
+```javascript
+// WRONG - req.body will be undefined
+app.post('/api/todos', (req, res) => {
+  console.log(req.body)  // undefined!
+})
+
+// CORRECT - add JSON middleware
+app.use(express.json())  // Add this BEFORE routes
+app.post('/api/todos', (req, res) => {
+  console.log(req.body)  // Now it works!
+})
+```
+
+### 2. Mixing Up HTTP Methods
+
+```javascript
+// GET: Retrieve data (no body)
+// POST: Create new data
+// PUT: Replace entire resource
+// PATCH: Update part of resource
+// DELETE: Remove data
+
+// WRONG - using GET to create data
+app.get('/api/todos/create', ...)
+
+// CORRECT - use POST for creation
+app.post('/api/todos', ...)
+```
+
+### 3. Not Handling Errors in Frontend
+
+```javascript
+// WRONG - crashes silently on error
+const data = await fetch(API_URL).then(r => r.json())
+
+// CORRECT - handle errors gracefully
+try {
+  const res = await fetch(API_URL)
+  if (!res.ok) throw new Error('API error')
+  const data = await res.json()
+  setTodos(data)
+} catch (err) {
+  console.error('Failed to fetch:', err)
+  setError('Could not load todos')
+}
+```
+
+### 4. Hardcoding API URLs
+
+```javascript
+// WRONG - breaks when you deploy
+const API_URL = 'http://localhost:3001/api'
+
+// CORRECT - use environment variables
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api'
+```
+
+### 5. Not Validating Backend Input
+
+```javascript
+// WRONG - anyone can send anything
+app.post('/api/todos', (req, res) => {
+  const { text } = req.body
+  db.prepare('INSERT INTO todos (text) VALUES (?)').run(text)
+})
+
+// CORRECT - validate first
+app.post('/api/todos', (req, res) => {
+  const { text } = req.body
+
+  if (!text || typeof text !== 'string' || text.length > 500) {
+    return res.status(400).json({ error: 'Invalid todo text' })
+  }
+
+  db.prepare('INSERT INTO todos (text) VALUES (?)').run(text.trim())
+})
+```
+
+### 6. Running Both Frontend and Backend on Same Port
+
+```bash
+# Backend is on 3001
+# Frontend dev server is on 5173 (Vite default)
+# They MUST be different ports!
+
+# Backend
+app.listen(3001, ...)
+
+# Frontend connects to backend
+const API_URL = 'http://localhost:3001/api'
 ```
 
 ---

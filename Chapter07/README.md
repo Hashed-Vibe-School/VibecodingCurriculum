@@ -10,6 +10,24 @@
 
 ---
 
+## Why Do You Need This?
+
+Imagine joining a new team on your first day. The codebase has thousands of files. Reading everything would take weeks. But you need to fix a bug today.
+
+This is where code exploration with Claude shines. Instead of manually hunting through folders, just ask Claude to find what you need.
+
+**Real-world scenarios:**
+- You inherited a project and need to understand how it works
+- There's a bug somewhere but you don't know which file to look at
+- You want to add a feature but need to find similar code to reference
+- You're reviewing someone's code and need to understand the context
+
+**Think of Claude as your code tour guide:**
+- Without Claude: Wandering through unfamiliar streets looking for a restaurant
+- With Claude: Having a local friend who knows exactly where everything is
+
+---
+
 ## Why is Code Exploration Important?
 
 When starting a new project, you often wonder "what does this code do?"
@@ -281,6 +299,116 @@ git clone https://github.com/facebook/react.git       # Large
 > How is test coverage structured?
 
 > Find potential performance bottlenecks
+```
+
+---
+
+## Try It Yourself
+
+Let's practice code exploration. You can use any project, or try with a popular open source project:
+
+### Exercise 1: Quick Project Overview
+
+```bash
+# Clone any project (or use your own)
+git clone https://github.com/expressjs/express.git
+cd express
+claude
+```
+
+```
+> /plan
+> Give me a 1-minute overview of this project.
+> What is it? What are the main files?
+```
+
+### Exercise 2: Find Something Specific
+
+```
+> Find all files that handle HTTP requests
+```
+
+```
+> Where is error handling done in this project?
+```
+
+### Exercise 3: Trace a Feature
+
+```
+> I want to understand how routing works.
+> Start from the entry point and trace the flow.
+```
+
+### Exercise 4: Safe Exploration
+
+```
+> /plan
+> Show me all the dependencies this project uses.
+> Don't modify anything.
+```
+
+---
+
+## If It Doesn't Work?
+
+**Claude can't find a file you know exists?**
+- Check if you're in the right directory
+- Try being more specific: "Find files with 'auth' in the name under src/"
+- The file might have a different name than you expect
+
+**Claude is showing too many results?**
+- Narrow down: "Find test files only in the components folder"
+- Add filters: "Find .ts files only, not .js"
+
+**Claude says "I don't have access to the project"?**
+- Make sure you're running Claude Code from inside the project folder
+- Try: `cd /path/to/project && claude`
+
+**Exploration is taking too long?**
+- Limit the scope: "Only look at the src folder"
+- Ask specific questions instead of "explain everything"
+
+---
+
+## Common Mistakes
+
+### Mistake 1: Trying to Understand Everything at Once
+```
+# Bad
+> Explain every file in this project
+
+# Good
+> First, show me the folder structure.
+> Then I'll pick which part to explore.
+```
+
+### Mistake 2: Not Using Plan Mode for Safe Exploration
+```
+# Risky - Claude might try to "fix" things it finds
+> Analyze this project and fix any issues
+
+# Safe - Read only
+> /plan
+> Analyze this project. Just explain, don't change anything.
+```
+
+### Mistake 3: Vague Search Requests
+```
+# Bad
+> Find the function
+
+# Good
+> Find where the "handleLogin" function is defined
+```
+
+### Mistake 4: Ignoring Project Context
+```
+# Bad (in a Python project)
+> Find all .js files
+
+# Good
+> What type of project is this first?
+> Then find the main source files.
 ```
 
 ---

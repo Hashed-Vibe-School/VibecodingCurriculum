@@ -10,6 +10,118 @@
 
 ---
 
+## Why do you need this?
+
+**Real-world scenario**: You're debugging an issue and need to check the database. You open a terminal, connect to PostgreSQL, write a query, copy the results, paste into Claude... Then Claude asks for more data. Repeat. This is exhausting!
+
+MCP lets Claude connect directly to external services, so you just ask "show me the last 10 orders" and it happens.
+
+### Simple Analogy: Giving Claude a Phone
+
+Without MCP, Claude can only see what's in front of it (your files). It's like someone who can only see documents on their desk.
+
+With MCP, you give Claude a "phone" to call external services:
+- "Call the database and ask for user data"
+- "Call GitHub and check the issues"
+- "Call Slack and send a message"
+
+MCP servers are like phone numbers in Claude's contact list.
+
+---
+
+## Your First MCP Setup (Step by Step)
+
+Let's set up a simple MCP server. We'll use the filesystem server as it requires no external accounts.
+
+### Step 1: Create the Config File
+
+Create the MCP config file:
+
+```bash
+mkdir -p ~/.claude
+touch ~/.claude/mcp_servers.json
+```
+
+### Step 2: Add a Simple Server
+
+Open `~/.claude/mcp_servers.json` and add:
+
+```json
+{
+  "servers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-server-filesystem", "/tmp"]
+    }
+  }
+}
+```
+
+This gives Claude access to files in `/tmp` via MCP.
+
+### Step 3: Restart Claude Code
+
+Exit and restart Claude Code for the MCP server to load.
+
+### Step 4: Test It
+
+```
+> Using MCP, list the files in /tmp
+```
+
+If it works, you'll see the files! If not, check the troubleshooting section below.
+
+---
+
+## Understanding the JSON Config
+
+The MCP config uses JSON. Here's what each part means:
+
+```json
+{
+  "servers": {                    // List of all your MCP servers
+    "serverName": {               // Name you choose (use in conversations)
+      "command": "npx",           // Program to run
+      "args": ["-y", "package"],  // Arguments for the command
+      "env": {                    // Environment variables (optional)
+        "API_KEY": "your-key"
+      }
+    }
+  }
+}
+```
+
+### Common Config Patterns
+
+**Pattern 1: npx package**
+```json
+{
+  "command": "npx",
+  "args": ["-y", "@anthropic-ai/mcp-server-postgres"]
+}
+```
+
+**Pattern 2: Environment variable**
+```json
+{
+  "env": {
+    "DATABASE_URL": "postgresql://user:pass@localhost/mydb"
+  }
+}
+```
+
+**Pattern 3: Multiple servers**
+```json
+{
+  "servers": {
+    "server1": { ... },
+    "server2": { ... }
+  }
+}
+```
+
+---
+
 ## Why Learn MCP?
 
 Claude Code basically only handles files and terminal. With MCP connected:
@@ -414,6 +526,138 @@ Add rules to CLAUDE.md:
 - Never output passwords, tokens, or sensitive info
 - Confirm before accessing bulk data
 ```
+
+---
+
+## Try it yourself
+
+### Exercise 1: Set Up Filesystem MCP
+
+Follow the step-by-step guide above to set up the filesystem MCP server. Test it by asking Claude to read a file from the allowed path.
+
+### Exercise 2: Add GitHub MCP (if you have a token)
+
+1. Get a GitHub personal access token
+2. Add to your config:
+
+```json
+{
+  "servers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-server-github"],
+      "env": {
+        "GITHUB_TOKEN": "your-token-here"
+      }
+    }
+  }
+}
+```
+
+3. Test: `> show me my recent GitHub repositories`
+
+### Exercise 3: Combine Multiple Servers
+
+Add both filesystem and GitHub to your config:
+
+```json
+{
+  "servers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-server-filesystem", "/tmp"]
+    },
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-server-github"],
+      "env": {
+        "GITHUB_TOKEN": "your-token"
+      }
+    }
+  }
+}
+```
+
+---
+
+## If it doesn't work?
+
+### Problem: MCP server not loading
+
+**Possible causes:**
+1. JSON syntax error in config
+2. Wrong file location
+3. Missing npm/npx
+
+**Solutions:**
+- Validate JSON: `cat ~/.claude/mcp_servers.json | jq .`
+- Check location: must be `~/.claude/mcp_servers.json`
+- Check npx: `which npx` (should show a path)
+
+### Problem: "Permission denied" errors
+
+**Possible causes:**
+1. File/folder access restricted
+2. API token missing or invalid
+3. Network firewall blocking
+
+**Solutions:**
+- Check file permissions
+- Verify your API tokens are valid
+- Try with a simpler path like `/tmp`
+
+### Problem: MCP server starts but Claude can't use it
+
+**Possible causes:**
+1. Server name mismatch
+2. Server crashed after starting
+3. Tool names different from expected
+
+**Solutions:**
+- Check server name in config matches what you're asking for
+- Look at Claude Code logs for errors
+- Restart Claude Code
+
+### Problem: Slow or timing out
+
+**Possible causes:**
+1. Network issues
+2. Server overloaded
+3. Too much data requested
+
+**Solutions:**
+- Check your internet connection
+- Start with smaller requests
+- Use more specific queries
+
+---
+
+## Common mistakes
+
+1. **Hardcoding secrets in config**
+   ```json
+   // BAD - token in plain text
+   { "env": { "TOKEN": "ghp_abc123..." } }
+
+   // BETTER - use environment variable
+   { "env": { "TOKEN": "${GITHUB_TOKEN}" } }
+   ```
+
+2. **Wrong JSON format**
+   - Remember: no comments, no trailing commas
+   - Always validate with `jq`
+
+3. **Too permissive access**
+   - Don't give MCP access to your entire home folder
+   - Use read-only tokens when possible
+
+4. **Forgetting to restart**
+   - After changing `mcp_servers.json`, restart Claude Code
+   - Changes don't apply automatically
+
+5. **Not checking logs**
+   - When things fail, check Claude Code logs
+   - MCP servers often print helpful error messages
 
 ---
 

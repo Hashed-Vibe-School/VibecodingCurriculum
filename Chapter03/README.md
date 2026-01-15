@@ -10,6 +10,27 @@
 
 ---
 
+## Why Do You Need This?
+
+You've installed Claude Code. Now what? This chapter teaches you how to actually talk to it and keep your files safe while doing so.
+
+**Real-world scenarios:**
+- You want to build a website, but you don't want Claude to accidentally delete important files
+- You're exploring a new project and want to understand the code before making changes
+- You need to make quick edits without clicking "approve" every single time
+
+### Simple Analogy: Giving Instructions to a Helper
+
+Imagine you have a very capable helper at your house. Before they start working, you'd want to set some ground rules:
+
+- **"Just look around first"** = Plan Mode (read-only)
+- **"Ask me before touching anything"** = Normal Mode (asks permission)
+- **"Go ahead and clean, but ask before throwing things away"** = Accept Edits Mode (auto-approves safe actions)
+
+Permission modes are these ground rules for Claude.
+
+---
+
 ## Basic Conversation Method
 
 Claude Code operates as a chat interface. Type input after the `>` prompt.
@@ -249,6 +270,78 @@ For complex features, rather than jumping into implementation, discuss the struc
 ```
 
 When Claude explains options like JWT, sessions, or OAuth, you choose and then proceed with implementation. This prevents "built it but it doesn't match the requirements" situations.
+
+---
+
+## Try It Yourself
+
+Let's practice what you learned. Open Claude Code and follow along:
+
+### Exercise 1: Mode Switching
+```
+1. Start Claude Code: claude
+2. Check current mode (shown in the interface)
+3. Press Shift + Tab to switch modes
+4. Notice how the mode indicator changes
+5. Press Shift + Tab again until you're in Plan mode
+```
+
+### Exercise 2: First Real Conversation
+```
+> What's in this folder?
+```
+Claude will show you the files. In Plan mode, it can only read, not change anything.
+
+### Exercise 3: Create Something Simple
+```
+1. Press Shift + Tab to switch to Normal mode
+2. Type: Create a file called hello.txt with "Hello World" inside
+3. When Claude asks for permission, click Allow
+4. Type: Show me what's in hello.txt
+```
+
+Congratulations! You just created your first file with Claude Code.
+
+---
+
+## Common Mistakes
+
+### 1. Forgetting Which Mode You're In
+Always check the mode indicator before making requests. If you're in Plan mode and ask Claude to create a file, it will explain what it would do but won't actually do it.
+
+### 2. Clicking "Deny" by Accident
+If you accidentally deny a change, just ask Claude again. "Do that again" or "Yes, please create that file" works fine.
+
+### 3. Not Using Plan Mode for Exploration
+When you first open a project, resist the urge to immediately start changing things. Use Plan mode to understand the structure first.
+
+### 4. Typing Commands Instead of Natural Language
+You don't need to type terminal commands. Instead of `ls -la`, just say "show me the files in this folder." Claude understands both, but natural language is easier.
+
+### 5. Not Reading Claude's Explanations
+Claude often explains what it's about to do and why. Reading these explanations helps you learn and catch potential issues.
+
+---
+
+## If It Doesn't Work...
+
+**Mode won't switch?**
+Make sure you're pressing Shift + Tab (not just Tab). Some terminals require specific key combinations.
+
+**Claude isn't responding?**
+- Check your internet connection
+- Try typing `/help` to see if Claude is active
+- Exit with `/exit` and restart
+
+**Permission dialogs not appearing?**
+You might be in Plan mode (read-only) or Accept Edits mode (auto-approve). Press `Shift + Tab` to switch to Normal mode.
+
+**Claude did something you didn't want?**
+- Press `Esc Esc` (Escape twice) to undo the last change
+- Or ask Claude: "Undo that last change"
+
+**Confused about what Claude is doing?**
+Just ask! "What did you just do?" or "Explain that change" works great.
 
 ---
 

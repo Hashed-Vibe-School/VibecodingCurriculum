@@ -11,7 +11,34 @@
 
 ---
 
-## 왜 CLI 도구인가?
+## 왜 필요합니까?
+
+**CLI 도구가 빛나는 실제 상황들:**
+
+- **다운로드 폴더가 난장판입니다** - 수백 개의 파일이 뒤섞여 있습니다. CLI 도구가 몇 초 만에 자동으로 정리해줍니다
+- **똑같은 프로젝트 구조를 반복해서 만듭니다** - 새 프로젝트마다 같은 폴더와 파일이 필요합니다. 자동화하시기 바랍니다
+- **많은 파일을 한꺼번에 처리해야 합니다** - 파일 100개 이름 바꾸기, 이미지 리사이즈, 포맷 변환 등 CLI 도구는 일괄 작업을 쉽게 처리합니다
+- **자동화 도구를 다른 사람과 공유하고 싶습니다** - npm에 배포하면 누구나 한 줄 명령어로 설치할 수 있습니다
+
+CLI 도구를 **반복 작업에 지치지 않는 나만의 로봇 비서**라고 생각하시기 바랍니다.
+
+---
+
+## 쉬운 비유: CLI 도구는 주방 가전과 같습니다
+
+주스를 만든다고 상상해 보시기 바랍니다:
+- **믹서기 없이**: 과일을 하나하나 손으로 짜야 하며, 시간이 많이 걸립니다
+- **믹서기로**: 과일 넣고 버튼 누르면 끝입니다
+
+CLI 도구도 마찬가지입니다:
+- **CLI 도구 없이**: 파일을 수동으로 옮기고, 폴더 만들고, 명령어 반복 입력
+- **CLI 도구로**: 명령어 한 번 실행하면 모든 게 자동으로 처리
+
+우리가 매일 쓰는 `git`, `npm`, `npx`도 모두 누군가가 시간을 아끼려고 만든 CLI 도구입니다.
+
+---
+
+## 왜 CLI 도구입니까?
 
 CLI(Command Line Interface) 도구는 개발자의 생산성을 높여주는 핵심 도구입니다:
 - 반복 작업 자동화
@@ -29,13 +56,13 @@ CLI(Command Line Interface) 도구는 개발자의 생산성을 높여주는 핵
 > package.json도 초기화해줘.
 ```
 
-입력(인자, 옵션)과 출력(어떤 동작을 할지)을 명확히 설명하세요.
+입력(인자, 옵션)과 출력(어떤 동작을 할지)을 명확히 설명하시기 바랍니다.
 
 ---
 
 ## 프로젝트: 파일 정리 도구 만들기
 
-다운로드 폴더가 지저분하지 않나요? 파일을 자동으로 정리하는 CLI 도구를 만들어봅시다.
+다운로드 폴더가 지저분하지 않습니까? 파일을 자동으로 정리하는 CLI 도구를 만들어봅시다.
 
 ### 목표
 
@@ -183,6 +210,59 @@ npm link
 organize ./downloads --dry-run
 organize ./downloads --verbose
 ```
+
+---
+
+## 따라해보세요: 최소 동작 예제
+
+전체 파일 정리 도구를 만들기 전에, 기본을 이해하기 위해 아주 간단한 CLI 도구부터 만들어봅시다:
+
+**1. `hello-cli.js`라는 파일 하나를 만드세요:**
+
+```javascript
+#!/usr/bin/env node
+
+// 명령줄 인자 가져오기 (처음 두 개는 건너뜀: node 경로와 스크립트 경로)
+const args = process.argv.slice(2)
+const name = args[0] || 'World'
+
+console.log(`안녕하세요, ${name}님!`)
+console.log('첫 번째 CLI 도구를 만들었어요!')
+```
+
+**2. 실행 권한을 주고 실행:**
+
+```bash
+# 실행 가능하게 만들기
+chmod +x hello-cli.js
+
+# 실행!
+./hello-cli.js
+# 출력: 안녕하세요, World님!
+
+./hello-cli.js 철수
+# 출력: 안녕하세요, 철수님!
+```
+
+**3. package.json에 추가해서 명령어로 사용:**
+
+```json
+{
+  "name": "my-first-cli",
+  "version": "1.0.0",
+  "bin": {
+    "greet": "./hello-cli.js"
+  }
+}
+```
+
+```bash
+npm link
+greet 영희
+# 출력: 안녕하세요, 영희님!
+```
+
+이것이 전부입니다. 이제 핵심 개념을 이해했습니다. 나머지는 모두 이 기초 위에 쌓아가는 것입니다.
 
 ---
 
@@ -476,6 +556,108 @@ bar.stop()
 > 공통 의존성과 버전 충돌을 찾아주는 도구
 
 > 이미지 파일들을 일괄 리사이즈/압축하는 도구
+```
+
+---
+
+## 안 되면? 문제 해결 팁
+
+### npm link 후 "command not found" 오류
+
+```bash
+# npm bin이 PATH에 있는지 확인
+npm bin -g
+
+# npx로 실행해보기
+npx organize ./downloads
+```
+
+### "Permission denied" 실행 권한 오류
+
+```bash
+# 파일에 실행 권한이 있는지 확인
+chmod +x bin/organize.js
+
+# shebang 라인이 올바른지 확인 (첫 줄이 이래야 함):
+#!/usr/bin/env node
+```
+
+### 파일이 안 움직이거나 아무 일도 안 일어날 때
+
+```bash
+# verbose 플래그로 무슨 일이 일어나는지 확인
+organize ./downloads --verbose
+
+# 디렉토리가 존재하는지 확인
+ls ./downloads
+
+# 절대 경로로 시도
+organize /Users/yourname/downloads
+```
+
+### "Cannot find module 'commander'" 오류
+
+```bash
+# 의존성을 설치했는지 확인
+cd your-project
+npm install
+
+# 또는 직접 설치
+npm install commander chalk
+```
+
+---
+
+## 자주 하는 실수
+
+### 1. Shebang 라인을 빼먹음
+
+```javascript
+// 틀림 - 직접 실행 안 됨
+const { program } = require('commander')
+
+// 맞음 - 첫 줄에 shebang 필요
+#!/usr/bin/env node
+const { program } = require('commander')
+```
+
+### 2. 인자가 없을 때 처리를 안 함
+
+```javascript
+// 틀림 - 디렉토리를 안 주면 크래시
+const dir = process.argv[2]
+fs.readdirSync(dir)  // dir이 undefined면 에러!
+
+// 맞음 - 먼저 검증
+const dir = process.argv[2]
+if (!dir) {
+  console.log('디렉토리 경로를 입력해주세요')
+  process.exit(1)
+}
+```
+
+### 3. 경로를 하드코딩함
+
+```javascript
+// 틀림 - 내 컴퓨터에서만 동작
+const targetDir = '/Users/yourname/downloads'
+
+// 맞음 - 상대 경로나 설정 가능한 경로 사용
+const targetDir = process.argv[2] || './downloads'
+```
+
+### 4. 테스트할 때 --dry-run을 안 씀
+
+파일을 수정하는 CLI에는 항상 dry-run 옵션을 추가하시기 바랍니다. 테스트하다가 중요한 파일을 실수로 삭제하거나 옮기는 것을 방지할 수 있습니다.
+
+### 5. 옵션 파싱을 잘못함
+
+```javascript
+// 주의 - options.dryRun으로 접근해야 함
+.option('-d, --dry-run')
+
+// commander가 camelCase로 변환함
+// --dry-run은 options.dryRun이 됨
 ```
 
 ---

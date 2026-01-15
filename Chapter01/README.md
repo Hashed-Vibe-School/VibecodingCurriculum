@@ -14,7 +14,30 @@
 
 No coding knowledge is required. This curriculum starts from scratch.
 
-You might think, "But I'm not a developer." Correct—for now. In the AI era, anyone can build their own ideas.
+You might think, "But I'm not a developer." Correct--for now. In the AI era, anyone can build their own ideas.
+
+---
+
+## Why Do You Need This?
+
+Think about these everyday situations:
+
+- **"I want to make a simple website for my side project, but hiring a developer is expensive..."**
+- **"I have a repetitive task at work that I wish I could automate..."**
+- **"I have an app idea but no coding skills to build it..."**
+- **"I want to learn coding but don't know where to start..."**
+
+AI coding solves all of these. You don't need years of study anymore. Just tell AI what you want, and it builds it for you.
+
+### Simple Analogy: The Translator
+
+Imagine you want to write a letter in French, but you only speak English.
+
+**Old way**: Study French for years, learn grammar, vocabulary, practice writing...
+
+**AI way**: Tell a fluent French speaker what you want to say, and they write it for you.
+
+AI coding works the same way. You speak "human" (what you want), AI speaks "code" (how to build it). Claude Code is your translator between ideas and working software.
 
 ---
 
@@ -157,6 +180,71 @@ Do not attempt something complex from the start. Begin with "Hello World."
 
 ### 4. Ask When Curious
 "What is this?", "Why this approach?" Ask AI and it will explain.
+
+---
+
+## Try It Yourself (Preview)
+
+You haven't installed Claude Code yet, but here's a sneak peek of what conversations look like:
+
+**Example 1: Making a web page**
+```
+You: Make a webpage that shows my name "Alex" in big blue letters
+
+Claude: I'll create that for you...
+[Creates index.html with styled heading]
+```
+
+**Example 2: Automating a task**
+```
+You: Rename all .jpeg files in this folder to .jpg
+
+Claude: I'll rename those files...
+[Renames all files automatically]
+```
+
+**Example 3: Fixing code**
+```
+You: This code isn't working. Fix it.
+[paste broken code]
+
+Claude: I see the issue. The error is...
+[Explains and fixes the code]
+```
+
+See? No coding knowledge needed. Just describe what you want in plain English.
+
+---
+
+## Common Mistakes (Before You Start)
+
+### 1. Thinking You Need to Learn Code First
+You don't. That's the whole point. Start with Claude Code, and you'll pick up coding concepts naturally as you go.
+
+### 2. Expecting Perfect Results on the First Try
+AI is smart, but not psychic. If the first result isn't what you wanted, just say "that's not quite right, I meant..." and try again.
+
+### 3. Being Too Vague
+"Make something cool" is hard for AI to interpret. "Make a blue button that says Click Me" is much clearer.
+
+### 4. Giving Up After One Error
+Errors happen to everyone, even professional developers. When something goes wrong, just tell Claude about the error and ask for help.
+
+---
+
+## If It Doesn't Work...
+
+**Feeling overwhelmed?**
+That's normal. Take it one chapter at a time. You don't need to understand everything right away.
+
+**Not sure if this is for you?**
+If you can write an email, you can use Claude Code. It's just having a conversation.
+
+**Worried about breaking something?**
+Claude Code has safety features. It asks for permission before making changes, and you can always say no.
+
+**Questions before starting?**
+Great! Curiosity is your best tool. Write down your questions and ask Claude as you learn.
 
 ---
 
