@@ -1122,3 +1122,9 @@ Chapter 14에서는 **배포하기**를 배웁니다.
 - [Coolors](https://coolors.co/) - 색상 팔레트 생성
 - [Google Fonts](https://fonts.google.com/) - 무료 웹 폰트
 - [Font Awesome](https://fontawesome.com/) - 아이콘 라이브러리
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

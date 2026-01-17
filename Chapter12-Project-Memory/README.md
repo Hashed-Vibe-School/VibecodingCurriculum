@@ -1008,3 +1008,9 @@ Continue to [Chapter 13: Website Development](../Chapter13-Website-Development/R
 **Related Tools:**
 - [Markdown Editor](https://stackedit.io/) - Online Markdown editor
 - [Claude Code GitHub](https://github.com/anthropics/claude-code) - Official repository
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

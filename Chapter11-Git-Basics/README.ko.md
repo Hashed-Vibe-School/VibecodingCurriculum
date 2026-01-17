@@ -1032,3 +1032,9 @@ Git이 **코드의 기억**이라면, CLAUDE.md는 **AI의 기억**입니다.
 - [GitHub Desktop](https://desktop.github.com/) - Git GUI 클라이언트
 - [GitKraken](https://www.gitkraken.com/) - 시각적 Git 클라이언트
 - [Sourcetree](https://www.sourcetreeapp.com/) - 무료 Git GUI
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

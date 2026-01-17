@@ -1193,3 +1193,9 @@ Claude Code가 터미널에서 동작하면, 기존 워크플로우에 자연스
 - 모드 전환 방법
 
 [Chapter 03: 첫 대화 시작하기](../Chapter03-First-Conversation/README.ko.md)로 진행하세요.
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

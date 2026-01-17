@@ -1475,3 +1475,9 @@ CLI 도구는 개발자로서의 생산성을 크게 높여줍니다. 반복되�
 - [Ora](https://github.com/sindresorhus/ora) - 로딩 스피너
 - [Inquirer.js](https://github.com/SBoudrias/Inquirer.js) - 인터랙티브 프롬프트
 - [cli-progress](https://github.com/npkgz/cli-progress) - 진행률 바
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

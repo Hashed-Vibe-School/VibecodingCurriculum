@@ -1196,3 +1196,9 @@ Now that you've learned backend basics, let's connect it to a frontend in the ne
 - [Insomnia](https://insomnia.rest/) - REST client
 - [DB Browser for SQLite](https://sqlitebrowser.org/) - SQLite GUI tool
 - [Thunder Client](https://www.thunderclient.com/) - VS Code API testing extension
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

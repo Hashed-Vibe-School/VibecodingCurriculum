@@ -1111,3 +1111,9 @@ README.md 생성 완료:
 - 로컬 서버 실행하기
 
 [Chapter 05: 터미널 명령어](../Chapter05-Terminal-Commands/README.ko.md)로 진행하십시오.
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

@@ -1095,3 +1095,9 @@ What you'll learn:
 - Overcoming memory limitations
 
 Proceed to [Chapter 07: Context and Memory](../Chapter07-Context-and-Memory/README.md).
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

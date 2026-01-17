@@ -1367,3 +1367,9 @@ When requesting from Claude:
 Clarify these three things and you can build the bot you want.
 
 Proceed to [Chapter 19: Backend Basics](../Chapter19-Backend-Basics/README.md).
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

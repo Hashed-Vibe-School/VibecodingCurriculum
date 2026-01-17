@@ -1378,3 +1378,9 @@ This chapter: Editing Code        ->     Next chapter: Git Basics
 - [Git Documentation](https://git-scm.com/doc) - Version control reference
 - [Jest](https://jestjs.io/) - JavaScript testing framework
 - [Vitest](https://vitest.dev/) - Modern testing framework
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

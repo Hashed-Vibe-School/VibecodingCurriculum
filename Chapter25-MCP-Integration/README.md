@@ -1914,3 +1914,9 @@ You've learned how to connect to external services with MCP - now let's learn ho
 ---
 
 Proceed to [Chapter 26: CI/CD Automation](../Chapter26-CI-CD-Automation/README.md).
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

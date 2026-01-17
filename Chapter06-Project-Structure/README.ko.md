@@ -1118,3 +1118,9 @@ components 폴더에는 5개의 컴포넌트가 있습니다:
 - 메모리 한계 극복 방법
 
 [Chapter 07: 컨텍스트와 메모리](../Chapter07-Context-and-Memory/README.ko.md)로 진행하십시오.
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

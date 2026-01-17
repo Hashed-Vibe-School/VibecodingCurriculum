@@ -1080,3 +1080,9 @@ Proceed to [Chapter 08: Effective Prompting](../Chapter08-Effective-Prompting/RE
 **Related Tools:**
 - [Tokenizer Tool](https://platform.openai.com/tokenizer) - Token counting tool
 - [Claude Code GitHub](https://github.com/anthropics/claude-code) - Official repository
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

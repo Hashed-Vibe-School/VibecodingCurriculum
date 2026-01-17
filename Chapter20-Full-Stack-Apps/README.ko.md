@@ -1693,3 +1693,9 @@ Todo 앱을 메모 앱으로 확장해보세요:
 - [Railway](https://railway.app/) - 풀스택 배포
 - [Render](https://render.com/) - 백엔드 배포 (무료 티어)
 - [Fly.io](https://fly.io/) - 글로벌 앱 배포
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

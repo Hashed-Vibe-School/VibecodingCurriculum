@@ -1050,3 +1050,9 @@ Proceed to [Chapter 10: Editing Code](../Chapter10-Editing-Code/README.md).
 **Related Tools:**
 - [ripgrep](https://github.com/BurntSushi/ripgrep) - Fast search tool
 - [fd](https://github.com/sharkdp/fd) - Fast file search
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

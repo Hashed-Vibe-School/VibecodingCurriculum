@@ -973,3 +973,9 @@ camelCase(카멜케이스) 스타일을 많이 써요.
 다음 챕터에서는 **Claude Code를 실제로 설치**합니다. Mac, Windows 모두 따라할 수 있도록 상세하게 안내합니다.
 
 [Chapter 02: Claude Code 설치하기](../Chapter02-Installation/README.ko.md)로 진행하세요.
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

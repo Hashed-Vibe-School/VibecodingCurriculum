@@ -1320,3 +1320,9 @@ CRUD는 거의 모든 앱의 기초입니다. localStorage로 개념을 익히�
 - [Supabase](https://supabase.com/) - 오픈소스 백엔드 서비스
 - [Firebase](https://firebase.google.com/) - Google 백엔드 플랫폼
 - [JSON Formatter](https://jsonformatter.org/) - JSON 포맷터/검증기
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

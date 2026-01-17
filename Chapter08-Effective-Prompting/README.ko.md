@@ -1287,3 +1287,9 @@ addToCart 함수에서 중복 요청 방지 로직이 없음.
 **커뮤니티:**
 - [Anthropic Discord](https://discord.gg/anthropic) - 커뮤니티 질문 및 토론
 - [r/ClaudeAI](https://www.reddit.com/r/ClaudeAI/) - Reddit 커뮤니티
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

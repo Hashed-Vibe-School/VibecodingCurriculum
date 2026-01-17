@@ -1393,3 +1393,9 @@ Claude에게 요청할 때는:
 - [Slack Bolt](https://slack.dev/bolt-js/) - Slack 봇 프레임워크
 - [Railway](https://railway.app/) - 봇 배포 플랫폼
 - [Render](https://render.com/) - 무료 봇 호스팅
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

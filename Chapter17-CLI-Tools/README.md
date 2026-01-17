@@ -1449,3 +1449,9 @@ What you learned in this chapter:
 CLI tools greatly boost developer productivity. If you have repetitive tasks, automate them with a CLI!
 
 Proceed to [Chapter 18: Building Chatbots](../Chapter18-Chatbots/README.md).
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

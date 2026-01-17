@@ -1027,3 +1027,9 @@ npm run preview
 - 코드베이스 탐색 전략
 
 [Chapter 06: 프로젝트 구조 이해](../Chapter06-Project-Structure/README.ko.md)로 진행하십시오.
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

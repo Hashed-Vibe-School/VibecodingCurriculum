@@ -1279,3 +1279,9 @@ In Chapter 25, you'll learn about **MCP Integration**:
 If Agents and Skills defined Claude's "personality and behavior", MCP expands Claude's "capabilities"!
 
 Proceed to [Chapter 25: MCP Integration](../Chapter25-MCP-Integration/README.md).
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

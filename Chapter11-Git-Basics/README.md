@@ -1032,3 +1032,9 @@ Continue to [Chapter 12: Project Memory](../Chapter12-Project-Memory/README.md).
 - [GitHub Desktop](https://desktop.github.com/) - Git GUI client
 - [GitKraken](https://www.gitkraken.com/) - Visual Git client
 - [Sourcetree](https://www.sourcetreeapp.com/) - Free Git GUI
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

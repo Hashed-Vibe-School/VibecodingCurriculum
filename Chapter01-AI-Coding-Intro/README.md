@@ -973,3 +973,9 @@ Congratulations! You've completed Chapter 01.
 In the next chapter, we'll **actually install Claude Code**. We provide detailed instructions for both Mac and Windows.
 
 Proceed to [Chapter 02: Installing Claude Code](../Chapter02-Installation/README.md).
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

@@ -876,3 +876,9 @@ Proceed to [Chapter 15: Data Storage](../Chapter15-Data-Storage/README.md).
 - [Netlify](https://www.netlify.com/) - Static site hosting
 - [Railway](https://railway.app/) - Backend deployment platform
 - [Namecheap](https://www.namecheap.com/) - Domain purchase
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

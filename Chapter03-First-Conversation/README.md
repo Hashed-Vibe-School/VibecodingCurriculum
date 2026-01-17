@@ -1137,3 +1137,9 @@ In the next chapter, we'll learn how to handle files in detail.
 - Using special prefixes (`@`, `!`, `#`)
 
 Proceed to [Chapter 04: Reading and Writing Files](../Chapter04-Working-with-Files/README.md).
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

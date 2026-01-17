@@ -874,3 +874,9 @@ Chapter 15에서는 **데이터 저장**을 배웁니다.
 - [Netlify](https://www.netlify.com/) - 정적 사이트 호스팅
 - [Railway](https://railway.app/) - 백엔드 배포 플랫폼
 - [Namecheap](https://www.namecheap.com/) - 도메인 구매
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

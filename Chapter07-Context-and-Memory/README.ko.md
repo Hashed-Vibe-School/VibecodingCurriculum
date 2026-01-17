@@ -1080,3 +1080,9 @@ Part 2에서는 Claude를 더 효과적으로 활용하는 방법을 배웁니�
 **관련 도구:**
 - [Tokenizer Tool](https://platform.openai.com/tokenizer) - 토큰 수 계산 도구
 - [Claude Code GitHub](https://github.com/anthropics/claude-code) - 공식 저장소
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

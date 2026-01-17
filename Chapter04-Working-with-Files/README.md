@@ -1111,3 +1111,9 @@ In the next chapter, we'll learn how to handle terminal commands.
 - Running a local server
 
 Proceed to [Chapter 05: Terminal Commands](../Chapter05-Terminal-Commands/README.md).
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

@@ -1289,3 +1289,9 @@ Proceed to [Chapter 09: Exploring Code](../Chapter09-Exploring-Code/README.md).
 **Community:**
 - [Anthropic Discord](https://discord.gg/anthropic) - Community questions and discussions
 - [r/ClaudeAI](https://www.reddit.com/r/ClaudeAI/) - Reddit community
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

@@ -1136,3 +1136,9 @@ Normal Mode 🔒
 - 특수 접두사 (`@`, `!`, `#`) 활용
 
 [Chapter 04: 파일 읽고 쓰기](../Chapter04-Working-with-Files/README.ko.md)로 진행하십시오.
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

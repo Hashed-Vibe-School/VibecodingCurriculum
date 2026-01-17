@@ -1320,3 +1320,9 @@ Proceed to [Chapter 16: Mini Games](../Chapter16-Mini-Games/README.md).
 - [Supabase](https://supabase.com/) - Open source backend service
 - [Firebase](https://firebase.google.com/) - Google backend platform
 - [JSON Formatter](https://jsonformatter.org/) - JSON formatter/validator
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

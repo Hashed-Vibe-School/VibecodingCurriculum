@@ -1761,3 +1761,9 @@ We support your development journey!
 
 [![Discord](https://img.shields.io/badge/Discord-Join_Community-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/your-invite-link)
 [![GitHub](https://img.shields.io/badge/GitHub-Star_Project-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/your-repo)
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

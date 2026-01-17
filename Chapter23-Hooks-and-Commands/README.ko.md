@@ -1219,3 +1219,9 @@ Hooks와 Commands가 "무엇을"에 집중했다면, Agents와 Skills는 "누가
 - [Prettier](https://prettier.io/) - 코드 포맷터
 - [ESLint](https://eslint.org/) - JavaScript 린터
 - [lint-staged](https://github.com/okonet/lint-staged) - 스테이징된 파일만 린트
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

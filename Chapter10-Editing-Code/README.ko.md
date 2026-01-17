@@ -1372,3 +1372,9 @@ A) 바로 코드 작성은 가장 피해야 할 패턴입니다.
 - [GitHub Desktop](https://desktop.github.com/) - Git GUI 클라이언트
 - [Jest](https://jestjs.io/) - JavaScript 테스트 프레임워크
 - [Prettier](https://prettier.io/) - 코드 포맷터
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

@@ -1007,3 +1007,9 @@ Chapter 13에서는 **웹사이트 개발**을 실습합니다.
 **관련 도구:**
 - [Markdown Editor](https://stackedit.io/) - 온라인 Markdown 에디터
 - [Claude Code GitHub](https://github.com/anthropics/claude-code) - 공식 저장소
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

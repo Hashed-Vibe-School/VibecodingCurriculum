@@ -3,11 +3,24 @@
 > **The Most Comprehensive Claude Code Learning Curriculum** - From Complete Beginner to AI-Native Developer
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Chapters](https://img.shields.io/badge/Chapters-27-blue.svg)](#curriculum-structure)
+[![Chapters](https://img.shields.io/badge/Chapters-30-blue.svg)](#curriculum-structure)
 [![Claude Code](https://img.shields.io/badge/Built%20with-Claude%20Code-blueviolet.svg)](https://github.com/anthropics/claude-code)
 [![Beginner Friendly](https://img.shields.io/badge/Beginner-Friendly-green.svg)](#audience)
 
 **English** | [한국어](./README.ko.md)
+
+---
+
+## 🎯 Who Is This For?
+
+> **Built for all levels** — from complete beginners to experienced vibecoding developers.
+
+| Your Level | What You'll Get |
+|------------|-----------------|
+| **"What is coding?"** | Start from scratch, complete your first project with AI |
+| **"I've coded before"** | 10x your productivity with AI tools |
+| **"Already vibecoding"** | Optimize workflow with advanced features (Hooks, MCP, Skills) |
+| **"Want to introduce to team"** | Team collaboration, CI/CD, onboarding strategies |
 
 ---
 
@@ -17,7 +30,7 @@ This curriculum goes beyond the official Claude Code tutorial to provide:
 
 | Official Tutorial | This Curriculum |
 |-------------------|-----------------|
-| Quick start guide | **27 chapters** of systematic learning |
+| Quick start guide | **30 chapters** of systematic learning |
 | Assumes coding knowledge | **Beginner-friendly** with no prerequisites |
 | Reference documentation | **Hands-on projects** you can actually use |
 | English only | **Bilingual** (English + Korean) |
@@ -139,7 +152,7 @@ No coding experience required for complete beginners. We start from scratch.
 
 ## Learning Outcomes
 
-### After 27 Chapters, You Can Build:
+### After 30 Chapters, You Can Build:
 
 | Project Type | Examples |
 |--------------|----------|
@@ -150,6 +163,7 @@ No coding experience required for complete beginners. We start from scratch.
 | **Chatbots** | Discord bot, Slack bot |
 | **Full-Stack Apps** | Complete apps with database & auth |
 | **Automation** | CI/CD pipelines, GitHub Actions |
+| **Web3 Dapps** | Farcaster Frames, Base miniapps, Smart Contracts |
 
 ### Skills You'll Gain:
 
@@ -159,6 +173,24 @@ No coding experience required for complete beginners. We start from scratch.
 - Project architecture understanding
 - Team collaboration workflows
 - Advanced Claude Code features (Hooks, Skills, MCP)
+
+---
+
+## Why Claude Code?
+
+> **"There's Google Jules, Cursor, Windsurf... Why Claude Code?"**
+
+| Criteria | Claude Code | Other Tools |
+|----------|-------------|-------------|
+| **Terminal Native** | ✅ CLI-based, works anywhere | Often IDE-dependent |
+| **Transparent Operation** | ✅ Shows every action explicitly | Sometimes black-box |
+| **Learning Value** | ✅ Learn principles as you go | Convenience can hide fundamentals |
+| **Extensibility** | ✅ Hooks, MCP, Skills, etc. | Varies by tool |
+| **Cost** | ✅ Pay for what you use (API) | Mostly subscription-based |
+
+> 💡 **Future Plans**: We plan to expand curricula for Cursor, Windsurf, Jules, and other tools.
+
+**Compatibility Note**: Core concepts learned here (prompting, debugging, project structure) apply to ANY AI coding tool.
 
 ---
 
@@ -174,43 +206,58 @@ Every chapter also includes **Beginner Tips** that explain technical concepts in
 
 ### Learning Path Overview
 
+Think of this curriculum like learning to cook with an AI sous chef:
+
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                    Your Learning Journey                         │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
 │  Part 1: Getting Started (Ch.01-05)                             │
-│  "Learn the kitchen tools"                                      │
+│  "Learn the kitchen tools" 🔪                                   │
 │  → What is AI coding? Install Claude Code. Basic commands.      │
 │  🎯 Milestone: First conversation with Claude                   │
+│  💬 Like: Setting up your kitchen and meeting your AI chef      │
 │                                                                 │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
 │  Part 2: Core Features (Ch.06-11)                               │
-│  "Learn to cook basic dishes"                                   │
+│  "Learn to cook basic dishes" 🍳                                │
 │  → Prompting, code navigation, Git, project memory              │
 │  🎯 Milestone: Modify existing code confidently                 │
+│  💬 Like: Making scrambled eggs and following recipes           │
 │                                                                 │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
 │  Part 3: Practical Projects I (Ch.12-16)                        │
-│  "Cook your first real meals"                                   │
+│  "Cook your first real meals" 🍝                                │
 │  → Websites, deployment, databases, games                       │
 │  🎯 Milestone: Deploy your portfolio online                     │
+│  💬 Like: Cooking dinner for yourself and posting pics online   │
 │                                                                 │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
 │  Part 4: Practical Projects II (Ch.17-20)                       │
-│  "Host a dinner party"                                          │
+│  "Host a dinner party" 🎉                                       │
 │  → CLI tools, chatbots, backend, full-stack                     │
 │  🎯 Milestone: Build a complete app with auth                   │
+│  💬 Like: Cooking for friends - multiple dishes, timing matters │
 │                                                                 │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
 │  Part 5: Advanced (Ch.21-27)                                    │
-│  "Become a master chef"                                         │
+│  "Become a master chef" 👨‍🍳                                      │
 │  → Architecture, Hooks, MCP, CI/CD, team workflows              │
 │  🎯 Milestone: Master-level Claude Code usage                   │
+│  💬 Like: Running a restaurant - systems, staff, efficiency     │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Part 6: Web3 Development (Ch.28-30)                            │
+│  "Open your own restaurant on the blockchain" 🌐                │
+│  → Wallet, Frames, Smart Contracts, NFT Community               │
+│  🎯 Milestone: NFT-Gated Community (Final Project!)             │
+│  💬 Like: Running a members-only club with crypto membership    │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -326,13 +373,50 @@ Master Claude Code and become a power user.
 | 26 | CI/CD Automation | GitHub Actions, auto deployment | [Go](./Chapter26-CI-CD-Automation/README.md) |
 | 27 | Team Collaboration | Team workflows, onboarding | [Go](./Chapter27-Team-Collaboration/README.md) |
 
+### 🎉 After Part 5
+
+> **You're now a Claude Code power user!**
+>
+> **You understand:**
+> - How Claude Code works internally
+> - Advanced configuration and customization
+> - Team collaboration patterns
+
+---
+
+### Part 6: Web3 Development (Chapter 28-30)
+
+"Enter the matrix" - Blockchain and decentralized applications await!
+
+```
+🎮 Your Web3 Evolution:
+
+Ch.28: CONSUMER 🛒     Ch.29: BUILDER 🔨     Ch.30: CREATOR ⚡
+"Order from         →  "Open your own    →  "Design the
+ the menu"              food truck"           whole kitchen"
+
+Use existing dapps     Build social Web3     Write smart contracts
+Connect wallet         Create Frames         Deploy your own code
+Claim tokens/NFTs      Viral distribution    NFT-gated communities
+```
+
+| Chapter | Topic | What You'll Build | Link |
+|---------|-------|-------------------|------|
+| 28 | Web3 Basics | Wallet connection, token/NFT claim site | [Go](./Chapter28-Web3-Basics/README.md) |
+| 29 | Farcaster Frames | Interactive poll/quiz Frames | [Go](./Chapter29-Farcaster-Frames/README.md) |
+| 30 | Base Smart Contracts | NFT-Gated Community (Final Project) | [Go](./Chapter30-Base-Smart-Contracts/README.md) |
+
+> 💡 **Fun Fact**: By the end of Part 6, you'll have built an NFT membership system - the same tech used by exclusive communities like Pudgy Penguins or Bored Ape Yacht Club (just on testnet, and way cooler because YOU built it!)
+
 ### 🎉 After Completing Everything
 
-> **You've become a Vibecoding Master!**
+> **You've become a Vibecoding Master + Web3 Developer!**
 >
 > **What's next:**
 > - Start your own projects
 > - Contribute to open source
+> - Build and deploy dapps
+> - Join Web3 communities (Farcaster, Base)
 > - Teach others
 > - Stay updated on AI tools
 
@@ -344,10 +428,13 @@ Master Claude Code and become a power user.
 
 | Do | Don't |
 |----|-------|
-| ✅ Complete chapters in order | ❌ Skip ahead |
-| ✅ Type and run code yourself | ❌ Just read passively |
-| ✅ Understand deeply before moving on | ❌ Rush through |
-| ✅ Ask Claude when stuck | ❌ Give up after first error |
+| ✅ Start from [your level](#audience), proceed in order | ❌ Jump to the middle without prior knowledge |
+| ✅ Ask Claude directly, check the results | ❌ Just read without executing |
+| ✅ Give feedback when results differ | ❌ Give up if first result isn't perfect |
+| ✅ Ask Claude "why?" when stuck | ❌ Ignore error messages |
+
+> 💡 **Vibecoding Tip**: You don't need to type code yourself!
+> **Describe** what you want to Claude, check the result, and give feedback.
 
 ### When You're Stuck
 
@@ -422,4 +509,10 @@ MIT License
 <p align="center">
   <strong>Ready to start your AI-native development journey?</strong><br>
   <a href="./Chapter01-AI-Coding-Intro/README.md">Begin Chapter 01 →</a>
+</p>
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
 </p>

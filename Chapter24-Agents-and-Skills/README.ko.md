@@ -1376,3 +1376,9 @@ Agents와 Skills가 Claude의 "성격과 행동"을 정의했다면, MCP는 Clau
 **커뮤니티:**
 - [Claude Code Discussions](https://github.com/anthropics/claude-code/discussions) - GitHub 토론
 - [r/ClaudeAI](https://www.reddit.com/r/ClaudeAI/) - Reddit 커뮤니티
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

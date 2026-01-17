@@ -1200,3 +1200,9 @@ In the next chapter, we'll learn how to have deeper conversations with Claude Co
 - How to switch modes
 
 Proceed to [Chapter 03: Starting Your First Conversation](../Chapter03-First-Conversation/README.md).
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

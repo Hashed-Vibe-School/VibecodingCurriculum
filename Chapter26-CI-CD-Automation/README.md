@@ -2008,3 +2008,9 @@ Now that you've learned automation with CI/CD, let's see how the entire team can
 ---
 
 Proceed to [Chapter 27: Team Collaboration](../Chapter27-Team-Collaboration/README.md).
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

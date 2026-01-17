@@ -1051,3 +1051,9 @@ git clone https://github.com/facebook/react.git
 - [ripgrep (rg)](https://github.com/BurntSushi/ripgrep) - 빠른 코드 검색 도구
 - [fd](https://github.com/sharkdp/fd) - 빠른 파일 찾기 도구
 - [fzf](https://github.com/junegunn/fzf) - 퍼지 파인더
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

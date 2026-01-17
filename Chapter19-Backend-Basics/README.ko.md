@@ -1195,3 +1195,9 @@ CREATE TABLE bookmarks (
 - [Insomnia](https://insomnia.rest/) - REST 클라이언트
 - [DB Browser for SQLite](https://sqlitebrowser.org/) - SQLite GUI 도구
 - [Thunder Client](https://www.thunderclient.com/) - VS Code API 테스트 확장
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

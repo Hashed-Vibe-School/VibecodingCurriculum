@@ -1793,3 +1793,9 @@ Part 3: 고급 (Chapter 22-27)
 **추가 학습:**
 - [Engineering Practices at Google](https://google.github.io/eng-practices/) - Google 엔지니어링 가이드
 - [The Pragmatic Programmer](https://pragprog.com/titles/tpp20/the-pragmatic-programmer-20th-anniversary-edition/) - 프로그래머 필독서
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

@@ -1193,3 +1193,9 @@ In Chapter 24, you'll learn about **Agents and Skills**:
 If Hooks and Commands focus on "what to do", Agents and Skills focus on "who does it, and how"!
 
 Proceed to [Chapter 24: Agents & Skills](../Chapter24-Agents-and-Skills/README.md).
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

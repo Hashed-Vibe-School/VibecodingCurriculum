@@ -703,3 +703,9 @@ Continue to [Chapter 22: Advanced Configuration](../Chapter22-Advanced-Config/RE
 **Community:**
 - [Claude Code GitHub](https://github.com/anthropics/claude-code) - Official repository
 - [r/ClaudeAI](https://www.reddit.com/r/ClaudeAI/) - Reddit community
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

@@ -2035,3 +2035,9 @@ CI/CD로 자동화를 배웠으니, 이제 팀 전체가 효과적으로 Claude 
 
 **실습 자료:**
 - [GitHub Learning Lab](https://github.com/skills) - GitHub 공식 실습 코스
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

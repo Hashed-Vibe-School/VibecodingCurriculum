@@ -1682,3 +1682,9 @@ What you learned in this chapter:
 - [x] Game improvement and debugging
 
 [Continue to Chapter 17: Building CLI Tools](../Chapter17-CLI-Tools/README.md)
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

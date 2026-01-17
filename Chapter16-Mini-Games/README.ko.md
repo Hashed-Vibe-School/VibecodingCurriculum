@@ -1707,3 +1707,9 @@ setTimeout(spawn, SPAWN_INTERVAL)
 - [Phaser.js](https://phaser.io/) - 인기있는 JavaScript 게임 프레임워크
 - [PixiJS](https://pixijs.com/) - 2D 렌더링 엔진
 - [Kaboom.js](https://kaboomjs.com/) - 간단한 게임 라이브러리
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

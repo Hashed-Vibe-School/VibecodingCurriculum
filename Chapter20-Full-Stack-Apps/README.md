@@ -1696,3 +1696,9 @@ Congratulations! You can now build complete full-stack apps!
 - [Railway](https://railway.app/) - Full-stack deployment
 - [Render](https://render.com/) - Backend deployment (free tier)
 - [Fly.io](https://fly.io/) - Global app deployment
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

@@ -1037,3 +1037,9 @@ In the next chapter, you'll learn how to understand and analyze project structur
 - Codebase exploration strategies
 
 Proceed to [Chapter 06: Understanding Project Structure](../Chapter06-Project-Structure/README.md).
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

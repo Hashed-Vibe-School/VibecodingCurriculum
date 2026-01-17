@@ -1120,3 +1120,9 @@ Proceed to [Chapter 14: Deployment](../Chapter14-Deployment/README.md).
 - [Coolors](https://coolors.co/) - Color palette generator
 - [Google Fonts](https://fonts.google.com/) - Free web fonts
 - [Font Awesome](https://fontawesome.com/) - Icon library
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

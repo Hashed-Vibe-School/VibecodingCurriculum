@@ -1252,3 +1252,9 @@ In Chapter 23, you'll learn about **Hooks and Commands**:
 Now that you've mastered configuration, you're ready to enter the world of automation!
 
 Proceed to [Chapter 23: Hooks & Commands](../Chapter23-Hooks-and-Commands/README.md).
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

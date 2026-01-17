@@ -1944,3 +1944,9 @@ MCP로 외부 서비스에 연결하는 방법을 배웠으니, 이제 이것을
 **관련 도구:**
 - [Postman](https://www.postman.com/) - API 테스트 도구
 - [DBeaver](https://dbeaver.io/) - 데이터베이스 관리 도구
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

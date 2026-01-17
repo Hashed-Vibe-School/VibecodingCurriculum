@@ -1277,3 +1277,9 @@ Chapter 23에서는 **Hooks와 Commands**를 배웁니다:
 **유용한 도구:**
 - [JSON Validator](https://jsonlint.com/) - JSON 문법 검증기
 - [VS Code JSON Extension](https://marketplace.visualstudio.com/items?itemName=ZainChen.json) - VS Code JSON 도구
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>

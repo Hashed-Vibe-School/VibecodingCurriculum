@@ -696,3 +696,9 @@ Claude의 응답을 관찰하시기 바랍니다. `Glob`을 사용했습니까, 
 **커뮤니티:**
 - [Claude Code GitHub](https://github.com/anthropics/claude-code) - 공식 저장소
 - [r/ClaudeAI](https://www.reddit.com/r/ClaudeAI/) - Reddit 커뮤니티
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://hashed.com">Hashed</a></sub>
+</p>
