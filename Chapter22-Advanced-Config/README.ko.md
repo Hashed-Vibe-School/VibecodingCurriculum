@@ -534,7 +534,7 @@ async def get_button():
 ~/.claude/settings.json
 
 # 프로젝트 설정 (해당 프로젝트에만 적용)
-./claude/settings.json
+./.claude/settings.json
 ```
 
 ### 전체 구조
@@ -868,7 +868,7 @@ my-project/
 ```
 프로젝트 설정 > 사용자 설정 > 시스템 기본값
 
-./claude/settings.json
+./.claude/settings.json
       ↓ (덮어씀)
 ~/.claude/settings.json
       ↓ (덮어씀)

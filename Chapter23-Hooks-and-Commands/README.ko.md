@@ -1201,9 +1201,9 @@ Hooks와 Commands가 "무엇을"에 집중했다면, Agents와 Skills는 "누가
 ### 추천 자료
 
 **공식 문서:**
-- [Claude Code Hooks 가이드](https://docs.anthropic.com/en/docs/claude-code/hooks) - Hooks 설정 및 사용법
-- [Claude Code Slash Commands](https://docs.anthropic.com/en/docs/claude-code/slash-commands) - 명령어 가이드
-- [Claude Code 자동화](https://docs.anthropic.com/en/docs/claude-code/tutorials) - 자동화 튜토리얼
+- [Claude Code Hooks 가이드](https://code.claude.com/docs/ko/hooks) - Hooks 설정 및 사용법
+- [Claude Code Slash Commands](https://code.claude.com/docs/ko/slash-commands) - 명령어 가이드
+- [Claude Code 자동화](https://code.claude.com/docs/ko/common-workflows) - 자동화 튜토리얼
 
 **영상 자료:**
 - [Git Hooks Tutorial (YouTube)](https://www.youtube.com/results?search_query=git+hooks+tutorial) - Git Hooks 기초 (유사 개념)

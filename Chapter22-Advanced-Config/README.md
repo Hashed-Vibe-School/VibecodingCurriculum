@@ -534,7 +534,7 @@ It's a React project. Make it well. No bugs. Fast.
 ~/.claude/settings.json
 
 # Project settings (applied only to that project)
-./claude/settings.json
+./.claude/settings.json
 ```
 
 ### Full Structure
@@ -868,7 +868,7 @@ my-project/
 ```
 Project settings > User settings > System defaults
 
-./claude/settings.json
+./.claude/settings.json
       ↓ (overrides)
 ~/.claude/settings.json
       ↓ (overrides)

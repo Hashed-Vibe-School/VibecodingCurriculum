@@ -668,7 +668,7 @@ Observe how many tool calls happen. Each one is an API round trip.
 
 What we learned in this chapter:
 - [x] Overall Claude Code architecture and API communication flow
-- [x] 18 built-in tools system
+- [x] 17 built-in tools system
 - [x] How sub-agents work and parallel execution
 - [x] Model selection and context management
 - [x] Permissions and security policies

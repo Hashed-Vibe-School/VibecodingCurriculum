@@ -271,25 +271,23 @@ Let's set up a simple MCP server. We'll use the filesystem server as it requires
 
 ### Step 1: Create the Config File
 
-Create the MCP config file:
+Create the MCP config file in your project root:
 
 ```bash
 # macOS/Linux
-mkdir -p ~/.claude
-touch ~/.claude/mcp_servers.json
+touch .mcp.json
 
 # Windows (PowerShell)
-New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.claude"
-New-Item -ItemType File -Force -Path "$env:USERPROFILE\.claude\mcp_servers.json"
+New-Item -ItemType File -Force -Path ".mcp.json"
 ```
 
 ### Step 2: Add a Simple Server
 
-Open `~/.claude/mcp_servers.json` and add:
+Open `.mcp.json` and add:
 
 ```json
 {
-  "servers": {
+  "mcpServers": {
     "filesystem": {
       "command": "npx",
       "args": ["-y", "@anthropic-ai/mcp-server-filesystem", "/tmp"]
@@ -773,14 +771,16 @@ Claude queries the database directly.
 ### Config File Location
 
 ```
-~/.claude/mcp_servers.json
+.mcp.json (in project root)
 ```
+
+> **Note**: You can also use `~/.claude.json` for user-wide config that applies to all projects.
 
 ### Basic Structure
 
 ```json
 {
-  "servers": {
+  "mcpServers": {
     "serverName": {
       "command": "command to run",
       "args": ["arg1", "arg2"],
@@ -796,7 +796,7 @@ Claude queries the database directly.
 
 ```json
 {
-  "servers": {
+  "mcpServers": {
     "postgres": {
       "command": "npx",
       "args": ["-y", "@anthropic-ai/mcp-server-postgres"],
@@ -815,9 +815,9 @@ Claude queries the database directly.
 ### 1. MCP Server Setup
 
 ```json
-// ~/.claude/mcp_servers.json
+// .mcp.json
 {
-  "servers": {
+  "mcpServers": {
     "postgres": {
       "command": "npx",
       "args": ["-y", "@anthropic-ai/mcp-server-postgres"],
@@ -1510,8 +1510,8 @@ Add both filesystem and GitHub to your config:
 3. Missing npm/npx
 
 **Solutions:**
-- Validate JSON: `cat ~/.claude/mcp_servers.json | jq .`
-- Check location: must be `~/.claude/mcp_servers.json`
+- Validate JSON: `cat .mcp.json | jq .`
+- Check location: must be `.mcp.json` in project root (or `~/.claude.json` for user-wide)
 - Check npx: `which npx` (should show a path)
 
 ### Problem: "Permission denied" errors
@@ -1563,7 +1563,7 @@ MCP not working
          │ OK
          ▼
 ┌─────────────────┐
-│ Check file location │ ──wrong──▶ Move to ~/.claude/mcp_servers.json
+│ Check file location │ ──wrong──▶ Move to .mcp.json in project root
 │                 │
 └────────┬────────┘
          │ OK
@@ -1660,7 +1660,7 @@ MCP not working
 
 ### 4. Forgetting to restart
 
-- After changing `mcp_servers.json`, restart Claude Code
+- After changing `.mcp.json`, restart Claude Code
 - Changes don't apply automatically
 
 ### 5. Not checking logs
@@ -1689,9 +1689,9 @@ Where should the MCP config file be located?
 <details>
 <summary>View Answer</summary>
 
-**Answer**: `~/.claude/mcp_servers.json`
+**Answer**: `.mcp.json` (project) or `~/.claude.json` (user)
 
-**Explanation**: MCP config is stored in the `mcp_servers.json` file inside the `.claude` folder in your home directory. After modifying this file, you must restart Claude Code for changes to take effect.
+**Explanation**: MCP config is stored in `.mcp.json` file in your project root for project-specific settings, or `~/.claude.json` for user-wide settings. After modifying this file, you must restart Claude Code for changes to take effect.
 </details>
 
 ### Quiz 3: Security Best Practice
@@ -1750,7 +1750,7 @@ Changed MCP settings but it's not working. What should you do first?
 **Goal**: First MCP server setup and test
 
 **Steps**:
-1. Create `~/.claude/mcp_servers.json` file
+1. Create `.mcp.json` file in project root
 2. Add Filesystem MCP server config
 3. Specify allowed folder path (e.g., `/tmp` or project folder)
 4. Restart Claude Code

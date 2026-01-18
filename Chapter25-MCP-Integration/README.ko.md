@@ -271,25 +271,23 @@ MCP는 비서에게 회사 시스템에 접근할 수 있는 **사원증**을 �
 
 ### 단계 1: 설정 파일 만들기
 
-MCP 설정 파일을 만드시기 바랍니다:
+프로젝트 루트에 MCP 설정 파일을 만드시기 바랍니다:
 
 ```bash
 # macOS/Linux
-mkdir -p ~/.claude
-touch ~/.claude/mcp_servers.json
+touch .mcp.json
 
 # Windows (PowerShell)
-New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.claude"
-New-Item -ItemType File -Force -Path "$env:USERPROFILE\.claude\mcp_servers.json"
+New-Item -ItemType File -Force -Path ".mcp.json"
 ```
 
 ### 단계 2: 간단한 서버 추가
 
-`~/.claude/mcp_servers.json`을 열고 추가하시기 바랍니다:
+`.mcp.json`을 열고 추가하시기 바랍니다:
 
 ```json
 {
-  "servers": {
+  "mcpServers": {
     "filesystem": {
       "command": "npx",
       "args": ["-y", "@anthropic-ai/mcp-server-filesystem", "/tmp"]
@@ -773,14 +771,16 @@ Claude가 직접 데이터베이스를 조회합니다.
 ### 설정 파일 위치
 
 ```
-~/.claude/mcp_servers.json
+.mcp.json (프로젝트 루트)
 ```
+
+> **참고**: 모든 프로젝트에 적용되는 사용자 전체 설정은 `~/.claude.json`을 사용할 수도 있습니다.
 
 ### 기본 구조
 
 ```json
 {
-  "servers": {
+  "mcpServers": {
     "서버이름": {
       "command": "실행할 명령어",
       "args": ["인자1", "인자2"],
@@ -796,7 +796,7 @@ Claude가 직접 데이터베이스를 조회합니다.
 
 ```json
 {
-  "servers": {
+  "mcpServers": {
     "postgres": {
       "command": "npx",
       "args": ["-y", "@anthropic-ai/mcp-server-postgres"],
@@ -815,9 +815,9 @@ Claude가 직접 데이터베이스를 조회합니다.
 ### 1. MCP 서버 설정
 
 ```json
-// ~/.claude/mcp_servers.json
+// .mcp.json
 {
-  "servers": {
+  "mcpServers": {
     "postgres": {
       "command": "npx",
       "args": ["-y", "@anthropic-ai/mcp-server-postgres"],
@@ -1511,8 +1511,8 @@ filesystem과 GitHub 둘 다 설정에 추가:
 3. npm/npx가 없음
 
 **해결 방법:**
-- JSON 검증: `cat ~/.claude/mcp_servers.json | jq .`
-- 위치 확인: 반드시 `~/.claude/mcp_servers.json`
+- JSON 검증: `cat .mcp.json | jq .`
+- 위치 확인: 반드시 프로젝트 루트의 `.mcp.json` (또는 사용자 전체 설정은 `~/.claude.json`)
 - npx 확인: `which npx` (경로가 보여야 함)
 
 ### 문제: "권한 거부" 에러
@@ -1564,7 +1564,7 @@ MCP가 작동하지 않음
          │ 정상
          ▼
 ┌─────────────────┐
-│ 파일 위치 확인   │ ──잘못됨──▶ ~/.claude/mcp_servers.json으로 이동
+│ 파일 위치 확인   │ ──잘못됨──▶ 프로젝트 루트의 .mcp.json으로 이동
 │                 │
 └────────┬────────┘
          │ 정상
@@ -1661,7 +1661,7 @@ MCP가 작동하지 않음
 
 ### 4. 재시작 잊기
 
-- `mcp_servers.json` 변경 후 Claude Code를 재시작하십시오
+- `.mcp.json` 변경 후 Claude Code를 재시작하십시오
 - 변경이 자동으로 적용되지 않습니다
 
 ### 5. 로그 확인 안 하기
@@ -1690,9 +1690,9 @@ MCP 설정 파일은 어디에 위치해야 하나요?
 <details>
 <summary>정답 보기</summary>
 
-**정답**: `~/.claude/mcp_servers.json`
+**정답**: `.mcp.json` (프로젝트) 또는 `~/.claude.json` (사용자)
 
-**설명**: MCP 설정은 사용자 홈 디렉토리의 `.claude` 폴더 안에 `mcp_servers.json` 파일로 저장됩니다. 이 파일을 수정한 후에는 Claude Code를 재시작해야 변경사항이 적용됩니다.
+**설명**: MCP 설정은 프로젝트별 설정의 경우 프로젝트 루트의 `.mcp.json` 파일에, 사용자 전체 설정의 경우 `~/.claude.json` 파일에 저장됩니다. 이 파일을 수정한 후에는 Claude Code를 재시작해야 변경사항이 적용됩니다.
 </details>
 
 ### 퀴즈 3: 보안 모범 사례
@@ -1751,7 +1751,7 @@ MCP 설정을 변경했는데 작동하지 않습니다. 가장 먼저 해야 �
 **목표**: 첫 MCP 서버 설정 및 테스트
 
 **단계**:
-1. `~/.claude/mcp_servers.json` 파일 생성
+1. 프로젝트 루트에 `.mcp.json` 파일 생성
 2. Filesystem MCP 서버 설정 추가
 3. 허용할 폴더 경로 지정 (예: `/tmp` 또는 프로젝트 폴더)
 4. Claude Code 재시작
